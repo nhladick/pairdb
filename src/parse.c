@@ -69,7 +69,7 @@ static void tokenize(char *inbuff, char *argv[])
 
 static enum CMD parse_cmd(char *str_cmd)
 {
-    if (strcmp(str_cmd, "newtable") == 0) {
+    if (strcmp(str_cmd, "newtbl") == 0) {
         return NEWTABLE;
     }
     else if (strcmp(str_cmd, "use") == 0) {
@@ -83,6 +83,25 @@ static enum CMD parse_cmd(char *str_cmd)
     }
     else {
         return FAIL;
+    }
+}
+
+static void parse_args(char *argv[], parse_data prs_data)
+{
+    switch (prs_data->cmd) {
+        case FAIL:
+            break;
+        case NEWTABLE:
+        case USETABLE:
+            strncpy(prs_data->tbl_name, argv[1], TBL_NAME_MAX - 1);
+            break;
+        case ADD:
+            strncpy(prs_data->key, argv[1], KEY_MAX - 1);
+            strncpy(prs_data->val, argv[2], VAL_MAX - 1);
+            break;
+        case DELETE:
+            strncpy(prs_data->key, argv[1], KEY_MAX - 1);
+            break;
     }
 }
 
@@ -117,6 +136,15 @@ void parse_input(char *inbuff, parse_data prs_data)
 
     prs_data->cmd = parse_cmd(argv[0]);
 
+    parse_args(argv, prs_data);
+
+    printf("cmd: %d\n", prs_data->cmd);
+    if (prs_data->tbl_name)
+        printf("tbl: %s\n", prs_data->tbl_name);
+    if (prs_data->key)
+        printf("k: %s\n", prs_data->key);
+    if (prs_data->val)
+        printf("v: %s\n", prs_data->val);
 }
 
 
