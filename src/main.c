@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "parse.h"
 #include "memorydb.h"
@@ -15,6 +16,9 @@ int main(int argc, char *argv[])
     bool run_loop = true;
 
     while (run_loop) {
+        // clear input buffer
+        memset(inbuff, 0, INBUFF_SIZE);
+
         printf("keydb>> ");
 
         fgets(inbuff, INBUFF_SIZE, stdin);
@@ -41,6 +45,11 @@ int main(int argc, char *argv[])
                 run_loop = false;
                 break;
         }
+        // clear key and val buffers in prs_data
+        clear_kv_buffs(prs_data);
+
+        // keep table name in prs_data - handle table name
+        // logic in main switch loop
     }
 
     destroy_parse_data(prs_data);
