@@ -27,6 +27,12 @@ struct parse_object {
     char *val;
 };
 
+/*
+ *
+ ********** start - static/internal functions **********
+ *
+ */
+
 static void preprocess(char *cp)
 {
     // remove newline char from fgets
@@ -105,6 +111,12 @@ static void parse_args(char *argv[], parse_data prs_data)
     }
 }
 
+/*
+ *
+ ********** end - static/internal functions **********
+ *
+ */
+
 parse_data init_parse_data()
 {
     parse_data ptr = calloc(1, sizeof(struct parse_object));
@@ -146,16 +158,3 @@ void parse_input(char *inbuff, parse_data prs_data)
     if (prs_data->val)
         printf("v: %s\n", prs_data->val);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
