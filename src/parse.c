@@ -132,9 +132,31 @@ static void parse_args(char *argv[], parse_data prs_data)
 parse_data init_parse_data()
 {
     parse_data ptr = calloc(1, sizeof(struct parse_object));
+    if (!ptr) {
+        return NULL;
+    }
+
     ptr->tbl_name = calloc(1, TBL_NAME_MAX);
+    if (!ptr->tbl_name) {
+        free(ptr);
+        return NULL;
+    }
+
     ptr->key = calloc(1, KEY_MAX);
+    if (!ptr->key) {
+        free(ptr->tbl_name);
+        free(ptr);
+        return NULL;
+    }
+
     ptr->val = calloc(1, VAL_MAX);
+    if (!ptr->val) {
+        free(ptr->key);
+        free(ptr->tbl_name);
+        free(ptr);
+        return NULL;
+    }
+
     return ptr;
 }
 

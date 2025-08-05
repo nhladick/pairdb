@@ -11,6 +11,11 @@
 int main(int argc, char *argv[])
 {
     parse_data prs_data = init_parse_data();
+    if (!prs_data) {
+        fprintf(stderr, "Unable to allocate memory\n");
+        exit(EXIT_FAILURE);
+    }
+
     char inbuff[INBUFF_SIZE];
 
     bool run_loop = true;
@@ -25,11 +30,15 @@ int main(int argc, char *argv[])
         parse_input(inbuff, prs_data);
         enum CMD input_cmd = get_input_cmd(prs_data);
 
+        // 'use <tbl_name>' or 'newtbl <tbl_name>' will set
+        // the table name that will be used until another
+        // 'use' or 'newtbl' command is received
         if (input_cmd != NEWTABLE &&
             input_cmd != USETABLE &&
-            input_cmd != FAIL &&
+            input_cmd != FAIL &&     // include FAIL to go to syntax error handle
             (get_tbl_name(prs_data))[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
+                // clear key and val buffers in prs_data
                 clear_kv_buffs(prs_data);
                 continue;
             }
@@ -57,9 +66,6 @@ int main(int argc, char *argv[])
         }
         // clear key and val buffers in prs_data
         clear_kv_buffs(prs_data);
-
-        // keep table name in prs_data - handle table name
-        // logic in main switch loop
     }
 
     destroy_parse_data(prs_data);
