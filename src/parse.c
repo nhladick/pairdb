@@ -12,14 +12,6 @@
 #define VAL_MAX 100
 #define MAX_ARGS 5
 
-enum CMD {
-    FAIL,
-    NEWTABLE,
-    USETABLE,
-    ADD,
-    DELETE
-};
-
 struct parse_object {
     enum CMD cmd;
     char *tbl_name;
@@ -75,6 +67,10 @@ static void tokenize(char *inbuff, char *argv[])
 
 static enum CMD parse_cmd(char *str_cmd)
 {
+    if (str_cmd == NULL) {
+        return FAIL;
+    }
+
     if (strcmp(str_cmd, "newtbl") == 0) {
         return NEWTABLE;
     }
@@ -99,13 +95,25 @@ static void parse_args(char *argv[], parse_data prs_data)
             break;
         case NEWTABLE:
         case USETABLE:
+            if (argv[1] == NULL) {
+                prs_data->cmd = FAIL;
+                return;
+            }
             strncpy(prs_data->tbl_name, argv[1], TBL_NAME_MAX - 1);
             break;
         case ADD:
+            if (argv[1] == NULL || argv[2] == NULL) {
+                prs_data->cmd = FAIL;
+                return;
+            }
             strncpy(prs_data->key, argv[1], KEY_MAX - 1);
             strncpy(prs_data->val, argv[2], VAL_MAX - 1);
             break;
         case DELETE:
+            if (argv[1] == NULL) {
+                prs_data->cmd = FAIL;
+                return;
+            }
             strncpy(prs_data->key, argv[1], KEY_MAX - 1);
             break;
     }
@@ -157,4 +165,9 @@ void parse_input(char *inbuff, parse_data prs_data)
         printf("k: %s\n", prs_data->key);
     if (prs_data->val)
         printf("v: %s\n", prs_data->val);
+}
+
+enum CMD get_input_cmd(parse_data prs_data)
+{
+    return prs_data->cmd;
 }
