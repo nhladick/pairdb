@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
         printf("keydb>> ");
         fgets(inbuff, INBUFF_SIZE, stdin);
         parse_input(inbuff, prs_data);
-        printf("%s\n", inbuff);
         run_loop = false;
     }
 

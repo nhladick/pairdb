@@ -2,11 +2,15 @@
 #include <string.h>
 #include <stdbool.h>
 
+// remove after testing
+#include <stdio.h>
+
 #include "parse.h"
 
 #define TBL_NAME_MAX 32
 #define KEY_MAX 100
 #define VAL_MAX 100
+#define MAX_ARGS 5
 
 enum parse_cmd {
     FAIL,
@@ -43,9 +47,23 @@ static void preprocess(char *cp)
                 inquote = false;
             }
         }
+
+        // if not in a quoted section, replace space with tab
         if (!inquote && *cp == ' ') {
             *cp = '\t';
         }
+    }
+}
+
+static void tokenize(char *inbuff, char *argv[])
+{
+    char *delim = "\t\'\"";
+    char *temp = strtok(inbuff, delim);
+    argv[0] = temp;
+
+    for (int i = 1; i < MAX_ARGS && temp; i++) {
+        temp = strtok(NULL, delim);
+        argv[i] = temp;
     }
 }
 
@@ -69,6 +87,15 @@ void destroy_parse_data(parse_data ptr)
 void parse_input(char *inbuff, parse_data prs_data)
 {
     preprocess(inbuff);
+
+    char *argv[MAX_ARGS];
+
+    for (int i = 0; i < MAX_ARGS; i++) {
+        argv[i] = NULL;
+    }
+
+    tokenize(inbuff, argv);
+
 }
 
 
