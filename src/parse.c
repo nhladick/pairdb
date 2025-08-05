@@ -69,10 +69,10 @@ static void tokenize(char *inbuff, char *argv[])
 
 parse_data init_parse_data()
 {
-    parse_data ptr = malloc(sizeof(struct parse_object));
-    ptr->tbl_name = malloc(TBL_NAME_MAX);
-    ptr->key = malloc(KEY_MAX);
-    ptr->val = malloc(VAL_MAX);
+    parse_data ptr = calloc(1, sizeof(struct parse_object));
+    ptr->tbl_name = calloc(1, TBL_NAME_MAX);
+    ptr->key = calloc(1, KEY_MAX);
+    ptr->val = calloc(1, VAL_MAX);
     return ptr;
 }
 
@@ -95,6 +95,7 @@ void parse_input(char *inbuff, parse_data prs_data)
     }
 
     tokenize(inbuff, argv);
+
 
 }
 
