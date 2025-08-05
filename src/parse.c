@@ -83,6 +83,9 @@ static enum CMD parse_cmd(char *str_cmd)
     else if (strcmp(str_cmd, "del") == 0) {
         return DELETE;
     }
+    else if (strcmp(str_cmd, "quit") == 0) {
+        return QUIT;
+    }
     else {
         return FAIL;
     }
@@ -92,6 +95,7 @@ static void parse_args(char *argv[], parse_data prs_data)
 {
     switch (prs_data->cmd) {
         case FAIL:
+        case QUIT:
             break;
         case NEWTABLE:
         case USETABLE:

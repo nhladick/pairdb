@@ -7,7 +7,8 @@ enum CMD {
     NEWTABLE,
     USETABLE,
     ADD,
-    DELETE
+    DELETE,
+    QUIT
 };
 
 typedef struct parse_object *parse_data;

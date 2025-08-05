@@ -36,9 +36,11 @@ int main(int argc, char *argv[])
             case DELETE:
                 printf("del\n");
                 break;
+            case QUIT:
+                printf("quit\n");
+                run_loop = false;
+                break;
         }
-
-        run_loop = false;
     }
 
     destroy_parse_data(prs_data);
