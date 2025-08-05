@@ -12,7 +12,7 @@
 #define VAL_MAX 100
 #define MAX_ARGS 5
 
-enum parse_cmd {
+enum CMD {
     FAIL,
     NEWTABLE,
     USETABLE,
@@ -21,7 +21,7 @@ enum parse_cmd {
 };
 
 struct parse_object {
-    enum parse_cmd cmd;
+    enum CMD cmd;
     char *tbl_name;
     char *key;
     char *val;
@@ -67,6 +67,25 @@ static void tokenize(char *inbuff, char *argv[])
     }
 }
 
+static enum CMD parse_cmd(char *str_cmd)
+{
+    if (strcmp(str_cmd, "newtable") == 0) {
+        return NEWTABLE;
+    }
+    else if (strcmp(str_cmd, "use") == 0) {
+        return USETABLE;
+    }
+    else if (strcmp(str_cmd, "add") == 0) {
+        return ADD;
+    }
+    else if (strcmp(str_cmd, "del") == 0) {
+        return DELETE;
+    }
+    else {
+        return FAIL;
+    }
+}
+
 parse_data init_parse_data()
 {
     parse_data ptr = calloc(1, sizeof(struct parse_object));
@@ -96,6 +115,7 @@ void parse_input(char *inbuff, parse_data prs_data)
 
     tokenize(inbuff, argv);
 
+    prs_data->cmd = parse_cmd(argv[0]);
 
 }
 

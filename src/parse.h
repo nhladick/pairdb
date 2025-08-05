@@ -1,7 +1,7 @@
 #ifndef PARSE_H
 #define PARSE_H
 
-enum parse_cmd;
+enum CMD;
 typedef struct parse_object *parse_data;
 
 parse_data init_parse_data();
