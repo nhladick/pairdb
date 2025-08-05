@@ -23,8 +23,18 @@ int main(int argc, char *argv[])
 
         fgets(inbuff, INBUFF_SIZE, stdin);
         parse_input(inbuff, prs_data);
+        enum CMD input_cmd = get_input_cmd(prs_data);
 
-        switch (get_input_cmd(prs_data)) {
+        if (input_cmd != NEWTABLE &&
+            input_cmd != USETABLE &&
+            input_cmd != FAIL &&
+            (get_tbl_name(prs_data))[0] == '\0') {
+                printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
+                clear_kv_buffs(prs_data);
+                continue;
+            }
+
+        switch (input_cmd) {
             case FAIL:
                 printf("fail\n");
                 break;
