@@ -25,12 +25,25 @@ struct parse_object {
 
 static void preprocess(char *cp)
 {
+    // remove newline char from fgets
+    // end points to null char
     char *end = &cp[strlen(cp) - 1];
     *end = '\0';
+
     bool inquote = false;
 
     for (; cp < end; cp++) {
-        if (*cp == ' ') {
+        // determine whether cp is within a quoted section
+        // check for single and double quote chars
+        if (*cp == '"' || *cp == '\'') {
+            if (inquote == false) {
+                inquote = true;
+            }
+            else {
+                inquote = false;
+            }
+        }
+        if (!inquote && *cp == ' ') {
             *cp = '\t';
         }
     }
