@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
         // 'use <tbl_name>' or 'newtbl <tbl_name>' will set
         // the table name that will be used until another
         // 'use' or 'newtbl' command is received
-        if (input_cmd != NEWTABLE &&
-            input_cmd != USETABLE &&
-            input_cmd != FAIL &&     // include FAIL to go to syntax error handle
+        // include FAIL to go to syntax error handle
+        if (input_cmd != FAIL &&
+            input_cmd != QUIT &&
             (get_tbl_name(prs_data))[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
                 // clear key and val buffers in prs_data
