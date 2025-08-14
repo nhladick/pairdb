@@ -174,7 +174,7 @@ void parse_input(char *inbuff, parse_data prs_data)
 
     char *argv[MAX_ARGS];
 
-    for (int i = 0; i < MAX_ARGS; i++) {
+    for (size_t i = 0; i < MAX_ARGS; i++) {
         argv[i] = NULL;
     }
 
