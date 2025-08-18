@@ -91,6 +91,19 @@ static void arr_insert(hashtbl tbl, struct node *np)
     np->tblpos = i;
 }
 
+static void free_node(struct node *np)
+{
+    if (np->key) {
+        free(np->key);
+    }
+
+    if (np->val) {
+        free(np->val);
+    }
+
+    free(np);
+}
+
 /*
  *
  ********* End - static/internal functions ********
@@ -116,6 +129,18 @@ hashtbl init_hashtbl(size_t tblsize)
     ptr->numentries = 0;
 
     return ptr;
+}
+
+void destroy_hashtbl(hashtbl tbl)
+{
+    for (size_t i = 0; i < tbl->arrsize; i++) {
+        if (tbl->arr[i]) {
+            free_node(tbl->arr[i]);
+        }
+    }
+
+    free(tbl->arr);
+    free(tbl);
 }
 
 /*
