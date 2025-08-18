@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 
 #include "hashtable.h"
 #include "buffsizes.h"
@@ -18,6 +19,12 @@
 
 
 // Data structures
+struct hashtbl_obj {
+    struct node **arr;
+    size_t arrsize;
+    size_t numentries;
+};
+
 struct node {
     char *key;
     char *val;
@@ -25,49 +32,11 @@ struct node {
     size_t tblpos;
 };
 
-struct hashtbl_obj {
-    struct node **arr;
-    size_t arrsize;
-    size_t numentries;
-};
-
-
-// Hash table functions
-hashtbl init_hashtbl(size_t tblsize)
-{
-    hashtbl ptr = malloc(sizeof(struct hashtbl_obj));
-    if (!ptr) {
-        return NULL;
-    }
-
-    ptr->arr = malloc(sizeof(struct node *) * tblsize);
-    if (!ptr->arr) {
-        free(ptr);
-        return NULL;
-    }
-
-    ptr->arrsize = tblsize;
-    ptr->numentries = 0;
-
-    return ptr;
-}
-
-void put(char *key, char *val)
-{
-    struct node *np = calloc(1, sizeof(struct node));
-}
-
-size_t get_tbl_size(hashtbl ht)
-{
-    return ht->arrsize;
-}
-
-
 /*
- *
- ********* Start - static/internal functions ********
- *
- */
+*
+********* Start - static/internal functions ********
+*
+*/
 
 static double get_load_factor(hashtbl ht)
 {
@@ -98,8 +67,76 @@ static unsigned int fnv_hash(void *p_in)
     return hval;
 }
 
+static void arr_insert(struct node *arr[], struct node *np)
+{
+    return;
+}
+
 /*
  *
  ********* End - static/internal functions ********
  *
  */
+
+
+// Hash table functions
+hashtbl init_hashtbl(size_t tblsize)
+{
+    hashtbl ptr = calloc(1, sizeof(struct hashtbl_obj));
+    if (!ptr) {
+        return NULL;
+    }
+
+    ptr->arr = calloc(tblsize, sizeof(struct node *));
+    if (!ptr->arr) {
+        free(ptr);
+        return NULL;
+    }
+
+    ptr->arrsize = tblsize;
+    ptr->numentries = 0;
+
+    return ptr;
+}
+
+/*
+ *
+ * put function
+ * input - two strings, key and val, to be copied to table
+ * (not dependent on original char buffers after returning)
+ * output - -1 on failure, 1 on success
+ * memory must be freed after successful call
+ * (node string elements created with strndup, must be freed,
+ * node itself must be freed)
+ *
+ */
+
+int put(hashtbl tbl, char *key, char *val)
+{
+    struct node *np = calloc(1, sizeof(struct node));
+    if (!np) {
+        return -1;
+    }
+
+    np->key = strndup(key, KEY_MAX);
+    if (!np->key) {
+        free(np);
+        return -1;
+    }
+
+    np->val = strndup(val, VAL_MAX);
+    if (!np->val) {
+        free(np->key);
+        free(np);
+        return -1;
+    }
+
+    np->hashval = fnv_hash(np->key);
+    np->tblpos = np->hashval % tbl->arrsize;
+}
+
+size_t get_tbl_size(hashtbl ht)
+{
+    return ht->arrsize;
+}
+
