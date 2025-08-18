@@ -41,7 +41,7 @@ struct node {
 
 /*
 *
-********* Start - static/internal functions ********
+************* Start - static/internal functions ************
 *
 */
 
@@ -111,9 +111,28 @@ static void free_node(struct node *np)
     free(np);
 }
 
+static ssize_t get_index_by_key(hashtbl tbl, char *key)
+{
+    struct node **arr = tbl->arr;
+    ssize_t i = fnv_hash(key) % tbl->arrsize;
+    size_t j = 0;
+
+    for (i, j; j < tbl->arrsize; i = (i + 1) % tbl->arrsize, j++) {
+        if (!arr[i]) {
+            continue;
+        }
+
+        if (strcmp(key, arr[i]->key) == 0) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 /*
  *
- ********* End - static/internal functions ********
+ ************* End - static/internal functions ************
  *
  */
 
@@ -187,9 +206,15 @@ int put(hashtbl tbl, char *key, char *val)
     return 1;
 }
 
-void remove(hashtbl tbl, char *key)
+void delete(hashtbl tbl, char *key)
 {
-    return;
+    ssize_t i = get_index_by_key(tbl, key);
+    if (i < 0) {
+        return;
+    }
+
+    free_node(tbl->arr[i]);
+    tbl->arr[i] = NULL;
 }
 
 size_t get_tbl_size(hashtbl tbl)
@@ -201,13 +226,13 @@ size_t get_tbl_size(hashtbl tbl)
 void print_tbl(hashtbl tbl)
 {
     for (size_t i = 0; i < tbl->arrsize; i++) {
-        printf("node %d\n", i);
+        printf("node %lu\n", i);
         struct node *np = tbl->arr[i];
         if (np) {
             printf("key: %s\n", np->key);
             printf("val: %s\n", np->val);
-            printf("hval: %d\n", np->hashval);
-            printf("tblpos: %d\n", np->tblpos);
+            printf("hval: %u\n", np->hashval);
+            printf("tblpos: %lu\n", np->tblpos);
         }
         else {
             printf("NULL\n");
