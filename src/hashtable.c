@@ -1,12 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-
-
-
-
 #include <stdio.h>
-
-
 
 #include "hashtable.h"
 #include "buffsizes.h"
@@ -25,7 +19,14 @@
 #define FNV_PRIME 0x01000193 // FNV hash
 
 
-// Data structures
+/*
+ *
+ **************** Data structures ****************
+ *
+ */
+
+// all hashtable operations performed using pointer
+// to hashtbl_obj - pointer defined in header file
 struct hashtbl_obj {
     struct node **arr;
     size_t arrsize;
@@ -50,16 +51,11 @@ static double get_load_factor(hashtbl ht)
     return ht->numentries / ht->arrsize;
 }
 
-/*
- *
- * Fowler/Noll/Vo hash function
- * In public domain - see links
- * https://github.com/lcn2/fnv/tree/master
- * https://github.com/lcn2/fnv/blob/master/LICENSE
- * https://github.com/lcn2/fnv/blob/master/hash_32a.c
- *
- */
-
+// Fowler/Noll/Vo hash function
+// In public domain - see links
+// https://github.com/lcn2/fnv/tree/master
+// https://github.com/lcn2/fnv/blob/master/LICENSE
+// https://github.com/lcn2/fnv/blob/master/hash_32a.c
 static unsigned int fnv_hash(void *p_in)
 {
     unsigned int hval = HVAL_INIT;
@@ -73,13 +69,8 @@ static unsigned int fnv_hash(void *p_in)
     return hval;
 }
 
-/*
- *
- *  insert to hash table array using
- *  linear probing for collisions
- *
- */
-
+// insert to hash table array using
+// linear probing for collisions
 static void arr_insert(hashtbl tbl, struct node *np)
 {
     // start with initial expected index
@@ -87,14 +78,16 @@ static void arr_insert(hashtbl tbl, struct node *np)
     size_t i = np->hashval % tbl->arrsize;
 
     // find first NULL element of arr
+    // starting at expected index
     while (tbl->arr[i]) {
         i = (i + 1) % tbl->arrsize;
     }
 
-    // insert pointer
+    // insert pointer to array
     tbl->arr[i] = np;
 
-    // cache table position for loading from disk
+    // cache table position for faster
+    // loading from disk
     np->tblpos = i;
 }
 
@@ -111,13 +104,14 @@ static void free_node(struct node *np)
     free(np);
 }
 
+// find hash table array index by key string
+// returns -1 if key not found
 static ssize_t get_index_by_key(hashtbl tbl, char *key)
 {
     struct node **arr = tbl->arr;
     ssize_t i = fnv_hash(key) % tbl->arrsize;
-    size_t j = 0;
 
-    for (i, j; j < tbl->arrsize; i = (i + 1) % tbl->arrsize, j++) {
+    for (size_t j = 0; j < tbl->arrsize; i = (i + 1) % tbl->arrsize, j++) {
         if (!arr[i]) {
             continue;
         }
@@ -137,7 +131,19 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
  */
 
 
-// Hash table functions
+
+/*
+ *
+ *************** Hash table public functions ***************
+ *
+ */
+
+
+// returns handle to hash table object allocated on heap
+// returns NULL on failure
+// on success, all array elements (node pointers) set to NULL
+// empty array elements will always be NULL when using
+// hash table functions
 hashtbl init_hashtbl(size_t tblsize)
 {
     hashtbl ptr = calloc(1, sizeof(struct hashtbl_obj));
@@ -157,6 +163,8 @@ hashtbl init_hashtbl(size_t tblsize)
     return ptr;
 }
 
+// frees all heap allocated components of table
+// and frees table
 void destroy_hashtbl(hashtbl tbl)
 {
     for (size_t i = 0; i < tbl->arrsize; i++) {
@@ -169,18 +177,19 @@ void destroy_hashtbl(hashtbl tbl)
     free(tbl);
 }
 
-/*
- *
- * put function
- * input: two strings, key and val, to be copied to table
- * (not dependent on original char buffers after returning)
- * output: -1 on failure, 1 on success
- * memory must be freed after successful call
- * (node string elements created with strndup, must be freed,
- * node itself must be freed)
- *
- */
 
+// put function
+//
+// input: two strings, key and val, to be copied to table
+// (no reference to original char buffers after returning)
+//
+// output: -1 on failure, 1 on success
+//
+// memory must be freed with delete or destroy functions
+// after successful call
+//
+// (node string elements created with strndup, must be freed,
+// node itself must be freed)
 int put(hashtbl tbl, char *key, char *val)
 {
     struct node *np = calloc(1, sizeof(struct node));
@@ -201,11 +210,19 @@ int put(hashtbl tbl, char *key, char *val)
         return -1;
     }
 
+    // hash value stored within node for quicker
+    // loading from disk and quicker execution
+    // of array expansion when necessary
     np->hashval = fnv_hash(np->key);
+
     arr_insert(tbl, np);
     return 1;
 }
 
+// removes node (key, value, hash value, arr position)
+// from hash table and frees allocated memory
+// idempotent - running multiple times on the same
+// key has no effect
 void delete(hashtbl tbl, char *key)
 {
     ssize_t i = get_index_by_key(tbl, key);
@@ -222,7 +239,7 @@ size_t get_tbl_size(hashtbl tbl)
     return tbl->arrsize;
 }
 
-
+// prints node info to stdout for debugging
 void print_tbl(hashtbl tbl)
 {
     for (size_t i = 0; i < tbl->arrsize; i++) {
