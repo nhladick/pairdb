@@ -1,6 +1,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
+
+#include <stdio.h>
+
+
+
 #include "hashtable.h"
 #include "buffsizes.h"
 
@@ -180,8 +187,36 @@ int put(hashtbl tbl, char *key, char *val)
     return 1;
 }
 
-size_t get_tbl_size(hashtbl ht)
+void remove(hashtbl tbl, char *key)
 {
-    return ht->arrsize;
+    return;
 }
+
+size_t get_tbl_size(hashtbl tbl)
+{
+    return tbl->arrsize;
+}
+
+
+void print_tbl(hashtbl tbl)
+{
+    for (size_t i = 0; i < tbl->arrsize; i++) {
+        printf("node %d\n", i);
+        struct node *np = tbl->arr[i];
+        if (np) {
+            printf("key: %s\n", np->key);
+            printf("val: %s\n", np->val);
+            printf("hval: %d\n", np->hashval);
+            printf("tblpos: %d\n", np->tblpos);
+        }
+        else {
+            printf("NULL\n");
+        }
+        printf("\n");
+    }
+}
+
+
+
+
 
