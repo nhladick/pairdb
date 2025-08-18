@@ -43,7 +43,6 @@ static double get_load_factor(hashtbl ht)
     return ht->numentries / ht->arrsize;
 }
 
-
 /*
  *
  * Fowler/Noll/Vo hash function
@@ -67,9 +66,29 @@ static unsigned int fnv_hash(void *p_in)
     return hval;
 }
 
-static void arr_insert(struct node *arr[], struct node *np)
+/*
+ *
+ *  insert to hash table array using
+ *  linear probing for collisions
+ *
+ */
+
+static void arr_insert(hashtbl tbl, struct node *np)
 {
-    return;
+    // start with initial expected index
+    // using hash function
+    size_t i = np->hashval % tbl->arrsize;
+
+    // find first NULL element of arr
+    while (tbl->arr[i]) {
+        i = (i + 1) % tbl->arrsize;
+    }
+
+    // insert pointer
+    tbl->arr[i] = np;
+
+    // cache table position for loading from disk
+    np->tblpos = i;
 }
 
 /*
@@ -102,9 +121,9 @@ hashtbl init_hashtbl(size_t tblsize)
 /*
  *
  * put function
- * input - two strings, key and val, to be copied to table
+ * input: two strings, key and val, to be copied to table
  * (not dependent on original char buffers after returning)
- * output - -1 on failure, 1 on success
+ * output: -1 on failure, 1 on success
  * memory must be freed after successful call
  * (node string elements created with strndup, must be freed,
  * node itself must be freed)
@@ -132,7 +151,8 @@ int put(hashtbl tbl, char *key, char *val)
     }
 
     np->hashval = fnv_hash(np->key);
-    np->tblpos = np->hashval % tbl->arrsize;
+    arr_insert(tbl, np);
+    return 1;
 }
 
 size_t get_tbl_size(hashtbl ht)
