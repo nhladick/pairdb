@@ -1,10 +1,23 @@
 #include <stdlib.h>
 
 #include "hashtable.h"
+#include "buffsizes.h"
 
-#define HVAL_INIT 0x811c9dc5
-#define FNV_PRIME 0x01000193
+/*
+ *
+ * Values for Fowler/Noll/Vo hash function
+ * In public domain - see links
+ * https://github.com/lcn2/fnv/tree/master
+ * https://github.com/lcn2/fnv/blob/master/LICENSE
+ * https://github.com/lcn2/fnv/blob/master/hash_32a.c
+ *
+ */
 
+#define HVAL_INIT 0x811c9dc5 // FNV hash
+#define FNV_PRIME 0x01000193 // FNV hash
+
+
+// Data structures
 struct node {
     char *key;
     char *val;
@@ -17,6 +30,8 @@ struct hashtbl_obj {
     size_t numentries;
 };
 
+
+// Hash table functions
 hashtbl init_hashtbl(size_t tblsize)
 {
     hashtbl ptr = malloc(sizeof(struct hashtbl_obj));
@@ -36,10 +51,22 @@ hashtbl init_hashtbl(size_t tblsize)
     return ptr;
 }
 
+void put(char *key, char *val)
+{
+    struct node *np = calloc(1, sizeof(struct node));
+}
+
 size_t get_tbl_size(hashtbl ht)
 {
     return ht->arrsize;
 }
+
+
+/*
+ *
+ ********* Start - static/internal functions ********
+ *
+ */
 
 static double get_load_factor(hashtbl ht)
 {
@@ -70,18 +97,8 @@ static unsigned int fnv_hash(void *p_in)
     return hval;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+ *
+ ********* End - static/internal functions ********
+ *
+ */
