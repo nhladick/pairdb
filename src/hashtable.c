@@ -21,7 +21,8 @@
 struct node {
     char *key;
     char *val;
-    struct node *next;
+    unsigned int hashval;
+    size_t tblpos;
 };
 
 struct hashtbl_obj {
