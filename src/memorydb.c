@@ -5,4 +5,4 @@
 struct db_object {
     // hash table handle
     //
-}
+};

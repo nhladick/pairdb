@@ -14,6 +14,7 @@ struct node {
 struct hashtbl_obj {
     struct node **arr;
     size_t arrsize;
+    size_t numentries;
 };
 
 hashtbl init_hashtbl(size_t tblsize)
@@ -30,6 +31,7 @@ hashtbl init_hashtbl(size_t tblsize)
     }
 
     ptr->arrsize = tblsize;
+    ptr->numentries = 0;
 
     return ptr;
 }
@@ -39,6 +41,21 @@ size_t get_tbl_size(hashtbl ht)
     return ht->arrsize;
 }
 
+static double get_load_factor(hashtbl ht)
+{
+    return ht->numentries / ht->arrsize;
+}
+
+
+/*
+ *
+ * Fowler/Noll/Vo hash function
+ * In public domain - see links
+ * https://github.com/lcn2/fnv/tree/master
+ * https://github.com/lcn2/fnv/blob/master/LICENSE
+ * https://github.com/lcn2/fnv/blob/master/hash_32a.c
+ *
+ */
 
 static unsigned int fnv_hash(void *p_in)
 {

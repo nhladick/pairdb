@@ -6,10 +6,8 @@
 #include <stdio.h>
 
 #include "parse.h"
+#include "buffsizes.h"
 
-#define TBL_NAME_MAX 32
-#define KEY_MAX 100
-#define VAL_MAX 100
 #define MAX_ARGS 5
 
 struct parse_object {
