@@ -28,7 +28,7 @@ $(BUILD)main.o: $(SRC)parse.h $(SRC)memorydb.h
 $(BUILD)parse.o: $(SRC)parse.h $(SRC)buffsizes.h
 $(BUILD)fileio.o: $(SRC)fileio.h
 $(BUILD)memorydb.o: $(SRC)memorydb.h $(SRC)fileio.h $(SRC)hashtable.h $(SRC)buffsizes.h
-$(BUILD)hashtable.o: $(SRC)hashtable.h
+$(BUILD)hashtable.o: $(SRC)hashtable.h $(SRC)buffsizes.h
 
 clean:
 	rm -rf $(BUILD)
