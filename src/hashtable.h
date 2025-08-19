@@ -7,12 +7,12 @@
 typedef struct hashtbl_obj *hashtbl;
 
 
-// create table with init_hashtbl function
-// hash table and all data allocated on heap
-// free with destroy_hashtbl function
+// Create table with init_hashtbl function.
+// Hash table and all data allocated on heap.
+// Free with destroy_hashtbl function.
 
-// returns handle to hash table object allocated on heap
-// returns NULL on failure
+// Returns handle to hash table object allocated on heap.
+// Returns NULL on failure.
 hashtbl init_hashtbl(size_t tblsize);
 
 void destroy_hashtbl(hashtbl tbl);
