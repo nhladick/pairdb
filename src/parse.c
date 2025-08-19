@@ -2,9 +2,6 @@
 #include <string.h>
 #include <stdbool.h>
 
-// remove after testing
-#include <stdio.h>
-
 #include "parse.h"
 #include "keydbstring.h"
 
@@ -181,14 +178,6 @@ void parse_input(char *inbuff, parse_data prs_data)
     prs_data->cmd = parse_cmd(argv[0]);
 
     parse_args(argv, prs_data);
-
-    printf("cmd: %d\n", prs_data->cmd);
-    if (prs_data->tbl_name)
-        printf("tbl: %s\n", prs_data->tbl_name);
-    if (prs_data->key)
-        printf("k: %s\n", prs_data->key);
-    if (prs_data->val)
-        printf("v: %s\n", prs_data->val);
 }
 
 enum CMD get_input_cmd(parse_data prs_data)
