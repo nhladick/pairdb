@@ -71,13 +71,8 @@ static unsigned int fnv_hash(void *p_in)
 
 // insert to hash table array using
 // linear probing for collisions
-// returns 1 on success, -1 on failure
-/*********************** to do: use getbyindex function to reject existing adds*/
-static int arr_insert(hashtbl tbl, struct node *np)
+static void arr_insert(hashtbl tbl, struct node *np)
 {
-    // check if key already exists
-
-
     // start with initial expected index
     // using hash function
     size_t i = np->hashval % tbl->arrsize;
@@ -188,7 +183,9 @@ void destroy_hashtbl(hashtbl tbl)
 // input: two strings, key and val, to be copied to table
 // (no reference to original char buffers after returning)
 //
-// output: -1 on failure, 1 on success
+// output: -1 if key already exists,
+//         -2 on memory allocation failure,
+//          1 on success
 //
 // memory must be freed with delete or destroy functions
 // after successful call
@@ -197,22 +194,27 @@ void destroy_hashtbl(hashtbl tbl)
 // node itself must be freed)
 int put(hashtbl tbl, char *key, char *val)
 {
+    // stop if key already exists
+    if (get_index_by_key(tbl, key) >= 0) {
+        return -1;
+    }
+
     struct node *np = calloc(1, sizeof(struct node));
     if (!np) {
-        return -1;
+        return -2;
     }
 
     np->key = strndup(key, KEY_MAX - 1);
     if (!np->key) {
         free(np);
-        return -1;
+        return -2;
     }
 
     np->val = strndup(val, VAL_MAX - 1);
     if (!np->val) {
         free(np->key);
         free(np);
-        return -1;
+        return -2;
     }
 
     // hash value stored within node for quicker
@@ -224,7 +226,7 @@ int put(hashtbl tbl, char *key, char *val)
     return 1;
 }
 
-size_t find(char *out_buff, size_t buff_size, hashtbl tbl, char *key)
+size_t find(char *dst, size_t dsize, hashtbl tbl, char *key)
 {
     struct node **arr = tbl->arr;
     ssize_t i = get_index_by_key(tbl, key);
@@ -233,8 +235,9 @@ size_t find(char *out_buff, size_t buff_size, hashtbl tbl, char *key)
         return 0;
     }
 
-    char *val = arr[i]->val;
+    ssize_t cpy = strtcpy(dst, arr[i]->val, dsize);
 
+    return (cpy < 0) ? dsize - 1 : cpy;
 }
 
 // removes node (key, value, hash value, arr position)

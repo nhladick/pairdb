@@ -20,18 +20,20 @@ void destroy_hashtbl(hashtbl tbl);
 size_t get_tbl_size(hashtbl tbl);
 
 // put
-// input: two strings, key and val, to be added to table
-// output: -1 on failure, 1 on success
-// attempt to add key that already exists results in failure
+// Input: two strings, key and val, to be added to table.
+// Output: -1 if key already exists,
+//         -2 on memory allocation failure,
+//          1 on success.
+// Attempt to add key that already exists results in failure.
 int put(hashtbl tbl, char *key, char *val);
 
-// searches for value associated with key
-// if found, copies value to out_buff
-// caller is responsible for allocating
-// and managing out_buff
-// function returns length of value string
-// function returns 0 if value not found
-size_t find(char *out_buff, size_t buff_size, hashtbl tbl, char *key);
+// Searches for value associated with key.
+// If found, copies value to dst.
+// Caller is responsible for allocating
+// and managing dst.
+// Returns length of value string copied to dst.
+// Returns 0 on error or if value not found.
+size_t find(char *dst, size_t dsize, hashtbl tbl, char *key);
 
 // key and value removed
 // running multiple times on same key has no effect
