@@ -101,22 +101,22 @@ static void parse_args(char *argv[], parse_data prs_data)
                 prs_data->cmd = FAIL;
                 return;
             }
-            strncpy(prs_data->tbl_name, argv[1], TBL_NAME_MAX - 1);
+            strtcpy(prs_data->tbl_name, argv[1], TBL_NAME_MAX);
             break;
         case ADD:
             if (argv[1] == NULL || argv[2] == NULL) {
                 prs_data->cmd = FAIL;
                 return;
             }
-            strncpy(prs_data->key, argv[1], KEY_MAX - 1);
-            strncpy(prs_data->val, argv[2], VAL_MAX - 1);
+            strtcpy(prs_data->key, argv[1], KEY_MAX);
+            strtcpy(prs_data->val, argv[2], VAL_MAX);
             break;
         case DELETE:
             if (argv[1] == NULL) {
                 prs_data->cmd = FAIL;
                 return;
             }
-            strncpy(prs_data->key, argv[1], KEY_MAX - 1);
+            strtcpy(prs_data->key, argv[1], KEY_MAX);
             break;
     }
 }
