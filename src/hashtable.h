@@ -25,6 +25,14 @@ size_t get_tbl_size(hashtbl tbl);
 // attempt to add key that already exists results in failure
 int put(hashtbl tbl, char *key, char *val);
 
+// searches for value associated with key
+// if found, copies value to out_buff
+// caller is responsible for allocating
+// and managing out_buff
+// function returns length of value string
+// function returns 0 if value not found
+size_t find(char *out_buff, size_t buff_size, hashtbl tbl, char *key);
+
 // key and value removed
 // running multiple times on same key has no effect
 void delete(hashtbl tbl, char *key);

@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "hashtable.h"
-#include "buffsizes.h"
+#include "keydbstring.h"
 
 /*
  *
@@ -71,8 +71,13 @@ static unsigned int fnv_hash(void *p_in)
 
 // insert to hash table array using
 // linear probing for collisions
-static void arr_insert(hashtbl tbl, struct node *np)
+// returns 1 on success, -1 on failure
+/*********************** to do: use getbyindex function to reject existing adds*/
+static int arr_insert(hashtbl tbl, struct node *np)
 {
+    // check if key already exists
+
+
     // start with initial expected index
     // using hash function
     size_t i = np->hashval % tbl->arrsize;
@@ -197,13 +202,13 @@ int put(hashtbl tbl, char *key, char *val)
         return -1;
     }
 
-    np->key = strndup(key, KEY_MAX);
+    np->key = strndup(key, KEY_MAX - 1);
     if (!np->key) {
         free(np);
         return -1;
     }
 
-    np->val = strndup(val, VAL_MAX);
+    np->val = strndup(val, VAL_MAX - 1);
     if (!np->val) {
         free(np->key);
         free(np);
@@ -217,6 +222,19 @@ int put(hashtbl tbl, char *key, char *val)
 
     arr_insert(tbl, np);
     return 1;
+}
+
+size_t find(char *out_buff, size_t buff_size, hashtbl tbl, char *key)
+{
+    struct node **arr = tbl->arr;
+    ssize_t i = get_index_by_key(tbl, key);
+
+    if (i < 0) {
+        return 0;
+    }
+
+    char *val = arr[i]->val;
+
 }
 
 // removes node (key, value, hash value, arr position)

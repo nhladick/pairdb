@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #include "parse.h"
-#include "buffsizes.h"
+#include "keydbstring.h"
 
 #define MAX_ARGS 5
 
