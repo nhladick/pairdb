@@ -18,6 +18,15 @@
 #define HVAL_INIT 0x811c9dc5 // FNV hash
 #define FNV_PRIME 0x01000193 // FNV hash
 
+/*
+ *
+ * Values for resizing hash table array
+ *
+ */
+
+#define RESIZE_FACTOR 2
+#define LOAD_FACT_LIM 0.65
+
 
 /*
  *
@@ -48,7 +57,7 @@ struct node {
 
 static double get_load_factor(hashtbl ht)
 {
-    return ht->numentries / ht->arrsize;
+    return (double) ht->numentries / ht->arrsize;
 }
 
 // Fowler/Noll/Vo hash function
@@ -122,6 +131,31 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
     }
 
     return -1;
+}
+
+// resize tbl array when load factor reaches LOAD_FACT_LIM
+// returns 1 if successful
+// returns -1 on memory allocation failure
+static int resize(hashtbl tbl)
+{
+    struct node **prevarr = tbl->arr;
+    tbl->arr = NULL;
+    size_t prevsize = tbl->arrsize;
+    tbl->arrsize *= RESIZE_FACTOR;
+    tbl->arr = calloc(tbl->arrsize, sizeof(struct node *));
+    if (!tbl->arr) {
+        return -1;
+    }
+
+    for (size_t i = 0; i < prevsize; i++) {
+        if (prevarr[i]) {
+            arr_insert(tbl, prevarr[i]);
+        }
+    }
+
+    free(prevarr);
+
+    return 1;
 }
 
 /*
@@ -199,6 +233,13 @@ int put(hashtbl tbl, char *key, char *val)
         return -1;
     }
 
+    // resize table array if load factor > LOAD_FACT_LIM
+    if (get_load_factor(tbl) > LOAD_FACT_LIM) {
+        if (resize(tbl) < 0) {
+            return -2;
+        }
+    }
+
     struct node *np = calloc(1, sizeof(struct node));
     if (!np) {
         return -2;
@@ -223,6 +264,7 @@ int put(hashtbl tbl, char *key, char *val)
     np->hashval = fnv_hash(np->key);
 
     arr_insert(tbl, np);
+    tbl->numentries++;
     return 1;
 }
 
