@@ -17,7 +17,7 @@ UNITY_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/refs/heads/ma
 
 TARGET = $(BUILD)keydb
 
-.PHONY: all clean init-test
+.PHONY: all clean init-test test
 
 all: $(TARGET)
 
@@ -43,3 +43,8 @@ init-test:
 	for file in $(TEST_FILES); do \
 		wget -P $(TEST) $(UNITY_URL)$$file; \
 	done
+
+test:
+	$(CC) -o test/test_parse src/parse.c src/keydbstring.c test/test_parse.c test/unity.c
+	./test/test_parse > test/test_output.txt
+	cat test/test_output.txt
