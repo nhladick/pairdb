@@ -295,6 +295,7 @@ void delete(hashtbl tbl, char *key)
 
     free_node(tbl->arr[i]);
     tbl->arr[i] = NULL;
+    tbl->numentries--;
 }
 
 size_t get_tbl_size(hashtbl tbl)
