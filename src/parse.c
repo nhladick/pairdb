@@ -47,7 +47,7 @@ static void tokenize(char *inbuff, char *argv[])
     char *temp = strtok(inbuff, delim);
     argv[0] = temp;
 
-    for (int i = 1; i < MAX_ARGS && temp; i++) {
+    for (size_t i = 1; i < MAX_ARGS && temp; i++) {
         temp = strtok(NULL, delim);
         argv[i] = temp;
     }
