@@ -133,9 +133,3 @@ void parse_input(char *inbuff, struct parse_object *prs_data)
 
     parse_args(argv, prs_data);
 }
-
-void clear_kv_buffs(struct parse_object *prs_data)
-{
-    memset(prs_data->key, 0, KEY_MAX);
-    memset(prs_data->val, 0, VAL_MAX);
-}

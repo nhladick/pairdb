@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
             parse_data.cmd != QUIT &&
             parse_data.tbl_name[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
-                // clear key and val buffers in prs_data
-                clear_kv_buffs(&parse_data);
                 continue;
             }
 
@@ -58,7 +56,5 @@ int main(int argc, char *argv[])
                 run_loop = false;
                 break;
         }
-        // clear key and val buffers in prs_data
-        clear_kv_buffs(&parse_data);
     }
 }

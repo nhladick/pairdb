@@ -22,6 +22,5 @@ struct parse_object {
 };
 
 void parse_input(char *inbuff, struct parse_object *prs_data);
-void clear_kv_buffs(struct parse_object *prs_data);
 
 #endif // PARSE_H
