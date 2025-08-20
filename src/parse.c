@@ -185,11 +185,6 @@ enum CMD get_input_cmd(parse_data prs_data)
     return prs_data->cmd;
 }
 
-const char *get_tbl_name(parse_data prs_data)
-{
-    return (const char *) prs_data->tbl_name;
-}
-
 void clear_kv_buffs(parse_data prs_data)
 {
     memset(prs_data->key, 0, KEY_MAX);
