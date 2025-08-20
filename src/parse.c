@@ -173,11 +173,6 @@ void parse_input(char *inbuff, parse_data prs_data)
     parse_args(argv, prs_data);
 }
 
-enum CMD get_input_cmd(parse_data prs_data)
-{
-    return prs_data->cmd;
-}
-
 void clear_kv_buffs(parse_data prs_data)
 {
     memset(prs_data->key, 0, KEY_MAX);
