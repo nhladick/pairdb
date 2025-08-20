@@ -24,10 +24,10 @@ int main(int argc, char *argv[])
         fgets(inbuff, INBUFF_SIZE, stdin);
         parse_input(inbuff, &parse_data);
 
-        // 'use <tbl_name>' or 'newtbl <tbl_name>' will set
-        // the table name that will be used until another
-        // 'use' or 'newtbl' command is received
-        // include FAIL to go to syntax error handle
+        // Commands 'use <tbl_name>' or 'newtbl <tbl_name>'
+        // will set the table name that will be used until
+        // another 'use' or 'newtbl' command is received.
+        // Include FAIL to go to syntax error handle.
         if (parse_data.cmd != FAIL &&
             parse_data.cmd != QUIT &&
             parse_data.tbl_name[0] == '\0') {

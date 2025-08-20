@@ -5,7 +5,6 @@
 
 #include "keydbstring.h"
 
-// data types
 enum CMD {
     FAIL,
     NEWTABLE,
@@ -22,7 +21,6 @@ struct parse_object {
     char val[VAL_MAX];
 };
 
-// object use functions
 void parse_input(char *inbuff, struct parse_object *prs_data);
 void clear_kv_buffs(struct parse_object *prs_data);
 
