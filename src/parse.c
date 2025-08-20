@@ -121,11 +121,7 @@ void parse_input(char *inbuff, struct parse_object *prs_data)
 {
     preprocess(inbuff);
 
-    char *argv[MAX_ARGS];
-
-    for (size_t i = 0; i < MAX_ARGS; i++) {
-        argv[i] = NULL;
-    }
+    char *argv[MAX_ARGS] = {NULL};
 
     tokenize(inbuff, argv);
 
