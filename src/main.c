@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         // include FAIL to go to syntax error handle
         if (input_cmd != FAIL &&
             input_cmd != QUIT &&
-            (get_tbl_name(prs_data))[0] == '\0') {
+            (prs_data->tbl_name)[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
                 // clear key and val buffers in prs_data
                 clear_kv_buffs(prs_data);

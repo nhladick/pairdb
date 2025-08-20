@@ -13,6 +13,13 @@ enum CMD {
     QUIT
 };
 
+struct parse_object {
+    enum CMD cmd;
+    char *tbl_name;
+    char *key;
+    char *val;
+};
+
 typedef struct parse_object *parse_data;
 
 // object lifecycle functions

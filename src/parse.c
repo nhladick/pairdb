@@ -7,13 +7,6 @@
 
 #define MAX_ARGS 5
 
-struct parse_object {
-    enum CMD cmd;
-    char *tbl_name;
-    char *key;
-    char *val;
-};
-
 /*
  *
  ********** start - static/internal functions **********
