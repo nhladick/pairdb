@@ -3,6 +3,7 @@ CFLAGS = -Wall
 
 SRC = src/
 BUILD = build/
+TEST = test
 
 OBJ = $(BUILD)main.o \
 	  $(BUILD)parse.o \
@@ -11,9 +12,12 @@ OBJ = $(BUILD)main.o \
 	  $(BUILD)hashtable.o \
 	  $(BUILD)keydbstring.o
 
+TEST_FILES = unity.c unity.h unity_internals.h
+UNITY_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/refs/heads/master/src/
+
 TARGET = $(BUILD)keydb
 
-.PHONY: all clean
+.PHONY: all clean init-test
 
 all: $(TARGET)
 
@@ -34,3 +38,8 @@ $(BUILD)keydbstring.o: $(SRC)keydbstring.h
 
 clean:
 	rm -rf $(BUILD)
+
+init-test:
+	for file in $(TEST_FILES); do \
+		wget -P $(TEST) $(UNITY_URL)$$file; \
+	done
