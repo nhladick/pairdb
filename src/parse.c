@@ -120,12 +120,8 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
 void parse_input(char *inbuff, struct parse_object *prs_data)
 {
     preprocess(inbuff);
-
     char *argv[MAX_ARGS] = {NULL};
-
     tokenize(inbuff, argv);
-
     prs_data->cmd = parse_cmd(argv[0]);
-
     parse_args(argv, prs_data);
 }
