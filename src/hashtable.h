@@ -18,6 +18,7 @@ hashtbl init_hashtbl(size_t tblsize);
 void destroy_hashtbl(hashtbl tbl);
 
 size_t get_tbl_size(hashtbl tbl);
+size_t get_numentries(hashtbl tbl);
 
 // put
 // Input: two strings, key and val, to be added to table.

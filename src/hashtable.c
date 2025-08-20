@@ -303,6 +303,11 @@ size_t get_tbl_size(hashtbl tbl)
     return tbl->arrsize;
 }
 
+size_t get_numentries(hashtbl tbl)
+{
+    return tbl->numentries;
+}
+
 // prints node info to stdout for debugging
 void print_tbl(hashtbl tbl)
 {
