@@ -79,7 +79,7 @@ static enum CMD parse_cmd(char *str_cmd)
     }
 }
 
-static void parse_args(char *argv[], parse_data prs_data)
+static void parse_args(char *argv[], struct parse_object *prs_data)
 {
     switch (prs_data->cmd) {
         case FAIL:
@@ -117,46 +117,7 @@ static void parse_args(char *argv[], parse_data prs_data)
  *
  */
 
-parse_data init_parse_data()
-{
-    parse_data ptr = calloc(1, sizeof(struct parse_object));
-    if (!ptr) {
-        return NULL;
-    }
-
-    ptr->tbl_name = calloc(1, TBL_NAME_MAX);
-    if (!ptr->tbl_name) {
-        free(ptr);
-        return NULL;
-    }
-
-    ptr->key = calloc(1, KEY_MAX);
-    if (!ptr->key) {
-        free(ptr->tbl_name);
-        free(ptr);
-        return NULL;
-    }
-
-    ptr->val = calloc(1, VAL_MAX);
-    if (!ptr->val) {
-        free(ptr->key);
-        free(ptr->tbl_name);
-        free(ptr);
-        return NULL;
-    }
-
-    return ptr;
-}
-
-void destroy_parse_data(parse_data ptr)
-{
-    free(ptr->tbl_name);
-    free(ptr->key);
-    free(ptr->val);
-    free(ptr);
-}
-
-void parse_input(char *inbuff, parse_data prs_data)
+void parse_input(char *inbuff, struct parse_object *prs_data)
 {
     preprocess(inbuff);
 
@@ -173,7 +134,7 @@ void parse_input(char *inbuff, parse_data prs_data)
     parse_args(argv, prs_data);
 }
 
-void clear_kv_buffs(parse_data prs_data)
+void clear_kv_buffs(struct parse_object *prs_data)
 {
     memset(prs_data->key, 0, KEY_MAX);
     memset(prs_data->val, 0, VAL_MAX);

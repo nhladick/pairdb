@@ -3,6 +3,8 @@
 
 #include <stddef.h>
 
+#include "keydbstring.h"
+
 // data types
 enum CMD {
     FAIL,
@@ -15,19 +17,13 @@ enum CMD {
 
 struct parse_object {
     enum CMD cmd;
-    char *tbl_name;
-    char *key;
-    char *val;
+    char tbl_name[TBL_NAME_MAX];
+    char key[KEY_MAX];
+    char val[VAL_MAX];
 };
 
-typedef struct parse_object *parse_data;
-
-// object lifecycle functions
-parse_data init_parse_data();
-void destroy_parse_data(parse_data ptr);
-
 // object use functions
-void parse_input(char *inbuff, parse_data prs_data);
-void clear_kv_buffs(parse_data prs_data);
+void parse_input(char *inbuff, struct parse_object *prs_data);
+void clear_kv_buffs(struct parse_object *prs_data);
 
 #endif // PARSE_H

@@ -10,12 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    parse_data prs_data = init_parse_data();
-    if (!prs_data) {
-        fprintf(stderr, "Unable to allocate memory\n");
-        exit(EXIT_FAILURE);
-    }
-
+    struct parse_object parse_data = {0};
     char inbuff[INBUFF_SIZE];
 
     bool run_loop = true;
@@ -27,23 +22,22 @@ int main(int argc, char *argv[])
         printf("keydb>> ");
 
         fgets(inbuff, INBUFF_SIZE, stdin);
-        parse_input(inbuff, prs_data);
-        enum CMD input_cmd = get_input_cmd(prs_data);
+        parse_input(inbuff, &parse_data);
 
         // 'use <tbl_name>' or 'newtbl <tbl_name>' will set
         // the table name that will be used until another
         // 'use' or 'newtbl' command is received
         // include FAIL to go to syntax error handle
-        if (input_cmd != FAIL &&
-            input_cmd != QUIT &&
-            (prs_data->tbl_name)[0] == '\0') {
+        if (parse_data.cmd != FAIL &&
+            parse_data.cmd != QUIT &&
+            parse_data.tbl_name[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
                 // clear key and val buffers in prs_data
-                clear_kv_buffs(prs_data);
+                clear_kv_buffs(&parse_data);
                 continue;
             }
 
-        switch (input_cmd) {
+        switch (parse_data.cmd) {
             case FAIL:
                 printf("fail\n");
                 break;
@@ -65,8 +59,6 @@ int main(int argc, char *argv[])
                 break;
         }
         // clear key and val buffers in prs_data
-        clear_kv_buffs(prs_data);
+        clear_kv_buffs(&parse_data);
     }
-
-    destroy_parse_data(prs_data);
 }
