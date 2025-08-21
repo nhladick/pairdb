@@ -45,6 +45,28 @@ init-test:
 	done
 
 test:
-	$(CC) -o test/test_parse src/parse.c src/keydbstring.c test/test_parse.c test/unity.c
-	./test/test_parse > test/test_output.txt
+	# Runs all tests with output to test/test_output.txt
+	# Prints output file to stdout upon completion
+	# If a test fails, output is not printed to stdout
+	# (make notifies that a program had error output and
+	# and doesn't continue)
+	# Check test/test_output.txt for results
+
+	# parse tests
+	$(CC) -o test/test_parse test/test_parse.c test/unity.c src/parse.c src/keydbstring.c
+	echo "---------- Parse Tests ------------" > test/test_output.txt
+	./test/test_parse >> test/test_output.txt
+
+	# hashtable tests
+	$(CC) -o test/test_hashtable test/test_hashtable.c test/unity.c src/hashtable.c \
+	src/keydbstring.c
+	echo "---------- Hashtable Tests ------------" >> test/test_output.txt
+	./test/test_hashtable >> test/test_output.txt
+
+	# hashtable memory allocation/deallocation test
+	$(CC) -o test/test_mem_hashtable test/test_mem_hashtable.c src/hashtable.c src/keydbstring.c
+	echo "---------- Hashtable Memory Test ------------" >> test/test_output.txt
+	valgrind ./test/test_mem_hashtable 2>> test/test_output.txt
+
+	# print to stdout
 	cat test/test_output.txt
