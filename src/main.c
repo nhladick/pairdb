@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
         // Include FAIL to go to syntax error handle.
         if (parse_data.cmd != FAIL &&
             parse_data.cmd != QUIT &&
+            parse_data.cmd != HELP &&
             parse_data.tbl_name[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
                 continue;
@@ -48,8 +49,17 @@ int main(int argc, char *argv[])
             case ADD:
                 printf("add\n");
                 break;
+            case GET:
+                printf("get\n");
+                break;
             case DELETE:
                 printf("del\n");
+                break;
+            case SAVE:
+                printf("save\n");
+                break;
+            case HELP:
+                printf("help\n");
                 break;
             case QUIT:
                 printf("quit\n");
