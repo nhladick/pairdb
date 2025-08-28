@@ -94,6 +94,7 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
         case FAIL:
         case QUIT:
         case SAVE:
+        case HELP:
             break;
         case NEWTABLE:
         case USETABLE:
