@@ -4,9 +4,15 @@
 #include <sys/types.h>
 
 // maximum buffer sizes
-#define TBL_NAME_MAX 32
-#define KEY_MAX 100
-#define VAL_MAX 100
+//#define TBL_NAME_MAX 32
+//#define KEY_MAX 100
+//#define VAL_MAX 100
+
+enum {
+    TBL_NAME_MAX = 32,
+    KEY_MAX = 100,
+    VAL_MAX = 100
+};
 
 /*
  * Public domain string copy function
