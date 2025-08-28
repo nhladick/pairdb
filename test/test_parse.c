@@ -81,6 +81,17 @@ void test_cmd_enum_and_str_add(void)
     TEST_ASSERT_EQUAL_STRING("val1", parse_data.val);
 }
 
+// Test get command - enum value and key string
+void test_cmd_enum_and_str_get(void)
+{
+    struct parse_object parse_data = {0};
+    char inbuff[] = "get key1\n";
+    parse_input(inbuff, &parse_data);
+    enum CMD cmd = GET;
+    TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
+    TEST_ASSERT_EQUAL_STRING("key1", parse_data.key);
+}
+
 // Test del command - enum value and key str
 void test_cmd_enum_and_str_del(void)
 {
@@ -112,6 +123,7 @@ int main(void)
     RUN_TEST(test_cmd_enum_and_str_nt);
     RUN_TEST(test_cmd_enum_and_str_ut);
     RUN_TEST(test_cmd_enum_and_str_add);
+    RUN_TEST(test_cmd_enum_and_str_get);
     RUN_TEST(test_cmd_enum_and_str_del);
     RUN_TEST(test_cmd_enum_quit);
 
