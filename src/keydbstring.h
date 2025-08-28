@@ -3,11 +3,7 @@
 
 #include <sys/types.h>
 
-// maximum buffer sizes
-//#define TBL_NAME_MAX 32
-//#define KEY_MAX 100
-//#define VAL_MAX 100
-
+// maximum buffer size constants
 enum {
     TBL_NAME_MAX = 32,
     KEY_MAX = 100,
