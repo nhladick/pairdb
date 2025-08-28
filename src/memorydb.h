@@ -23,6 +23,6 @@ size_t get(char *dst, size_t dsize, db_obj dbo, char *key);
 
 // key and value removed
 // running multiple times on same key has no effect
-void remove(db_obj dbo, char *key);
+void db_remove(db_obj dbo, char *key);
 
 #endif // MEMORYDB_H
