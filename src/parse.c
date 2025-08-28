@@ -77,6 +77,9 @@ static enum CMD parse_cmd(char *str_cmd)
     else if (strcmp(str_cmd, "save") == 0) {
         return SAVE;
     }
+    else if (strcmp(str_cmd, "help") == 0) {
+        return HELP;
+    }
     else if (strcmp(str_cmd, "quit") == 0) {
         return QUIT;
     }
