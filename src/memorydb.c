@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "memorydb.h"
-#include "fileio.h"
 #include "hashtable.h"
 #include "keydbstring.h"
 

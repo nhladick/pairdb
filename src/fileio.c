@@ -1,6 +1,4 @@
 #include <stdio.h>
 
-void fileio_stub()
-{
-    printf("in file io\n");
-}
+#include "memorydb.h"
+#include "hashtable.h"
