@@ -4,7 +4,7 @@
 #include "hashtable.h"
 #include "keydbstring.h"
 
-#define INIT_TBL_SIZE 32
+static const size_t INIT_TBL_SIZE = 32;
 
 struct db_object {
     hashtbl tbl;

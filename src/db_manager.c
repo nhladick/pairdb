@@ -5,3 +5,7 @@
 #include "memorydb.h"
 #include "fileio.h"
 
+struct db_manager {
+    hashtbl active_tbls;
+
+};

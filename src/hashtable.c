@@ -15,8 +15,8 @@
  *
  */
 
-#define HVAL_INIT 0x811c9dc5 // FNV hash
-#define FNV_PRIME 0x01000193 // FNV hash
+static const unsigned int HVAL_INIT = 0x811c9dc5; // FNV hash
+static const unsigned int FNV_PRIME = 0x01000193; // FNV hash
 
 /*
  *
@@ -24,8 +24,8 @@
  *
  */
 
-#define RESIZE_FACTOR 2
-#define LOAD_FACT_LIM 0.65
+static const unsigned int RESIZE_FACTOR = 2;
+static const double LOAD_FACT_LIM = 0.65;
 
 
 /*

@@ -7,7 +7,7 @@
 #include "db_manager.h"
 #include "memorydb.h"
 
-#define INBUFF_SIZE 256
+static const size_t INBUFF_SIZE = 256;
 
 int main(int argc, char *argv[])
 {

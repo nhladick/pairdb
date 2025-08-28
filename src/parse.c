@@ -5,7 +5,7 @@
 #include "parse.h"
 #include "keydbstring.h"
 
-#define MAX_ARGS 5
+static const size_t MAX_ARGS = 5;
 
 /*
  *
