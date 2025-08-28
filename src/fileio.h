@@ -4,8 +4,6 @@
 #include "fileio.h"
 #include "memorydb.h"
 
-void save_db()
-
-
+void save_db();
 
 #endif // FILEIO_H

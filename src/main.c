@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "parse.h"
+#include "db_manager.h"
 #include "memorydb.h"
 
 #define INBUFF_SIZE 256

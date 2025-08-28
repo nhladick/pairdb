@@ -10,7 +10,8 @@ OBJ = $(BUILD)main.o \
 	  $(BUILD)fileio.o \
 	  $(BUILD)memorydb.o \
 	  $(BUILD)hashtable.o \
-	  $(BUILD)keydbstring.o
+	  $(BUILD)keydbstring.o \
+	  $(BUILD)db_manager.o
 
 TEST_FILES = unity.c unity.h unity_internals.h
 UNITY_URL = https://raw.githubusercontent.com/ThrowTheSwitch/Unity/refs/heads/master/src/
@@ -29,12 +30,13 @@ $(BUILD)%.o: $(SRC)%.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILD)main.o: $(SRC)parse.h $(SRC)memorydb.h
+$(BUILD)main.o: $(SRC)parse.h $(SRC)memorydb.h $(SRC)db_manager.h
 $(BUILD)parse.o: $(SRC)parse.h $(SRC)keydbstring.h
 $(BUILD)fileio.o: $(SRC)fileio.h $(SRC)memorydb.h $(SRC)hashtable.h
 $(BUILD)memorydb.o: $(SRC)memorydb.h $(SRC)hashtable.h $(SRC)keydbstring.h
 $(BUILD)hashtable.o: $(SRC)hashtable.h $(SRC)keydbstring.h
 $(BUILD)keydbstring.o: $(SRC)keydbstring.h
+$(BUILD)db_manager.o: $(SRC)db_manager.h $(SRC)memorydb.h $(SRC)fileio.h
 
 clean:
 	rm -rf $(BUILD)
