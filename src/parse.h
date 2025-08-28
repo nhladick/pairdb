@@ -12,6 +12,7 @@ enum CMD {
     ADD,
     GET,
     DELETE,
+    SAVE,
     QUIT
 };
 
