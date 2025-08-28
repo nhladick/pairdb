@@ -113,6 +113,16 @@ void test_cmd_enum_save(void)
     TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
 }
 
+// Test help command enum value
+void test_cmd_enum_help(void)
+{
+    struct parse_object parse_data = {0};
+    char inbuff[] = "help\n";
+    parse_input(inbuff, &parse_data);
+    enum CMD cmd = HELP;
+    TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
+}
+
 // Test quit command enum value
 void test_cmd_enum_quit(void)
 {
@@ -136,6 +146,7 @@ int main(void)
     RUN_TEST(test_cmd_enum_and_str_get);
     RUN_TEST(test_cmd_enum_and_str_del);
     RUN_TEST(test_cmd_enum_save);
+    RUN_TEST(test_cmd_enum_help);
     RUN_TEST(test_cmd_enum_quit);
 
     return UNITY_END();
