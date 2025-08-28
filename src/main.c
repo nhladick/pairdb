@@ -13,8 +13,9 @@ int main(int argc, char *argv[])
     struct parse_object parse_data = {0};
     char inbuff[INBUFF_SIZE];
 
-    bool run_loop = true;
+    db_obj dbo = NULL;
 
+    bool run_loop = true;
     while (run_loop) {
         // clear input buffer
         memset(inbuff, 0, INBUFF_SIZE);
@@ -27,7 +28,8 @@ int main(int argc, char *argv[])
         // Commands 'use <tbl_name>' or 'newtbl <tbl_name>'
         // will set the table name that will be used until
         // another 'use' or 'newtbl' command is received.
-        // Include FAIL to go to syntax error handle.
+        // FAIL, QUIT, HELP are bypassed - no table needed
+        // for these commands.
         if (parse_data.cmd != FAIL &&
             parse_data.cmd != QUIT &&
             parse_data.cmd != HELP &&
@@ -41,19 +43,31 @@ int main(int argc, char *argv[])
                 printf("fail\n");
                 break;
             case NEWTABLE:
-                printf("newtbl\n");
+                dbo = init_db_obj(parse_data.tbl_name);
                 break;
             case USETABLE:
                 printf("usetable\n");
                 break;
             case ADD:
-                printf("add\n");
+                int result = add(dbo, parse_data.key, parse_data.val);
+                if (result == -1) {
+                    printf("Key %s already exists\n", parse_data.key);
+                }
+                else if (result == -2) {
+                    printf("Memory allocation error\n");
+                }
                 break;
             case GET:
-                printf("get\n");
+                char buff[VAL_MAX];
+                if (get(buff, VAL_MAX, dbo, parse_data.key) == 0) {
+                    printf("Value not found\n");
+                }
+                else {
+                    printf("%s\n", buff);
+                }
                 break;
             case DELETE:
-                printf("del\n");
+                db_remove(dbo, parse_data.key);
                 break;
             case SAVE:
                 printf("save\n");
