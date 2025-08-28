@@ -5,7 +5,9 @@
 #include "parse.h"
 #include "keydbstring.h"
 
-static const size_t MAX_ARGS = 5;
+enum {
+    MAX_ARGS = 5
+};
 
 /*
  *
