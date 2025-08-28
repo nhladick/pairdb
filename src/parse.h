@@ -10,6 +10,7 @@ enum CMD {
     NEWTABLE,
     USETABLE,
     ADD,
+    GET,
     DELETE,
     QUIT
 };

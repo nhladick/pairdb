@@ -68,6 +68,9 @@ static enum CMD parse_cmd(char *str_cmd)
     else if (strcmp(str_cmd, "add") == 0) {
         return ADD;
     }
+    else if (strcmp(str_cmd, "get") == 0) {
+        return GET;
+    }
     else if (strcmp(str_cmd, "del") == 0) {
         return DELETE;
     }
@@ -101,6 +104,12 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
             strtcpy(prs_data->key, argv[1], KEY_MAX);
             strtcpy(prs_data->val, argv[2], VAL_MAX);
             break;
+        case GET:
+            if (argv[1] == NULL) {
+                prs_data->cmd = FAIL;
+                return;
+            }
+            strtcpy(prs_data->key, argv[1], KEY_MAX);
         case DELETE:
             if (argv[1] == NULL) {
                 prs_data->cmd = FAIL;
