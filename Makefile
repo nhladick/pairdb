@@ -36,7 +36,7 @@ $(BUILD)fileio.o: $(SRC)fileio.h $(SRC)memorydb.h $(SRC)hashtable.h
 $(BUILD)memorydb.o: $(SRC)memorydb.h $(SRC)hashtable.h $(SRC)keydbstring.h
 $(BUILD)hashtable.o: $(SRC)hashtable.h $(SRC)keydbstring.h
 $(BUILD)keydbstring.o: $(SRC)keydbstring.h
-$(BUILD)db_manager.o: $(SRC)db_manager.h $(SRC)memorydb.h $(SRC)fileio.h
+$(BUILD)db_manager.o: $(SRC)db_manager.h $(SRC)hashtable.h $(SRC)memorydb.h $(SRC)fileio.h
 
 clean:
 	rm -rf $(BUILD)
