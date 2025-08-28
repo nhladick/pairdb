@@ -3,7 +3,7 @@
 
 typedef struct db_object *db_obj;
 
-db_obj init_db_obj();
+db_obj init_db_obj(char *tblname);
 void destroy_db_obj(db_obj dbo);
 
 // Input: two strings, key and val, to be added to database.

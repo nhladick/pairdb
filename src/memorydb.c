@@ -12,7 +12,7 @@ struct db_object {
     char *tblname;
 };
 
-db_obj init_db_obj()
+db_obj init_db_obj(char *tblname)
 {
     db_obj ptr = calloc(1, sizeof(struct db_object));
     if (!ptr) {
@@ -30,6 +30,8 @@ db_obj init_db_obj()
         free(ptr);
         return NULL;
     }
+
+    strtcpy(ptr->tblname, tblname, TBL_NAME_MAX);
 
     return ptr;
 }
