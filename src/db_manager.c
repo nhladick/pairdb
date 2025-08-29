@@ -12,7 +12,6 @@ static const size_t INIT_HASHTBL_SIZE = 32;
 
 struct db_manager {
     hashtbl active_tbls;
-
 };
 
 /*
@@ -33,6 +32,7 @@ int load_tbl_list(const char *fname, hashtbl tbl)
 {
     FILE *inf = fopen(fname, "r");
     if (!inf) {
+        fclose(inf);
         return -1;
     }
 
@@ -73,7 +73,11 @@ db_mgr init_db_mgr()
         return NULL;
     }
 
-    load_tbl_list(TBL_LIST_FNAME, ptr->active_tbls);
+    if (load_tbl_list(TBL_LIST_FNAME, ptr->active_tbls) < 0) {
+        free(ptr->active_tbls);
+        free(ptr);
+        return NULL;
+    }
 
     return ptr;
 }
@@ -83,3 +87,20 @@ void destroy_db_mgr(db_mgr dbm)
     free(dbm->active_tbls);
     free(dbm);
 }
+
+db_obj get_new_tbl(db_mgr dbm, char *tblname)
+{
+    if (exists(dbm->active_tbls, tblname)) {
+        return NULL;
+    }
+
+    return init_db_obj(tblname);
+}
+
+
+
+
+
+
+
+
