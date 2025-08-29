@@ -2,6 +2,7 @@
 #define HASHTABLE_H
 
 #include <stddef.h>
+#include <stdbool.h>
 
 // hashtable object handle
 typedef struct hashtbl_obj *hashtbl;
@@ -35,6 +36,8 @@ int put(hashtbl tbl, char *key, char *val);
 // Returns length of value string copied to dst.
 // Returns 0 on error or if value not found.
 size_t find(char *dst, size_t dsize, hashtbl tbl, char *key);
+
+bool exists(hashtbl tbl, char *key);
 
 // key and value removed
 // running multiple times on same key has no effect

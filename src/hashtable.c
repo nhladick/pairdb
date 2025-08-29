@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "hashtable.h"
 #include "keydbstring.h"
@@ -280,6 +281,14 @@ size_t find(char *dst, size_t dsize, hashtbl tbl, char *key)
     ssize_t cpy = strtcpy(dst, arr[i]->val, dsize);
 
     return (cpy < 0) ? dsize - 1 : cpy;
+}
+
+bool exists(hashtbl tbl, char *key)
+{
+    if (get_index_by_key(tbl, key) < 0) {
+        return false;
+    }
+    return true;
 }
 
 // removes node (key, value, hash value, arr position)
