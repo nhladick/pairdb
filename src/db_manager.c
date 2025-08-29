@@ -32,7 +32,6 @@ int load_tbl_list(const char *fname, hashtbl tbl)
 {
     FILE *inf = fopen(fname, "r");
     if (!inf) {
-        fclose(inf);
         return -1;
     }
 
