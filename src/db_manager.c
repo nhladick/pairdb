@@ -6,7 +6,6 @@
 #include "hashtable.h"
 #include "memorydb.h"
 #include "keydbstring.h"
-#include "fileio.h"
 
 // Update to absolute path
 static const char *TBL_LIST_FNAME = "tbl_list";
