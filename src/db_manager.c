@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "db_manager.h"
 #include "hashtable.h"
@@ -7,7 +8,9 @@
 #include "keydbstring.h"
 #include "fileio.h"
 
-static const char *TBL_LIST_FNAME = "../data/tbl_list";
+// Update to absolute path
+static const char *TBL_LIST_FNAME = "tbl_list";
+
 static const size_t INIT_HASHTBL_SIZE = 32;
 
 struct db_manager {
@@ -44,6 +47,7 @@ int load_tbl_list(const char *fname, hashtbl tbl)
 
     for (int i = 0; i < len; i++) {
         fgets(buff, TBL_NAME_MAX, inf);
+        buff[strlen(buff) - 1] = '\0';
         // Leave val field empty
         put(tbl, buff, "");
     }

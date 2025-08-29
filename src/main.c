@@ -14,7 +14,11 @@ int main(int argc, char *argv[])
     struct parse_object parse_data = {0};
     char inbuff[INBUFF_SIZE];
 
-    db_obj dbo = NULL;
+    db_mgr dbmgr = init_db_mgr();
+    if (!dbmgr) {
+        exit(EXIT_FAILURE);
+    }
+    db_obj dbobj;
 
     bool run_loop = true;
     while (run_loop) {
@@ -31,9 +35,10 @@ int main(int argc, char *argv[])
         // another 'use' or 'newtbl' command is received.
         // FAIL, QUIT, HELP are bypassed - no table needed
         // for these commands.
-        if (parse_data.cmd != FAIL &&
-            parse_data.cmd != QUIT &&
-            parse_data.cmd != HELP &&
+        if ((parse_data.cmd == ADD ||
+            parse_data.cmd == GET ||
+            parse_data.cmd == DELETE ||
+            parse_data.cmd == SAVE) &&
             parse_data.tbl_name[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
                 continue;
@@ -44,13 +49,18 @@ int main(int argc, char *argv[])
                 printf("fail\n");
                 break;
             case NEWTABLE:
-                dbo = init_db_obj(parse_data.tbl_name);
+                dbobj = get_new_tbl(dbmgr, parse_data.tbl_name);
+                if (!dbobj) {
+                    printf("Table already exists or an error occurred\n");
+                    // Reset table name field in parse_object
+                    parse_data.tbl_name[0] = '\0';
+                }
                 break;
             case USETABLE:
                 printf("usetable\n");
                 break;
             case ADD:
-                int result = add(dbo, parse_data.key, parse_data.val);
+                int result = add(dbobj, parse_data.key, parse_data.val);
                 if (result == -1) {
                     printf("Key %s already exists\n", parse_data.key);
                 }
@@ -60,7 +70,7 @@ int main(int argc, char *argv[])
                 break;
             case GET:
                 char buff[VAL_MAX];
-                if (get(buff, VAL_MAX, dbo, parse_data.key) == 0) {
+                if (get(buff, VAL_MAX, dbobj, parse_data.key) == 0) {
                     printf("Value not found\n");
                 }
                 else {
@@ -68,7 +78,7 @@ int main(int argc, char *argv[])
                 }
                 break;
             case DELETE:
-                db_remove(dbo, parse_data.key);
+                db_remove(dbobj, parse_data.key);
                 break;
             case SAVE:
                 printf("save\n");
@@ -81,5 +91,9 @@ int main(int argc, char *argv[])
                 run_loop = false;
                 break;
         }
+    }
+    destroy_db_mgr(dbmgr);
+    if (dbobj) {
+        destroy_db_obj(dbobj);
     }
 }
