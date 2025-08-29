@@ -4,5 +4,6 @@
 typedef struct db_manager *db_mgr;
 
 db_mgr init_db_mgr();
+void destroy_db_mgr(db_mgr dbm);
 
 #endif // DB_MANAGER_H
