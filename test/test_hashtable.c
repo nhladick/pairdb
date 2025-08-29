@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <stdbool.h>
 
 #include "unity.h"
 #include "../src/hashtable.h"
@@ -117,6 +118,19 @@ void test_find(void)
     destroy_hashtbl(tbl);
 }
 
+void test_exists(void)
+{
+    hashtbl tbl = init_hashtbl(4);
+    put(tbl, "key1", "val1");
+    bool result1 = exists(tbl, "key1");
+    TEST_ASSERT_EQUAL_INT(true, result1);
+
+    bool result2 = exists(tbl, "key2");
+    TEST_ASSERT_EQUAL_INT(false, result2);
+
+    destroy_hashtbl(tbl);
+}
+
 
 int main(void)
 {
@@ -127,6 +141,7 @@ int main(void)
     RUN_TEST(test_put_and_delete_size);
     RUN_TEST(test_resize);
     RUN_TEST(test_find);
+    RUN_TEST(test_exists);
 
     return UNITY_END();
 }
