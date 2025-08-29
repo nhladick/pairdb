@@ -77,3 +77,9 @@ db_mgr init_db_mgr()
 
     return ptr;
 }
+
+void destroy_db_mgr(db_mgr dbm)
+{
+    free(dbm->active_tbls);
+    free(dbm);
+}
