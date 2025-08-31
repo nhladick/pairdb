@@ -25,4 +25,9 @@ size_t get(char *dst, size_t dsize, db_obj dbo, char *key);
 // running multiple times on same key has no effect
 void db_remove(db_obj dbo, char *key);
 
+// Copies tblname to dst.
+// Returns length of value string copied to dst.
+// Returns 0 on error.
+size_t get_tblname(db_obj dbo, char *dst, size_t dsize);
+
 #endif // MEMORYDB_H
