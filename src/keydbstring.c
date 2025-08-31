@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include "keydbstring.h"
 
@@ -38,3 +39,40 @@ ssize_t strtcpy(char *restrict dst, const char *restrict src, size_t dsize)
 
     return trunc ? -1 : slen;
 }
+
+/*
+ * Generates a random nul-terminated string
+ * of length len - 1 using characters listed
+ * below. Writes string and nul char to dst.
+ *
+ * Characters:
+ *      - ascii digits 0 through 9
+ *      - letters a through z
+ *
+ * Note: works only on Linux or BSD-like
+ * systems - uses /dev/urandom
+ */
+
+void getrandstr(char *dst, size_t len)
+{
+    const char charset[] = "0123456789abcdefghijklmnopqrstuvwxyz";
+    size_t cslen = strlen(charset);
+
+    unsigned int ruint;
+    FILE *f = fopen("/dev/urandom", "r");
+
+    for (size_t i = 0; i < len - 1; i++) {
+        fread(&ruint, sizeof(ruint), 1, f);
+        dst[i] = charset[ruint % cslen];
+    }
+    dst[len - 1] = '\0';
+    fclose(f);
+}
+
+
+
+
+
+
+
+

@@ -29,4 +29,19 @@ enum {
 
 ssize_t strtcpy(char *restrict dst, const char *restrict src, size_t dsize);
 
+/*
+ * Generates a random nul-terminated string
+ * of length len - 1 using characters listed
+ * below. Writes string and nul char to dst.
+ *
+ * Characters:
+ *      - ascii digits 0 through 9
+ *      - letters a through z
+ *
+ * Note: works only on Linux or BSD-like
+ * systems - uses /dev/urandom
+ */
+
+void getrandstr(char *dst, size_t len);
+
 #endif // KEYDBSTRING_H
