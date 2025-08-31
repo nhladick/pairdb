@@ -81,5 +81,5 @@ size_t get_tblname(db_obj dbo, char *dst, size_t dsize)
 
 hashtbl get_hashtbl(db_obj dbo)
 {
-    return tbl;
+    return dbo->tbl;
 }
