@@ -336,7 +336,125 @@ void print_tbl(hashtbl tbl)
     }
 }
 
+// Write (binary) all key-val pairs and
+// metadata to file stream provided.
+// Writes starting at location pointed
+// to by stream. Input stream should
+// be set to write ("w") mode.
+// Returns number of items written.
+size_t hashtbl_to_file(hashtbl tbl, FILE *outf)
+{
+    if (!tbl || !outf) {
+        return 0;
+    }
 
+    // File format:
+    // arrsize          (sizeof(size_t)) bytes
+    // numentries       (sizeof(size_t)) bytes
+    // list of nodes with no separation:
+    //      key len     (sizeof(size_t)) bytes
+    //      key         (strlen(key)) bytes
+    //      val len     (sizeof(size_t)) bytes
+    //      val         (strlen(val)) bytes
+    //      hashval     (sizeof(unsigned int)) bytes
+    //      tblpos      (sizeof(size_t)) bytes
+
+    size_t writecnt = 0;
+
+    // Write arrsize
+    writecnt += fwrite(&tbl->arrsize, sizeof(size_t), 1, outf);
+
+    // Write numentries
+    writecnt += fwrite(&tbl->numentries, sizeof(size_t), 1, outf);
+
+    size_t tbllen = get_tbl_size(tbl);
+    size_t keylen;
+    size_t vallen;
+    struct node *nptr = NULL;
+    for (size_t i = 0; i < tbllen; i++) {
+        if (tbl->arr[i]) {
+            nptr = tbl->arr[i];
+
+            // key
+            keylen = strlen(nptr->key) + 1;
+            // Write keylen
+            writecnt += fwrite(&keylen, sizeof(size_t), 1, outf);
+            // Write key
+            writecnt += fwrite(nptr->key, keylen, 1, outf);
+
+            // val
+            vallen = strlen(nptr->val) + 1;
+            // Write vallen
+            writecnt += fwrite(&vallen, sizeof(size_t), 1, outf);
+            // Write val
+            writecnt += fwrite(nptr->val, vallen, 1, outf);
+
+            // Write hashval
+            writecnt += fwrite(&nptr->hashval, sizeof(unsigned int), 1, outf);
+
+            // Write tblpos
+            writecnt += fwrite(&nptr->tblpos, sizeof(size_t), 1, outf);
+        }
+    }
+    return writecnt;
+}
+
+// Load hashtable from file - expects
+// format provided by hashtbl_to_file.
+// Input - FILE pointer to open file.
+// Returns - pointer to hashtable
+// allocated on heap.
+hashtbl load_hashtbl_from_file(FILE *inf)
+{
+    if (!inf) {
+        return NULL;
+    }
+
+    // Read arrsize
+    size_t arrsize;
+    fread(&arrsize, sizeof(size_t), 1, inf);
+
+    // Read numentries
+    size_t numentries;
+    fread(&numentries, sizeof(size_t), 1, inf);
+
+    hashtbl tbl = init_hashtbl(arrsize);
+
+    char keybuff[KEY_MAX] = {0};
+    char valbuff[VAL_MAX] = {0};
+    size_t keylen;
+    size_t vallen;
+    struct node *nptr = NULL;
+    for (size_t i = 0; i < numentries; i++) {
+        nptr = calloc(1, sizeof(struct node));
+
+        // Read keylen
+        fread(&keylen, sizeof(size_t), 1, inf);
+
+        // Read key
+        fread(keybuff, keylen, 1, inf);
+        nptr->key = strndup(keybuff, KEY_MAX - 1);
+
+        // Read vallen
+        fread(&vallen, sizeof(size_t), 1, inf);
+
+        // Read val
+        fread(valbuff, vallen, 1, inf);
+        nptr->val = strndup(valbuff, VAL_MAX - 1);
+
+        // Read hashval
+        fread(&nptr->hashval, sizeof(unsigned int), 1, inf);
+
+        // Read tblpos
+        fread(&nptr->tblpos, sizeof(size_t), 1, inf);
+
+        // Add to array
+        tbl->arr[nptr->tblpos] = nptr;
+        tbl->numentries++;
+    }
+
+    return tbl;
+}
 
 
 

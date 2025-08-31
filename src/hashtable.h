@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 // hashtable object handle
 typedef struct hashtbl_obj *hashtbl;
@@ -45,5 +46,20 @@ void delete(hashtbl tbl, char *key);
 
 // print key and value pairs stored in table
 void print_tbl(hashtbl tbl);
+
+// Write (binary) all key-val pairs and
+// metadata to file stream provided.
+// Writes starting at location pointed
+// to by stream. Input stream should
+// be set to write ("w") mode.
+// Returns number of items written.
+size_t hashtbl_to_file(hashtbl tbl, FILE *outf);
+
+// Load hashtable from file - expects
+// format provided by hashtbl_to_file.
+// Input - FILE pointer to open file.
+// Returns - pointer to hashtable
+// allocated on heap.
+hashtbl load_hashtbl_from_file(FILE *inf);
 
 #endif // HASHTABLE_H
