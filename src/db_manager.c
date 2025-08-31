@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "db_manager.h"
 #include "hashtable.h"
@@ -19,52 +20,6 @@ struct db_manager {
     hashtbl active_tbls;
 };
 
-/*
- *
- ******** Start - static / internal functions ********
- *
- *
- */
-
-// Read table list file from disk.
-//      file format:
-//          line 1: int file_length
-//          line 2...line n: file names, one per line
-// Populate hashtable with file name strings.
-// Returns 1 on success.
-// Returns -1 on failure.
-int load_tbl_list(const char *fname, hashtbl tbl)
-{
-    FILE *inf = fopen(fname, "r");
-    if (!inf) {
-        return -1;
-    }
-
-    char buff[TBL_NAME_MAX];
-
-    // Get length of file list
-    // from first line of file
-    fgets(buff, TBL_NAME_MAX, inf);
-    int len = atoi(buff);
-
-    for (int i = 0; i < len; i++) {
-        fgets(buff, TBL_NAME_MAX, inf);
-        buff[strlen(buff) - 1] = '\0';
-        // Leave val field empty
-        put(tbl, buff, "");
-    }
-
-    fclose(inf);
-    return 1;
-}
-
-/*
- *
- ******** End - static / internal functions ********
- *
- *
- */
-
 db_mgr init_db_mgr()
 {
     db_mgr ptr = calloc(1, sizeof(struct db_manager));
@@ -72,14 +27,20 @@ db_mgr init_db_mgr()
         return NULL;
     }
 
-    ptr->active_tbls = init_hashtbl(INIT_HASHTBL_SIZE);
-    if (!ptr->active_tbls) {
-        free(ptr);
-        return NULL;
+    // Check whether tbl_list file exists
+    if (access(TBL_LIST_FNAME, F_OK) == 0) {
+        // If exists, load tbl from file
+        FILE *inf = fopen(TBL_LIST_FNAME, "r");
+        ptr->active_tbls = load_hashtbl_from_file(inf);
+        fclose(inf);
+    }
+    else {
+        // If it doesn't exist, create new hashtable
+        // to be written when db_mgr object is freed
+        ptr->active_tbls = init_hashtbl(INIT_HASHTBL_SIZE);
     }
 
-    if (load_tbl_list(TBL_LIST_FNAME, ptr->active_tbls) < 0) {
-        free(ptr->active_tbls);
+    if (!ptr->active_tbls) {
         free(ptr);
         return NULL;
     }
