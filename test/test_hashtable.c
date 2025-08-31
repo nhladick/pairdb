@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "unity.h"
 #include "../src/hashtable.h"
@@ -131,6 +132,55 @@ void test_exists(void)
     destroy_hashtbl(tbl);
 }
 
+void test_hashtbl_fileio(void)
+{
+    hashtbl tbl = init_hashtbl(8);
+
+    put(tbl, "key1", "val1");
+    put(tbl, "key2", "val2");
+    put(tbl, "key3", "val3");
+
+    size_t initsize = get_tbl_size(tbl);
+    size_t initnumentries = get_numentries(tbl);
+
+    char buff[256];
+
+    FILE *outf = fmemopen(buff, sizeof(buff), "w");
+    hashtbl_to_file(tbl, outf);
+    fclose(outf);
+
+    destroy_hashtbl(tbl);
+
+    FILE *inf = fmemopen(buff, sizeof(buff), "r");
+    hashtbl tbl2 = load_hashtbl_from_file(inf);
+
+    size_t postsize = get_tbl_size(tbl2);
+    size_t postnumentries = get_numentries(tbl2);
+
+    TEST_ASSERT_EQUAL_INT(initsize, postsize);
+    TEST_ASSERT_EQUAL_INT(initnumentries, postnumentries);
+
+    bool k1exist = exists(tbl2, "key1");
+    bool k2exist = exists(tbl2, "key2");
+    bool k3exist = exists(tbl2, "key3");
+
+    TEST_ASSERT_EQUAL_INT(true, k1exist);
+    TEST_ASSERT_EQUAL_INT(true, k2exist);
+    TEST_ASSERT_EQUAL_INT(true, k3exist);
+
+    char valbuff[VAL_MAX];
+
+    find(valbuff, VAL_MAX, tbl2, "key1");
+    TEST_ASSERT_EQUAL_STRING("val1", valbuff);
+    find(valbuff, VAL_MAX, tbl2, "key2");
+    TEST_ASSERT_EQUAL_STRING("val2", valbuff);
+    find(valbuff, VAL_MAX, tbl2, "key3");
+    TEST_ASSERT_EQUAL_STRING("val3", valbuff);
+
+    fclose(inf);
+    destroy_hashtbl(tbl2);
+}
+
 
 int main(void)
 {
@@ -142,6 +192,7 @@ int main(void)
     RUN_TEST(test_resize);
     RUN_TEST(test_find);
     RUN_TEST(test_exists);
+    RUN_TEST(test_hashtbl_fileio);
 
     return UNITY_END();
 }
