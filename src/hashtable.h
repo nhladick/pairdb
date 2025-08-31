@@ -58,6 +58,8 @@ size_t hashtbl_to_file(hashtbl tbl, FILE *outf);
 // Load hashtable from file - expects
 // format provided by hashtbl_to_file.
 // Input - FILE pointer to open file.
+// Input stream should
+// be set to write ("r") mode.
 // Returns - pointer to hashtable
 // allocated on heap.
 hashtbl load_hashtbl_from_file(FILE *inf);
