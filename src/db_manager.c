@@ -122,6 +122,7 @@ int save_db_obj(db_mgr dbm, db_obj dbo)
     }
     else {
         getrandstr(fname, FNAME_LEN);
+        put(dbm->active_tbls, tblname, fname);
     }
 
     FILE *outf = fopen(fname, "w");
