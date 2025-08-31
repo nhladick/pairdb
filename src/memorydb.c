@@ -78,3 +78,8 @@ size_t get_tblname(db_obj dbo, char *dst, size_t dsize)
     ssize_t cpy = strtcpy(dst, dbo->tblname, dsize);
     return (cpy < 0) ? dsize - 1 : cpy;
 }
+
+hashtbl get_hashtbl(db_obj dbo)
+{
+    return tbl;
+}
