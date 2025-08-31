@@ -10,7 +10,10 @@
 // Update to absolute path
 static const char *TBL_LIST_FNAME = "tbl_list";
 
-static const size_t INIT_HASHTBL_SIZE = 32;
+enum {
+    INIT_HASHTBL_SIZE = 32,
+    FNAME_LEN = 11
+};
 
 struct db_manager {
     hashtbl active_tbls;
@@ -99,7 +102,37 @@ db_obj get_new_tbl(db_mgr dbm, char *tblname)
     return init_db_obj(tblname);
 }
 
+// Returns -1 on failure,
+// returns 1 on success.
+int save_db_obj(db_mgr dbm, db_obj dbo)
+{
+    if (!dbm || !dbo) {
+        return -1;
+    }
 
+    char fname[FNAME_LEN];
+
+    char tblname[TBL_NAME_MAX];
+    get_tblname(dbo, tblname, TBL_NAME_MAX);
+
+    // if db exists - get file name from active_tbls
+    // else - create new file name
+    if (exists(dbm->active_tbls, tblname)) {
+        find(fname, FNAME_LEN, dbm->active_tbls, tblname);
+    }
+    else {
+        getrandstr(fname, FNAME_LEN);
+    }
+
+    FILE *outf = fopen(fname, "w");
+    if (!outf) {
+        return -1;
+    }
+    size_t result = hashtbl_to_file(get_hashtbl(dbo), outf);
+    fclose(outf);
+
+    return (result == 0) ? -1 : 1;
+}
 
 
 
