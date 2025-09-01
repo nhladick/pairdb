@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "unity.h"
+#include "unity/unity.h"
 #include "../src/hashtable.h"
 #include "../src/keydbstring.h"
 
