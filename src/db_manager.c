@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -92,6 +93,14 @@ int get_new_tbl(db_mgr dbm, char *tblname)
         return -1;
     }
 
+    if (dbm->curr_tbl) {
+        destroy_hashtbl(dbm->curr_tbl);
+    }
+
+    if (dbm->curr_tbl_name) {
+        free(dbm->curr_tbl_name);
+    }
+
     dbm->curr_tbl = init_hashtbl(INIT_HASHTBL_SIZE);
     if (!dbm->curr_tbl) {
         return -2;
@@ -115,6 +124,14 @@ int use_tbl(db_mgr dbm, char *tblname)
 {
     if (!exists(dbm->active_tbls, tblname)) {
         return -1;
+    }
+
+    if (dbm->curr_tbl) {
+        destroy_hashtbl(dbm->curr_tbl);
+    }
+
+    if (dbm->curr_tbl_name) {
+        free(dbm->curr_tbl_name);
     }
 
     char fname[FNAME_LEN];
