@@ -146,9 +146,6 @@ int save_curr_tbl(db_mgr dbm)
 
     char fname[FNAME_LEN];
 
-    char tblname[TBL_NAME_MAX];
-    get_tblname(dbo, tblname, TBL_NAME_MAX);
-
     // if db exists - get file name from active_tbls
     // else - create new file name
     if (exists(dbm->active_tbls, tblname)) {
@@ -163,7 +160,7 @@ int save_curr_tbl(db_mgr dbm)
     if (!outf) {
         return -1;
     }
-    size_t result = hashtbl_to_file(get_hashtbl(dbo), outf);
+    size_t result = hashtbl_to_file(dbm->curr_tbl, outf);
     fclose(outf);
 
     return (result == 0) ? -1 : 1;
