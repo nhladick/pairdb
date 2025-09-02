@@ -164,9 +164,12 @@ int use_tbl(db_mgr dbm, char *tblname)
         free(dbm->curr_tbl_name);
     }
 
-    char fname[FNAME_FULL_LEN];
-    find(fname, FNAME_FULL_LEN, dbm->active_tbls, tblname);
-    FILE *inf = fopen(fname, "r");
+    char fname[TBL_FNAME_LEN];
+    find(fname, TBL_FNAME_LEN, dbm->active_tbls, tblname);
+
+    char *tbl_fname = get_full_path(fname);
+
+    FILE *inf = fopen(tbl_fname, "r");
     if (!inf) {
         return -2;
     }
@@ -182,6 +185,8 @@ int use_tbl(db_mgr dbm, char *tblname)
     if (!dbm->curr_tbl_name) {
         return -2;
     }
+
+    free(tbl_fname);
 
     return 1;
 
