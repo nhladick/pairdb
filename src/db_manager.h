@@ -57,4 +57,9 @@ size_t get(char *dst, size_t dsize, db_mgr dbm, char *key);
 // running multiple times on same key has no effect
 void db_remove(db_mgr dbm, char *key);
 
+// Returns pointer to heap-allocated array of
+// table name strings. Caller is responsible for
+// freeing returned pointer.
+char **get_tbls(db_mgr dbm);
+
 #endif // DB_MANAGER_H

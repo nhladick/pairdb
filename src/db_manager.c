@@ -255,3 +255,11 @@ void db_remove(db_mgr dbm, char *key)
     delete(dbm->curr_tbl, key);
 }
 
+// Returns pointer to heap-allocated array of
+// table name strings. Caller is responsible for
+// freeing returned pointer.
+char **get_tbls(db_mgr dbm)
+{
+    return get_keys(dbm->active_tbls);
+}
+
