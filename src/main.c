@@ -62,6 +62,19 @@ int main(int argc, char *argv[])
                 }
                 break;
             case USETABLE:
+                if (has_curr_tbl(dbmgr)) {
+                    save_curr_tbl(dbmgr);
+                }
+                int usetbl_stat = use_tbl(dbmgr, parse_data.tbl_name);
+                if (usetbl_stat == -1) {
+                    printf("Table does not exist\n");
+                    // Reset table name field in parse_object
+                    parse_data.tbl_name[0] = '\0';
+                }
+                else if (usetbl_stat == -2) {
+                    fprintf(stderr, "Memory allocation error\n");
+                    exit(EXIT_FAILURE);
+                }
                 printf("usetable\n");
                 break;
             case ADD:
@@ -86,12 +99,18 @@ int main(int argc, char *argv[])
                 db_remove(dbmgr, parse_data.key);
                 break;
             case SAVE:
+                if (has_curr_tbl(dbmgr)) {
+                    save_curr_tbl(dbmgr);
+                }
                 printf("save\n");
                 break;
             case HELP:
                 printf("help\n");
                 break;
             case QUIT:
+                if (has_curr_tbl(dbmgr)) {
+                    save_curr_tbl(dbmgr);
+                }
                 printf("quit\n");
                 run_loop = false;
                 break;
