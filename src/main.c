@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     if (!dbmgr) {
         exit(EXIT_FAILURE);
     }
-    db_obj dbobj = NULL;
 
     bool run_loop = true;
     while (run_loop) {
@@ -48,8 +47,8 @@ int main(int argc, char *argv[])
                 printf("fail\n");
                 break;
             case NEWTABLE:
-                if (dbobj) {
-                    save_db_obj(dbmgr, dbobj);
+                if (has_curr_tbl(dbmgr)) {
+                    save_curr_tbl(dbmgr);
                 }
                 int newtbl_stat = get_new_tbl(dbmgr, parse_data.tbl_name);
                 if (newtbl_stat == -1) {
@@ -63,13 +62,10 @@ int main(int argc, char *argv[])
                 }
                 break;
             case USETABLE:
-                if (dbobj) {
-                    save_db_obj(dbmgr, dbobj);
-                }
                 printf("usetable\n");
                 break;
             case ADD:
-                int result = add(dbobj, parse_data.key, parse_data.val);
+                int result = add(dbmgr, parse_data.key, parse_data.val);
                 if (result == -1) {
                     printf("Key %s already exists\n", parse_data.key);
                 }
@@ -79,7 +75,7 @@ int main(int argc, char *argv[])
                 break;
             case GET:
                 char buff[VAL_MAX];
-                if (get(buff, VAL_MAX, dbobj, parse_data.key) == 0) {
+                if (get(buff, VAL_MAX, dbmgr, parse_data.key) == 0) {
                     printf("Value not found\n");
                 }
                 else {
@@ -87,7 +83,7 @@ int main(int argc, char *argv[])
                 }
                 break;
             case DELETE:
-                db_remove(dbobj, parse_data.key);
+                db_remove(dbmgr, parse_data.key);
                 break;
             case SAVE:
                 printf("save\n");
@@ -102,7 +98,4 @@ int main(int argc, char *argv[])
         }
     }
     destroy_db_mgr(dbmgr);
-    if (dbobj) {
-        destroy_db_obj(dbobj);
-    }
 }
