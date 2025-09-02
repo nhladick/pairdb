@@ -9,6 +9,7 @@ db_mgr init_db_mgr();
 void destroy_db_mgr(db_mgr dbm);
 
 db_obj get_new_tbl(db_mgr dbm, char *tblname);
+db_obj use_tbl(db_mgr dbm, char *tblname);
 
 // Writes db to file.
 // Returns -1 on failure,

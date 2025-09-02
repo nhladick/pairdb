@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     if (!dbmgr) {
         exit(EXIT_FAILURE);
     }
-    db_obj dbobj;
+    db_obj dbobj = NULL;
 
     bool run_loop = true;
     while (run_loop) {
@@ -49,6 +49,9 @@ int main(int argc, char *argv[])
                 printf("fail\n");
                 break;
             case NEWTABLE:
+                if (dbobj) {
+                    save_db_obj(dbmgr, dbobj);
+                }
                 dbobj = get_new_tbl(dbmgr, parse_data.tbl_name);
                 if (!dbobj) {
                     printf("Table already exists or an error occurred\n");
@@ -57,6 +60,9 @@ int main(int argc, char *argv[])
                 }
                 break;
             case USETABLE:
+                if (dbobj) {
+                    save_db_obj(dbmgr, dbobj);
+                }
                 printf("usetable\n");
                 break;
             case ADD:

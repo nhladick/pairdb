@@ -63,6 +63,23 @@ db_obj get_new_tbl(db_mgr dbm, char *tblname)
     return init_db_obj(tblname);
 }
 
+db_obj use_tbl(db_mgr dbm, char *tblname)
+{
+    if (!exists(dbm->active_tbls, tblname)) {
+        return NULL;
+    }
+
+    char fname[FNAME_LEN];
+    find(fname, FNAME_LEN, dbm->active_tbls, tblname);
+    FILE *inf = fopen(fname, "r");
+    hashtbl tbl = load_hashtbl_from_file(inf);
+    fclose(inf);
+
+    db_obj dbo = init_db_obj(tblname);
+    return dbo;
+
+}
+
 // Returns -1 on failure,
 // returns 1 on success.
 int save_db_obj(db_mgr dbm, db_obj dbo)
