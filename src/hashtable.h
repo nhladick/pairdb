@@ -44,9 +44,6 @@ bool exists(hashtbl tbl, char *key);
 // running multiple times on same key has no effect
 void delete(hashtbl tbl, char *key);
 
-// print key and value pairs stored in table
-void print_tbl(hashtbl tbl);
-
 // Write (binary) all key-val pairs and
 // metadata to file stream provided.
 // Writes starting at location pointed

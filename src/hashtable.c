@@ -315,25 +315,6 @@ size_t get_numentries(hashtbl tbl)
     return tbl->numentries;
 }
 
-// prints node info to stdout for debugging
-void print_tbl(hashtbl tbl)
-{
-    for (size_t i = 0; i < tbl->arrsize; i++) {
-        printf("node %lu\n", i);
-        struct node *np = tbl->arr[i];
-        if (np) {
-            printf("key: %s\n", np->key);
-            printf("val: %s\n", np->val);
-            printf("hval: %u\n", np->hashval);
-            printf("tblpos: %lu\n", np->tblpos);
-        }
-        else {
-            printf("NULL\n");
-        }
-        printf("\n");
-    }
-}
-
 // Write (binary) all key-val pairs and
 // metadata to file stream provided.
 // Writes starting at location pointed
@@ -401,7 +382,7 @@ size_t hashtbl_to_file(hashtbl tbl, FILE *outf)
 // format provided by hashtbl_to_file.
 // Input - FILE pointer to open file.
 // Input stream should
-// be set to write ("r") mode.
+// be set to read ("r") mode.
 // Returns - pointer to hashtable
 // allocated on heap.
 hashtbl load_hashtbl_from_file(FILE *inf)
