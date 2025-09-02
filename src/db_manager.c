@@ -224,12 +224,3 @@ void db_remove(db_mgr dbm, char *key)
     delete(dbm->curr_tbl, key);
 }
 
-// Copies tblname to dst.
-// Returns length of value string copied to dst.
-// Returns 0 on error.
-size_t get_tblname(db_mgr dbm, char *dst, size_t dsize)
-{
-    ssize_t cpy = strtcpy(dst, dbm->curr_tbl_name, dsize);
-    return (cpy < 0) ? dsize - 1 : cpy;
-}
-
