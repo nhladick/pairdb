@@ -49,6 +49,11 @@ void delete(hashtbl tbl, char *key);
 // freeing returned pointer.
 char **get_keys(hashtbl tbl);
 
+// Returns pointer to heap-allocated array of
+// val strings. Caller is responsible for
+// freeing returned pointer.
+char **get_vals(hashtbl tbl);
+
 // Write (binary) all key-val pairs and
 // metadata to file stream provided.
 // Writes starting at location pointed

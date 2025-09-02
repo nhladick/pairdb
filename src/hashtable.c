@@ -335,6 +335,26 @@ char **get_keys(hashtbl tbl)
     return keyarr;
 }
 
+// Returns pointer to heap-allocated array of
+// val strings. Caller is responsible for
+// freeing returned pointer.
+char **get_vals(hashtbl tbl)
+{
+    char **valarr = calloc(tbl->numentries, sizeof(char *));
+
+    size_t v_index = 0;
+    struct node *nptr;
+    for (size_t i = 0; i < tbl->arrsize; i++) {
+        if (tbl->arr[i]) {
+            nptr = tbl->arr[i];
+            valarr[v_index] = nptr->val;
+            v_index++;
+        }
+    }
+
+    return valarr;
+}
+
 // Write (binary) all key-val pairs and
 // metadata to file stream provided.
 // Writes starting at location pointed
