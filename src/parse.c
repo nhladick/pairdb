@@ -3,7 +3,7 @@
 #include <stdbool.h>
 
 #include "parse.h"
-#include "keydbstring.h"
+#include "pairdbstring.h"
 
 enum {
     MAX_ARGS = 5

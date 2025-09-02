@@ -6,7 +6,7 @@
 
 #include "db_manager.h"
 #include "hashtable.h"
-#include "keydbstring.h"
+#include "pairdbstring.h"
 
 // String constants
 static const char *KDB_ENV_VAR = "KEYDB_DIR";

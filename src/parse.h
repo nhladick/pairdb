@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-#include "keydbstring.h"
+#include "pairdbstring.h"
 
 enum CMD {
     FAIL,

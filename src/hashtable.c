@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "hashtable.h"
-#include "keydbstring.h"
+#include "pairdbstring.h"
 
 /*
  *

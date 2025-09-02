@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "keydbstring.h"
+#include "pairdbstring.h"
 
 /*
  * Public domain string copy function

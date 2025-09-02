@@ -1,5 +1,5 @@
-#ifndef KEYDBSTRING_H
-#define KEYDBSTRING_H
+#ifndef PAIRDBSTRING_H
+#define PAIRDBSTRING_H
 
 #include <sys/types.h>
 
@@ -44,4 +44,4 @@ ssize_t strtcpy(char *restrict dst, const char *restrict src, size_t dsize);
 
 void getrandstr(char *dst, size_t len);
 
-#endif // KEYDBSTRING_H
+#endif // PAIRDBSTRING_H
