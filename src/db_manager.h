@@ -9,6 +9,10 @@ typedef struct db_object *db_obj;
 db_mgr init_db_mgr();
 void destroy_db_mgr(db_mgr dbm);
 
+// Check whether db_mgr object has a
+// current db table
+bool has_curr_tbl(db_mgr dbm);
+
 // Get new empty db_obj for use with db_mgr.
 // Input: valid db_mgr handle, new tbl name string
 // Returns:
