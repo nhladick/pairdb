@@ -16,6 +16,7 @@ enum {
 };
 
 struct db_manager {
+    db_obj curr_dbo;
     hashtbl active_tbls;
 };
 
@@ -43,6 +44,8 @@ db_mgr init_db_mgr()
         free(ptr);
         return NULL;
     }
+
+    ptr->curr_dbo = NULL;
 
     return ptr;
 }
