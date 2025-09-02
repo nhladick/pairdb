@@ -89,7 +89,7 @@ void destroy_db_mgr(db_mgr dbm)
 
     // Write active_tbls to file
     FILE *outf = fopen(dbm->active_tbls_fname, "w");
-    printf("%d\n", outf == NULL);
+
     hashtbl_to_file(dbm->active_tbls, outf);
     fclose(outf);
 
@@ -205,11 +205,12 @@ int save_curr_tbl(db_mgr dbm)
     }
     else {
         getrandstr(fname, FNAME_SHORT_LEN);
-        strcat(fname, KDB_FILE_EXT);
         put(dbm->active_tbls, dbm->curr_tbl_name, fname);
     }
 
-    FILE *outf = fopen(fname, "w");
+    char *tbl_fname = get_full_path(fname);
+
+    FILE *outf = fopen(tbl_fname, "w");
     if (!outf) {
         return -1;
     }
