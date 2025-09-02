@@ -13,6 +13,8 @@ void destroy_db_mgr(db_mgr dbm);
 bool has_curr_tbl(db_mgr dbm);
 
 // Get new empty table for use with db_mgr.
+// Use save_curr_tbl to keep current table
+// data, as this function overwrites current data.
 // Input: valid db_mgr handle, new table name string
 // Returns:
 //      -1 if table with tblname already exists
@@ -21,6 +23,8 @@ bool has_curr_tbl(db_mgr dbm);
 int get_new_tbl(db_mgr dbm, char *tblname);
 
 // Use a previously saved table within db_mgr.
+// Use save_curr_tbl to keep current table
+// data, as this function overwrites current data.
 // Input: valid db_mgr handle, table name string
 // Returns:
 //      -1 if table with tblname does not exist
