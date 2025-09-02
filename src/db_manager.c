@@ -8,7 +8,8 @@
 #include "hashtable.h"
 #include "keydbstring.h"
 
-// Update to absolute path
+// String constants
+static const char *KDB_ENV_VAR = "KEYDB_DIR";
 static const char *TBL_LIST_FNAME = "tbl_list";
 static const char *KDB_FILE_EXT = ".keydb";
 
@@ -24,6 +25,24 @@ struct db_manager {
     hashtbl active_tbls;
 };
 
+// Input: file name without ".keydb" file extension.
+// Allocates string on heap:
+//     absolute_keydb_dir_path + input_file_name + ".keydb"
+// Use return value to write to and read from file.
+// User is responsible for freeing allocated string.
+static char *get_full_path(const char *fname)
+{
+    char *KDB_PATH = getenv(KDB_ENV_VAR);
+    size_t buffsize = strlen(KDB_PATH) +
+                      strlen(fname) +
+                      strlen(KDB_FILE_EXT) + 1;
+    char *fullpath = calloc(1, buffsize);
+    strcat(fullpath, KDB_PATH);
+    strcat(fullpath, fname);
+    strcat(fullpath, KDB_FILE_EXT);
+    return fullpath;
+}
+
 db_mgr init_db_mgr()
 {
     db_mgr ptr = calloc(1, sizeof(struct db_manager));
@@ -31,10 +50,12 @@ db_mgr init_db_mgr()
         return NULL;
     }
 
+    char *tbl_list_fname = get_full_path(TBL_LIST_FNAME);
+
     // Check whether tbl_list file exists
-    if (access(TBL_LIST_FNAME, F_OK) == 0) {
+    if (access(tbl_list_fname, F_OK) == 0) {
         // If exists, load tbl from file
-        FILE *inf = fopen(TBL_LIST_FNAME, "r");
+        FILE *inf = fopen(tbl_list_fname, "r");
         if (!inf) {
             free(ptr);
             return NULL;
@@ -55,6 +76,8 @@ db_mgr init_db_mgr()
 
     ptr->curr_tbl = NULL;
     ptr->curr_tbl_name = NULL;
+
+    free(tbl_list_fname);
 
     return ptr;
 }
