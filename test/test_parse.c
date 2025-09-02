@@ -47,6 +47,16 @@ void test_cmd_enum_f3(void)
     TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
 }
 
+// Test lstables command
+void test_cmd_enum_lstbls(void)
+{
+    struct parse_object parse_data = {0};
+    char inbuff[] = "lstbls\n";
+    parse_input(inbuff, &parse_data);
+    enum CMD cmd = LSTABLES;
+    TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
+}
+
 // Test newtbl command - enum value and table name str
 void test_cmd_enum_and_str_nt(void)
 {
@@ -140,6 +150,7 @@ int main(void)
     RUN_TEST(test_cmd_enum_f1);
     RUN_TEST(test_cmd_enum_f2);
     RUN_TEST(test_cmd_enum_f3);
+    RUN_TEST(test_cmd_enum_lstbls);
     RUN_TEST(test_cmd_enum_and_str_nt);
     RUN_TEST(test_cmd_enum_and_str_ut);
     RUN_TEST(test_cmd_enum_and_str_add);
