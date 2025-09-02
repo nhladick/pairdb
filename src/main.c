@@ -51,11 +51,15 @@ int main(int argc, char *argv[])
                 if (dbobj) {
                     save_db_obj(dbmgr, dbobj);
                 }
-                dbobj = get_new_tbl(dbmgr, parse_data.tbl_name);
-                if (!dbobj) {
-                    printf("Table already exists or an error occurred\n");
+                int newtbl_stat = get_new_tbl(dbmgr, parse_data.tbl_name);
+                if (newtbl_stat == -1) {
+                    printf("Table already exists\n");
                     // Reset table name field in parse_object
                     parse_data.tbl_name[0] = '\0';
+                }
+                else if (newtbl_stat == -2) {
+                    fprintf(stderr, "Memory allocation error\n");
+                    exit(EXIT_FAILURE);
                 }
                 break;
             case USETABLE:

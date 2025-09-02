@@ -9,7 +9,13 @@ typedef struct db_object *db_obj;
 db_mgr init_db_mgr();
 void destroy_db_mgr(db_mgr dbm);
 
-db_obj get_new_tbl(db_mgr dbm, char *tblname);
+// Get new empty db_obj for use with db_mgr.
+// Input: valid db_mgr handle, new tbl name string
+// Returns:
+//      -1 if table with tblname already exists
+//      -2 on memory allocation error
+//      1 on success
+int get_new_tbl(db_mgr dbm, char *tblname);
 db_obj use_tbl(db_mgr dbm, char *tblname);
 
 // Writes db to file.

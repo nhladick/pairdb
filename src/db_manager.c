@@ -65,13 +65,24 @@ void destroy_db_mgr(db_mgr dbm)
     free(dbm);
 }
 
-db_obj get_new_tbl(db_mgr dbm, char *tblname)
+// Get new empty db_obj for use with db_mgr.
+// Input: valid db_mgr handle, new tbl name string
+// Returns:
+//      -1 if table with tblname already exists
+//      -2 on memory allocation error
+//      1 on success
+int get_new_tbl(db_mgr dbm, char *tblname)
 {
     if (exists(dbm->active_tbls, tblname)) {
-        return NULL;
+        return -1;
     }
 
-    return init_db_obj(tblname);
+    dbm->curr_dbo = init_db_obj(tblname);
+    if (!dbm->curr_dbo) {
+        return -2;
+    }
+
+    return 1;
 }
 
 db_obj use_tbl(db_mgr dbm, char *tblname)
