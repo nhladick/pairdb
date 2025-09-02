@@ -48,6 +48,14 @@ int main(int argc, char *argv[])
             case FAIL:
                 printf("fail\n");
                 break;
+            case LSTABLES:
+                size_t numtbls = get_numtbls(dbmgr);
+                char **tbls = get_tbls(dbmgr);
+                for (size_t i = 0; i < numtbls; i++) {
+                    printf("%s\n", tbls[i]);
+                }
+                free(tbls);
+                break;
             case NEWTABLE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
