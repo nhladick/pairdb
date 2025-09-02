@@ -315,6 +315,26 @@ size_t get_numentries(hashtbl tbl)
     return tbl->numentries;
 }
 
+// Returns pointer to heap-allocated array of
+// key strings. Caller is responsible for
+// freeing returned pointer.
+char **get_keys(hashtbl tbl)
+{
+    char **keyarr = calloc(tbl->numentries, sizeof(char *));
+
+    size_t k_index = 0;
+    struct node *nptr;
+    for (size_t i = 0; i < tbl->arrsize; i++) {
+        if (tbl->arr[i]) {
+            nptr = tbl->arr[i];
+            keyarr[k_index] = nptr->key;
+            k_index++;
+        }
+    }
+
+    return keyarr;
+}
+
 // Write (binary) all key-val pairs and
 // metadata to file stream provided.
 // Writes starting at location pointed
