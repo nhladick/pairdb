@@ -109,9 +109,9 @@ db_obj use_tbl(db_mgr dbm, char *tblname)
 
 // Returns -1 on failure,
 // returns 1 on success.
-int save_db_obj(db_mgr dbm, db_obj dbo)
+int save_curr_tbl(db_mgr dbm)
 {
-    if (!dbm || !dbo) {
+    if (!dbm) {
         return -1;
     }
 

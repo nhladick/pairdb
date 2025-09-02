@@ -25,7 +25,7 @@ db_obj use_tbl(db_mgr dbm, char *tblname);
 // Writes db to file.
 // Returns -1 on failure,
 // returns 1 on success.
-int save_db_obj(db_mgr dbm, db_obj dbo);
+int save_curr_tbl(db_mgr dbm);
 
 db_obj init_db_obj(char *tblname);
 void destroy_db_obj(db_obj dbo);
