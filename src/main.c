@@ -6,7 +6,9 @@
 #include "parse.h"
 #include "db_manager.h"
 
-static const size_t INBUFF_SIZE = 256;
+enum {
+    INBUFF_SIZE = 256
+};
 
 int main(int argc, char *argv[])
 {
