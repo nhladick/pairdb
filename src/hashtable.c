@@ -122,12 +122,10 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
     ssize_t i = fnv_hash(key) % tbl->arrsize;
 
     for (size_t j = 0; j < tbl->arrsize; i = (i + 1) % tbl->arrsize, j++) {
-        if (!arr[i]) {
-            continue;
-        }
-
-        if (strcmp(key, arr[i]->key) == 0) {
-            return i;
+        if (arr[i]) {
+            if (strcmp(key, arr[i]->key) == 0) {
+                return i;
+            }
         }
     }
 
