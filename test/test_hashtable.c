@@ -6,7 +6,7 @@
 
 #include "unity/unity.h"
 #include "../src/hashtable.h"
-#include "../src/keydbstring.h"
+#include "../src/pairdbstring.h"
 
 void setUp(void)
 {
