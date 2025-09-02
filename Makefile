@@ -5,7 +5,7 @@ CFLAGS = -MMD -Wall
 SRCDIR = src
 BUILDDIR = build
 
-TARGET = $(BUILDDIR)/keydb
+TARGET = $(BUILDDIR)/pairdb
 
 .PHONY: all
 all: $(TARGET)
