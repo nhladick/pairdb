@@ -171,9 +171,9 @@ int save_curr_tbl(db_mgr dbm)
 //         -2 on memory allocation failure,
 //          1 on success.
 // Attempt to add key that already exists results in failure.
-int add(db_obj dbo, char *key, char *val)
+int add(db_mgr dbm, char *key, char *val)
 {
-    return put(dbo->tbl, key, val);
+    return put(dbm->curr_tbl, key, val);
 }
 
 // Searches for value associated with key.
@@ -182,9 +182,9 @@ int add(db_obj dbo, char *key, char *val)
 // and managing dst.
 // Returns length of value string copied to dst.
 // Returns 0 on error or if value not found.
-size_t get(char *dst, size_t dsize, db_obj dbo, char *key)
+size_t get(char *dst, size_t dsize, db_mgr dbm, char *key)
 {
-    return find(dst, dsize, dbo->tbl, key);
+    return find(dst, dsize, dbm->curr_tbl, key);
 }
 
 // key and value removed
