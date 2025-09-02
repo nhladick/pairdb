@@ -52,7 +52,16 @@ db_mgr init_db_mgr()
 
 void destroy_db_mgr(db_mgr dbm)
 {
-    free(dbm->active_tbls);
+    if (!dbm) {
+        return;
+    }
+
+    destroy_hashtbl(dbm->active_tbls);
+
+    if (dbm->curr_dbo) {
+        destroy_db_obj(dbm->curr_dbo);
+    }
+
     free(dbm);
 }
 
