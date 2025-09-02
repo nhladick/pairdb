@@ -10,10 +10,12 @@
 
 // Update to absolute path
 static const char *TBL_LIST_FNAME = "tbl_list";
+static const char *KDB_FILE_EXT = ".keydb";
 
 enum {
     INIT_HASHTBL_SIZE = 32,
-    FNAME_LEN = 11
+    FNAME_SHORT_LEN = 11,
+    FNAME_FULL_LEN = 17
 };
 
 struct db_manager {
@@ -139,8 +141,8 @@ int use_tbl(db_mgr dbm, char *tblname)
         free(dbm->curr_tbl_name);
     }
 
-    char fname[FNAME_LEN];
-    find(fname, FNAME_LEN, dbm->active_tbls, tblname);
+    char fname[FNAME_FULL_LEN];
+    find(fname, FNAME_FULL_LEN, dbm->active_tbls, tblname);
     FILE *inf = fopen(fname, "r");
     if (!inf) {
         return -2;
@@ -170,15 +172,16 @@ int save_curr_tbl(db_mgr dbm)
         return -1;
     }
 
-    char fname[FNAME_LEN];
+    char fname[FNAME_FULL_LEN];
 
     // if db exists - get file name from active_tbls
     // else - create new file name
     if (exists(dbm->active_tbls, dbm->curr_tbl_name)) {
-        find(fname, FNAME_LEN, dbm->active_tbls, dbm->curr_tbl_name);
+        find(fname, FNAME_FULL_LEN, dbm->active_tbls, dbm->curr_tbl_name);
     }
     else {
-        getrandstr(fname, FNAME_LEN);
+        getrandstr(fname, FNAME_SHORT_LEN);
+        strcat(fname, KDB_FILE_EXT);
         put(dbm->active_tbls, dbm->curr_tbl_name, fname);
     }
 
