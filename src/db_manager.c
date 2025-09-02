@@ -16,7 +16,7 @@ enum {
 };
 
 struct db_manager {
-    char * curr_tbl_name;
+    char *curr_tbl_name;
     hashtbl curr_tbl;
     hashtbl active_tbls;
 };
@@ -75,6 +75,10 @@ void destroy_db_mgr(db_mgr dbm)
     free(dbm);
 }
 
+bool has_curr_tbl(db_mgr dbm)
+{
+    return (dbm->curr_tbl);
+}
 
 // Get new empty db_obj for use with db_mgr.
 // Input: valid db_mgr handle, new tbl name string
