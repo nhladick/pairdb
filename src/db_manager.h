@@ -20,7 +20,14 @@ bool has_curr_tbl(db_mgr dbm);
 //      -2 on memory allocation error
 //      1 on success
 int get_new_tbl(db_mgr dbm, char *tblname);
-db_obj use_tbl(db_mgr dbm, char *tblname);
+
+// Use previously saved db_obj within db_mgr.
+// Input: valid db_mgr handle, tbl name string
+// Returns:
+//      -1 if table with tblname does not exist
+//      -2 on memory allocation error
+//      1 on success
+int use_tbl(db_mgr dbm, char *tblname);
 
 // Writes db to file.
 // Returns -1 on failure,

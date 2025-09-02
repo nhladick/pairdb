@@ -126,20 +126,33 @@ int get_new_tbl(db_mgr dbm, char *tblname)
     return 1;
 }
 
-db_obj use_tbl(db_mgr dbm, char *tblname)
+// Get new empty db_obj for use with db_mgr.
+// Input: valid db_mgr handle, new tbl name string
+// Returns:
+//      -1 if table with tblname does not exist
+//      -2 on memory allocation or file error
+//      1 on success
+int use_tbl(db_mgr dbm, char *tblname)
 {
     if (!exists(dbm->active_tbls, tblname)) {
-        return NULL;
+        return -1;
     }
 
     char fname[FNAME_LEN];
     find(fname, FNAME_LEN, dbm->active_tbls, tblname);
     FILE *inf = fopen(fname, "r");
-    hashtbl tbl = load_hashtbl_from_file(inf);
+    if (!inf) {
+        return -2;
+    }
+
+    dbm->curr_dbo = load_hashtbl_from_file(inf);
     fclose(inf);
 
-    db_obj dbo = init_db_obj(tblname);
-    return dbo;
+    if (!dbm->curr_dbo) {
+        return -2;
+    }
+
+    return 1;
 
 }
 
