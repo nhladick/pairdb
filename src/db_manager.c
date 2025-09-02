@@ -16,13 +16,9 @@ enum {
 };
 
 struct db_manager {
-    db_obj curr_dbo;
+    char * curr_tbl_name;
+    hashtbl curr_tbl;
     hashtbl active_tbls;
-};
-
-struct db_object {
-    hashtbl tbl;
-    char *tblname;
 };
 
 db_mgr init_db_mgr()
@@ -36,6 +32,10 @@ db_mgr init_db_mgr()
     if (access(TBL_LIST_FNAME, F_OK) == 0) {
         // If exists, load tbl from file
         FILE *inf = fopen(TBL_LIST_FNAME, "r");
+        if (!inf) {
+            free(ptr);
+            return NULL;
+        }
         ptr->active_tbls = load_hashtbl_from_file(inf);
         fclose(inf);
     }
@@ -50,7 +50,8 @@ db_mgr init_db_mgr()
         return NULL;
     }
 
-    ptr->curr_dbo = NULL;
+    ptr->curr_tbl = NULL;
+    ptr->curr_tbl_name = NULL;
 
     return ptr;
 }
@@ -63,8 +64,12 @@ void destroy_db_mgr(db_mgr dbm)
 
     destroy_hashtbl(dbm->active_tbls);
 
-    if (dbm->curr_dbo) {
-        destroy_db_obj(dbm->curr_dbo);
+    if (dbm->curr_tbl) {
+        destroy_hashtbl(dbm->curr_tbl);
+    }
+
+    if (dbm->curr_tbl_name) {
+        free(dbm->curr_tbl_name);
     }
 
     free(dbm);
