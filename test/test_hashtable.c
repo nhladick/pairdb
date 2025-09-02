@@ -204,6 +204,27 @@ void test_get_keys(void)
     destroy_hashtbl(tbl);
 }
 
+void test_get_vals(void)
+{
+    hashtbl tbl = init_hashtbl(4);
+    put(tbl, "key1", "val1");
+    put(tbl, "key2", "val2");
+
+    char **vals = get_vals(tbl);
+
+    bool v1 = (strcmp(vals[0], "val1") == 0 ||
+               strcmp(vals[1], "val1") == 0);
+
+    bool v2 = (strcmp(vals[0], "val2") == 0 ||
+               strcmp(vals[1], "val2") == 0);
+
+    TEST_ASSERT_EQUAL_INT(true, v1);
+    TEST_ASSERT_EQUAL_INT(true, v2);
+
+    free(vals);
+    destroy_hashtbl(tbl);
+}
+
 
 int main(void)
 {
@@ -217,6 +238,7 @@ int main(void)
     RUN_TEST(test_exists);
     RUN_TEST(test_hashtbl_fileio);
     RUN_TEST(test_get_keys);
+    RUN_TEST(test_get_vals);
 
     return UNITY_END();
 }
