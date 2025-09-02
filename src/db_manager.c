@@ -88,8 +88,13 @@ int get_new_tbl(db_mgr dbm, char *tblname)
         return -1;
     }
 
-    dbm->curr_dbo = init_db_obj(tblname);
-    if (!dbm->curr_dbo) {
+    dbm->curr_tbl = init_hashtbl(INIT_HASHTBL_SIZE);
+    if (!dbm->curr_tbl) {
+        return -2;
+    }
+
+    dbm->curr_tbl_name = strndup(tblname, TBL_NAME_MAX);
+    if (!dbm->curr_tbl_name) {
         return -2;
     }
 
