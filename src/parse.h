@@ -7,6 +7,7 @@
 
 enum CMD {
     FAIL,
+    LSTABLES,
     NEWTABLE,
     USETABLE,
     ADD,

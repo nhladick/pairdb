@@ -61,7 +61,10 @@ static enum CMD parse_cmd(char *str_cmd)
         return FAIL;
     }
 
-    if (strcmp(str_cmd, "newtbl") == 0) {
+    if (strcmp(str_cmd, "lstbls") == 0) {
+        return LSTABLES;
+    }
+    else if (strcmp(str_cmd, "newtbl") == 0) {
         return NEWTABLE;
     }
     else if (strcmp(str_cmd, "use") == 0) {
@@ -97,6 +100,7 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
         case QUIT:
         case SAVE:
         case HELP:
+        case LSTABLES:
             break;
         case NEWTABLE:
         case USETABLE:
