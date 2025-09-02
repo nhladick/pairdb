@@ -75,41 +75,6 @@ void destroy_db_mgr(db_mgr dbm)
     free(dbm);
 }
 
-db_obj init_db_obj(char *tblname)
-{
-    db_obj ptr = calloc(1, sizeof(struct db_object));
-    if (!ptr) {
-        return NULL;
-    }
-
-    ptr->tbl = init_hashtbl(INIT_TBL_SIZE);
-    if (!ptr->tbl) {
-        free(ptr);
-        return NULL;
-    }
-
-    ptr->tblname = calloc(1, TBL_NAME_MAX);
-    if (!ptr->tblname) {
-        free(ptr);
-        return NULL;
-    }
-
-    strtcpy(ptr->tblname, tblname, TBL_NAME_MAX);
-
-    return ptr;
-}
-
-void destroy_db_obj(db_obj dbo)
-{
-    destroy_hashtbl(dbo->tbl);
-    free(dbo->tblname);
-    free(dbo);
-}
-
-bool has_curr_tbl(db_mgr dbm)
-{
-    return (dbm->curr_dbo);
-}
 
 // Get new empty db_obj for use with db_mgr.
 // Input: valid db_mgr handle, new tbl name string
@@ -150,10 +115,15 @@ int use_tbl(db_mgr dbm, char *tblname)
         return -2;
     }
 
-    dbm->curr_dbo = load_hashtbl_from_file(inf);
+    dbm->curr_tbl = load_hashtbl_from_file(inf);
     fclose(inf);
 
     if (!dbm->curr_dbo) {
+        return -2;
+    }
+
+    dbm->curr_tbl_name = strndup(tblname, TBL_NAME_MAX);
+    if (!dbm->curr_tbl_name) {
         return -2;
     }
 
