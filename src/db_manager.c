@@ -80,8 +80,8 @@ bool has_curr_tbl(db_mgr dbm)
     return (dbm->curr_tbl);
 }
 
-// Get new empty db_obj for use with db_mgr.
-// Input: valid db_mgr handle, new tbl name string
+// Get new empty table for use with db_mgr.
+// Input: valid db_mgr handle, new table name string
 // Returns:
 //      -1 if table with tblname already exists
 //      -2 on memory allocation error
@@ -105,11 +105,11 @@ int get_new_tbl(db_mgr dbm, char *tblname)
     return 1;
 }
 
-// Get new empty db_obj for use with db_mgr.
-// Input: valid db_mgr handle, new tbl name string
+// Use a previously saved table within db_mgr.
+// Input: valid db_mgr handle, table name string
 // Returns:
 //      -1 if table with tblname does not exist
-//      -2 on memory allocation or file error
+//      -2 on memory allocation error
 //      1 on success
 int use_tbl(db_mgr dbm, char *tblname)
 {
@@ -170,7 +170,8 @@ int save_curr_tbl(db_mgr dbm)
     return (result == 0) ? -1 : 1;
 }
 
-// Input: two strings, key and val, to be added to database.
+// Input: valid db_mgr handle,
+//        two strings, key and val, to be added to database.
 // Output: -1 if key already exists,
 //         -2 on memory allocation failure,
 //          1 on success.
