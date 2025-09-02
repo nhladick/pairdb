@@ -15,8 +15,7 @@ static const char *KDB_FILE_EXT = ".keydb";
 
 enum {
     INIT_HASHTBL_SIZE = 32,
-    FNAME_SHORT_LEN = 11,
-    FNAME_FULL_LEN = 17
+    TBL_FNAME_LEN = 11
 };
 
 struct db_manager {
@@ -196,15 +195,15 @@ int save_curr_tbl(db_mgr dbm)
         return -1;
     }
 
-    char fname[FNAME_FULL_LEN];
+    char fname[TBL_FNAME_LEN];
 
     // if db exists - get file name from active_tbls
     // else - create new file name
     if (exists(dbm->active_tbls, dbm->curr_tbl_name)) {
-        find(fname, FNAME_FULL_LEN, dbm->active_tbls, dbm->curr_tbl_name);
+        find(fname, TBL_FNAME_LEN, dbm->active_tbls, dbm->curr_tbl_name);
     }
     else {
-        getrandstr(fname, FNAME_SHORT_LEN);
+        getrandstr(fname, TBL_FNAME_LEN);
         put(dbm->active_tbls, dbm->curr_tbl_name, fname);
     }
 
@@ -216,6 +215,8 @@ int save_curr_tbl(db_mgr dbm)
     }
     size_t result = hashtbl_to_file(dbm->curr_tbl, outf);
     fclose(outf);
+
+    free(tbl_fname);
 
     return (result == 0) ? -1 : 1;
 }
