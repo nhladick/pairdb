@@ -255,6 +255,12 @@ void db_remove(db_mgr dbm, char *key)
     delete(dbm->curr_tbl, key);
 }
 
+// Get number of tables saved in file
+size_t get_numtbls(db_mgr dbm)
+{
+    return get_numentries(dbm->active_tbls);
+}
+
 // Returns pointer to heap-allocated array of
 // table name strings. Caller is responsible for
 // freeing returned pointer.
