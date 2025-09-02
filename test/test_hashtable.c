@@ -1,6 +1,8 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "unity/unity.h"
 #include "../src/hashtable.h"
@@ -181,6 +183,27 @@ void test_hashtbl_fileio(void)
     destroy_hashtbl(tbl2);
 }
 
+void test_get_keys(void)
+{
+    hashtbl tbl = init_hashtbl(4);
+    put(tbl, "key1", "val1");
+    put(tbl, "key2", "val2");
+
+    char **keys = get_keys(tbl);
+
+    bool k1 = (strcmp(keys[0], "key1") == 0 ||
+               strcmp(keys[1], "key1") == 0);
+
+    bool k2 = (strcmp(keys[0], "key2") == 0 ||
+               strcmp(keys[1], "key2") == 0);
+
+    TEST_ASSERT_EQUAL_INT(true, k1);
+    TEST_ASSERT_EQUAL_INT(true, k2);
+
+    free(keys);
+    destroy_hashtbl(tbl);
+}
+
 
 int main(void)
 {
@@ -193,6 +216,7 @@ int main(void)
     RUN_TEST(test_find);
     RUN_TEST(test_exists);
     RUN_TEST(test_hashtbl_fileio);
+    RUN_TEST(test_get_keys);
 
     return UNITY_END();
 }
