@@ -23,6 +23,7 @@ struct db_manager {
     char *curr_tbl_name;
     hashtbl curr_tbl;
     hashtbl active_tbls;
+    char *active_tbls_fname;
 };
 
 // Input: file name without ".keydb" file extension.
@@ -50,12 +51,12 @@ db_mgr init_db_mgr()
         return NULL;
     }
 
-    char *tbl_list_fname = get_full_path(TBL_LIST_FNAME);
+    ptr->active_tbls_fname = get_full_path(TBL_LIST_FNAME);
 
     // Check whether tbl_list file exists
-    if (access(tbl_list_fname, F_OK) == 0) {
+    if (access(ptr->active_tbls_fname, F_OK) == 0) {
         // If exists, load tbl from file
-        FILE *inf = fopen(tbl_list_fname, "r");
+        FILE *inf = fopen(ptr->active_tbls_fname, "r");
         if (!inf) {
             free(ptr);
             return NULL;
@@ -77,8 +78,6 @@ db_mgr init_db_mgr()
     ptr->curr_tbl = NULL;
     ptr->curr_tbl_name = NULL;
 
-    free(tbl_list_fname);
-
     return ptr;
 }
 
@@ -89,7 +88,8 @@ void destroy_db_mgr(db_mgr dbm)
     }
 
     // Write active_tbls to file
-    FILE *outf = fopen(TBL_LIST_FNAME, "w");
+    FILE *outf = fopen(dbm->active_tbls_fname, "w");
+    printf("%d\n", outf == NULL);
     hashtbl_to_file(dbm->active_tbls, outf);
     fclose(outf);
 
@@ -103,6 +103,7 @@ void destroy_db_mgr(db_mgr dbm)
         free(dbm->curr_tbl_name);
     }
 
+    free(dbm->active_tbls_fname);
     free(dbm);
 }
 
