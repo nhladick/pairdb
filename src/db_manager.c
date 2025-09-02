@@ -63,6 +63,11 @@ void destroy_db_mgr(db_mgr dbm)
         return;
     }
 
+    // Write active_tbls to file
+    FILE *outf = fopen(TBL_LIST_FNAME, "w");
+    hashtbl_to_file(dbm->active_tbls, outf);
+    fclose(outf);
+
     destroy_hashtbl(dbm->active_tbls);
 
     if (dbm->curr_tbl) {
