@@ -127,7 +127,7 @@ int use_tbl(db_mgr dbm, char *tblname)
     dbm->curr_tbl = load_hashtbl_from_file(inf);
     fclose(inf);
 
-    if (!dbm->curr_dbo) {
+    if (!dbm->curr_tbl) {
         return -2;
     }
 
@@ -152,12 +152,12 @@ int save_curr_tbl(db_mgr dbm)
 
     // if db exists - get file name from active_tbls
     // else - create new file name
-    if (exists(dbm->active_tbls, tblname)) {
-        find(fname, FNAME_LEN, dbm->active_tbls, tblname);
+    if (exists(dbm->active_tbls, dbm->curr_tbl_name)) {
+        find(fname, FNAME_LEN, dbm->active_tbls, dbm->curr_tbl_name);
     }
     else {
         getrandstr(fname, FNAME_LEN);
-        put(dbm->active_tbls, tblname, fname);
+        put(dbm->active_tbls, dbm->curr_tbl_name, fname);
     }
 
     FILE *outf = fopen(fname, "w");
