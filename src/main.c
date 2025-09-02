@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
         // clear input buffer
         memset(inbuff, 0, INBUFF_SIZE);
 
-        printf("keydb>> ");
+        printf("pairdb>> ");
 
         fgets(inbuff, INBUFF_SIZE, stdin);
         parse_input(inbuff, &parse_data);

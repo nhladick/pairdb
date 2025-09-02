@@ -9,9 +9,9 @@
 #include "pairdbstring.h"
 
 // String constants
-static const char *KDB_ENV_VAR = "KEYDB_DIR";
+static const char *PDB_ENV_VAR = "PAIRDB_DIR";
 static const char *TBL_LIST_FNAME = "tbl_list";
-static const char *KDB_FILE_EXT = ".keydb";
+static const char *PDB_FILE_EXT = ".pairdb";
 
 enum {
     INIT_HASHTBL_SIZE = 32,
@@ -25,21 +25,21 @@ struct db_manager {
     char *active_tbls_fname;
 };
 
-// Input: file name without ".keydb" file extension.
+// Input: file name without ".pairdb" file extension.
 // Allocates string on heap:
-//     absolute_keydb_dir_path + input_file_name + ".keydb"
+//     absolute_pairdb_dir_path + input_file_name + ".pairdb"
 // Use return value to write to and read from file.
 // User is responsible for freeing allocated string.
 static char *get_full_path(const char *fname)
 {
-    char *KDB_PATH = getenv(KDB_ENV_VAR);
-    size_t buffsize = strlen(KDB_PATH) +
+    char *PDB_PATH = getenv(PDB_ENV_VAR);
+    size_t buffsize = strlen(PDB_PATH) +
                       strlen(fname) +
-                      strlen(KDB_FILE_EXT) + 1;
+                      strlen(PDB_FILE_EXT) + 1;
     char *fullpath = calloc(1, buffsize);
-    strcat(fullpath, KDB_PATH);
+    strcat(fullpath, PDB_PATH);
     strcat(fullpath, fname);
-    strcat(fullpath, KDB_FILE_EXT);
+    strcat(fullpath, PDB_FILE_EXT);
     return fullpath;
 }
 
