@@ -53,15 +53,15 @@ void print_tbl(hashtbl tbl);
 // to by stream. Input stream should
 // be set to write ("w") mode.
 // Returns number of items written.
+// Caller is responsible for closing stream.
 size_t hashtbl_to_file(hashtbl tbl, FILE *outf);
 
 // Load hashtable from file - expects
-// format provided by hashtbl_to_file.
+// file format provided by hashtbl_to_file.
 // Input - FILE pointer to open file.
-// Input stream should
-// be set to write ("r") mode.
-// Returns - pointer to hashtable
-// allocated on heap.
+// Input stream should be set to read ("r") mode.
+// Returns - handle to hashtable allocated on heap.
+// Caller is responsible for closing stream.
 hashtbl load_hashtbl_from_file(FILE *inf);
 
 #endif // HASHTABLE_H
