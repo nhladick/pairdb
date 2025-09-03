@@ -200,7 +200,6 @@ int main(int argc, char *argv[])
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
-                printf("save\n");
                 break;
             case HELP:
                 printf("%s", long_help_msg());
@@ -209,7 +208,6 @@ int main(int argc, char *argv[])
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
-                printf("quit\n");
                 run_loop = false;
                 break;
         }
