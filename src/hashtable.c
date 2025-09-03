@@ -6,6 +6,11 @@
 #include "hashtable.h"
 #include "pairdbstring.h"
 
+enum {
+    HT_KEY_MAX = 100,
+    HT_VAL_MAX = 100
+};
+
 /*
  *
  * Values for Fowler/Noll/Vo hash function
@@ -244,13 +249,13 @@ int put(hashtbl tbl, char *key, char *val)
         return -2;
     }
 
-    np->key = strndup(key, KEY_MAX - 1);
+    np->key = strndup(key, HT_KEY_MAX - 1);
     if (!np->key) {
         free(np);
         return -2;
     }
 
-    np->val = strndup(val, VAL_MAX - 1);
+    np->val = strndup(val, HT_VAL_MAX - 1);
     if (!np->val) {
         free(np->key);
         free(np);
@@ -441,8 +446,8 @@ hashtbl load_hashtbl_from_file(FILE *inf)
 
     hashtbl tbl = init_hashtbl(arrsize);
 
-    char keybuff[KEY_MAX] = {0};
-    char valbuff[VAL_MAX] = {0};
+    char keybuff[HT_KEY_MAX] = {0};
+    char valbuff[HT_VAL_MAX] = {0};
     size_t keylen;
     size_t vallen;
     struct node *nptr = NULL;
@@ -454,14 +459,14 @@ hashtbl load_hashtbl_from_file(FILE *inf)
 
         // Read key
         fread(keybuff, keylen, 1, inf);
-        nptr->key = strndup(keybuff, KEY_MAX - 1);
+        nptr->key = strndup(keybuff, HT_KEY_MAX - 1);
 
         // Read vallen
         fread(&vallen, sizeof(size_t), 1, inf);
 
         // Read val
         fread(valbuff, vallen, 1, inf);
-        nptr->val = strndup(valbuff, VAL_MAX - 1);
+        nptr->val = strndup(valbuff, HT_VAL_MAX - 1);
 
         // Read hashval
         fread(&nptr->hashval, sizeof(unsigned int), 1, inf);
