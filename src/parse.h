@@ -14,6 +14,7 @@ enum CMD {
     GET,
     DELETE,
     SAVE,
+    DROPTABLE,
     LSDATA,
     HELP,
     QUIT
