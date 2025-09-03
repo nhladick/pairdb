@@ -227,13 +227,42 @@ int save_curr_tbl(db_mgr dbm)
     return (result == 0) ? -1 : 1;
 }
 
-// Deletes all table data in memory and on disk
-// Input: db_mgr object and string table name
-// Returns: 1 on success,
-//          -1 if table not found
-//          -2 on file access error
+// Input: db_mgr object and string name
+// of table to be deleted.
+//
+// If tblname has an associated file on disk,
+// the file is deleted.
+//
+// If tblname refers to the current, active
+// table set by use_tbl or get_new_tbl,
+// the table is cleared from memory and the
+// db_mgr active table is set to NULL.
+//
+// Returns: 1 if file is successfully deleted,
+//          -1 if no associated file is found,
+//          -2 on file access error.
+//
+// If file access error occurs, the table
+// specified by tblname will remain accessible
+// on disk and through the db_mgr.
+//
+// Note - if tblname refers to current table
+// in db_mgr, the data in memory is always
+// cleared regardless of whether a file exists
+// on disk or whether it is accessed/deleted
+// successfully. This is not recorded in a
+// return value.
 int drop_tbl(db_mgr dbm, char *tblname)
 {
+    // If current table is table to be deleted,
+    // clear current table and table name
+    if (strcmp(dbm->curr_tbl_name, tblname) == 0) {
+        destroy_hashtbl(dbm->curr_tbl);
+        dbm->curr_tbl = NULL;
+        free(dbm->curr_tbl_name);
+        dbm->curr_tbl_name = NULL;
+    }
+
     if (!exists(dbm->active_tbls, tblname)) {
         return -1;
     }
@@ -245,6 +274,8 @@ int drop_tbl(db_mgr dbm, char *tblname)
     if (unlink(fullname) < 0) {
         return -2;
     }
+
+    delete(dbm->active_tbls, tblname);
 
     return 1;
 }
