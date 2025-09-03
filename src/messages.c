@@ -35,8 +35,10 @@ const char *long_help_msg()
 {
     const char *msg =
             "Pairdb is an interactive key-value database for use\n"
-            "at the command line. This program also accepts input\n"
-            "files at stdin to execute batch commands.\n\n"
+            "at the command line - usage: 'pairdb'. This program\n"
+            "also accepts input files at stdin to execute batch\n"
+            "commands - usage 'pairdb < <input_file>' (see example\n"
+            "below).\n\n"
             "Pairdb can manage multiple named database tables. Each\n"
             "table contains key-value pairs of strings. Upon starting\n"
             "the program, a table must be created or a previously\n"

@@ -7,8 +7,10 @@
  * --------------------------------------------------
  *
  * Pairdb is an interactive key-value database for use
- * at the command line. This program also accepts input
- * files at stdin to execute batch commands.
+ * at the command line - usage: 'pairdb'. This program
+ * also accepts input files at stdin to execute batch
+ * commands - usage 'pairdb < <input_file>' (see example
+ * below).
  *
  * Pairdb can manage multiple named database tables. Each
  * table contains key-value pairs of strings. Upon starting
@@ -101,6 +103,13 @@ enum {
 
 int main(int argc, char *argv[])
 {
+    // Print program info if any command line
+    // argument is provided
+    if (argc > 1) {
+        printf("%s", long_help_msg());
+        exit(EXIT_FAILURE);
+    }
+
     struct parse_object parse_data = {0};
     char inbuff[INBUFF_SIZE];
 
