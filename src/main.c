@@ -52,6 +52,16 @@
  *
  * lstbls                     Prints list of all saved tables.
  *
+ * drop <table_name>          Drops table by deleting file
+ *                            associated with <table_name> and
+ *                            removing <table_name> from database
+ *                            table list. If <table_name> refers
+ *                            to the current active table, all
+ *                            table data is cleared from memory,
+ *                            and another table must be created
+ *                            or selected to perform any table
+ *                            operations.
+ *
  * add <key> <val>            Adds key-value pair to current
  *                            table. Command fails if <key>
  *                            already exists in current table.
@@ -115,7 +125,7 @@ enum {
  * the parse function receives clean input.
  *
  * An initialized db manager object is used to create,
- * manipulate, and save database tables.
+ * manipulate, save, and delete database tables.
  *
  */
 
