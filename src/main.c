@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
                 break;
 
             case LSTABLES:
-                size_t numtbls = get_numtbls(dbmgr);
+                ssize_t numtbls = get_numtbls(dbmgr);
                 char **tbls = get_tbls(dbmgr);
                 for (size_t i = 0; i < numtbls; i++) {
                     printf("%s\n", tbls[i]);
@@ -266,7 +266,7 @@ int main(int argc, char *argv[])
             case LSDATA:
                 printf("KEY\t\t\t-\tVAL\n");
                 printf("--------------------------------------\n");
-                size_t numentries = get_num_tbl_entries(dbmgr);
+                ssize_t numentries = get_num_tbl_entries(dbmgr);
                 char **keys = get_tbl_keys(dbmgr);
                 char **vals = get_tbl_vals(dbmgr);
                 for (size_t i = 0; i < numentries; i++) {
