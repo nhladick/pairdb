@@ -90,6 +90,7 @@
 
 #include "parse.h"
 #include "db_manager.h"
+#include "messages.h"
 
 enum {
     INBUFF_SIZE = 256
@@ -104,6 +105,8 @@ int main(int argc, char *argv[])
     if (!dbmgr) {
         exit(EXIT_FAILURE);
     }
+
+    intro_msg();
 
     bool run_loop = true;
     while (run_loop) {
