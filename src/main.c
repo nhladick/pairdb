@@ -234,9 +234,20 @@ int main(int argc, char *argv[])
             case DELETE:
                 db_remove(dbmgr, parse_data.key);
                 break;
+
             case SAVE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
+                }
+                break;
+
+            case DROPTABLE:
+                int drop_stat = drop_tbl(dbmgr, parse_data.tbl_name);
+                if (drop_stat == -1) {
+                    printf("No file found - not deleted\n");
+                }
+                else if (drop_stat == -2) {
+                    printf("File read error\n");
                 }
                 break;
 
