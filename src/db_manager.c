@@ -277,7 +277,7 @@ int use_tbl(db_mgr dbm, char *tblname)
 // returns 1 on success.
 int save_curr_tbl(db_mgr dbm)
 {
-    if (!dbm || !dbm->curr_tbl || dbm->curr_tbl_name) {
+    if (!dbm || !dbm->curr_tbl || !dbm->curr_tbl_name) {
         return -1;
     }
 
