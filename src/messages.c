@@ -4,7 +4,8 @@ const char *intro_msg()
 {
     const char *msg =
                 "Pairdb - a command line key-value database\n"
-                "Copyright (C) Nikolai Hladick - 2025\n"
+                "Copyright (C) 2025 Nikolai Hladick\n"
+                "SPDX-License-Identifier: MIT\n"
                 "https://github.com/nhladick/pairdb\n"
                 "nhladick@gmail.com\n"
                 "--------------------------------------------------\n"
