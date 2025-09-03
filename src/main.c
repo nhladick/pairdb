@@ -126,9 +126,11 @@ int main(int argc, char *argv[])
         if ((parse_data.cmd == ADD ||
             parse_data.cmd == GET ||
             parse_data.cmd == DELETE ||
-            parse_data.cmd == SAVE) &&
+            parse_data.cmd == SAVE ||
+            parse_data.cmd == LSDATA) &&
             parse_data.tbl_name[0] == '\0') {
                 printf("No table selected: 'use <tbl_name>' or 'newtbl <tbl_name>'\n");
+                printf("Use 'lstbls' to see all tables\n");
                 continue;
             }
 
@@ -173,7 +175,6 @@ int main(int argc, char *argv[])
                     fprintf(stderr, "Memory allocation error\n");
                     exit(EXIT_FAILURE);
                 }
-                printf("usetable\n");
                 break;
             case ADD:
                 int result = add(dbmgr, parse_data.key, parse_data.val);
@@ -200,6 +201,18 @@ int main(int argc, char *argv[])
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
+                break;
+            case LSDATA:
+                printf("KEY\t\t\t-\tVAL\n");
+                printf("--------------------------------------\n");
+                size_t numentries = get_num_tbl_entries(dbmgr);
+                char **keys = get_tbl_keys(dbmgr);
+                char **vals = get_tbl_vals(dbmgr);
+                for (size_t i = 0; i < numentries; i++) {
+                    printf("%s\t\t\t-\t%s\n", keys[i], vals[i]);
+                }
+                free(keys);
+                free(vals);
                 break;
             case HELP:
                 printf("%s", long_help_msg());
