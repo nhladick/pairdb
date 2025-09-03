@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    intro_msg();
+    printf("%s", intro_msg());
 
     bool run_loop = true;
     while (run_loop) {
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 
         switch (parse_data.cmd) {
             case FAIL:
-                printf("fail\n");
+                printf("%s", short_help_msg());
                 break;
             case LSTABLES:
                 size_t numtbls = get_numtbls(dbmgr);
@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
                 printf("save\n");
                 break;
             case HELP:
-                printf("help\n");
+                printf("%s", long_help_msg());
                 break;
             case QUIT:
                 if (has_curr_tbl(dbmgr)) {
