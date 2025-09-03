@@ -256,6 +256,13 @@ void db_remove(db_mgr dbm, char *key)
     delete(dbm->curr_tbl, key);
 }
 
+// Returns number of key-val pairs
+// saved in current table.
+size_t get_num_tbl_entries(db_mgr dbm)
+{
+    return get_numentries(dbm->curr_tbl);
+}
+
 // Returns pointer to heap-allocated array of
 // key strings. Caller is responsible for
 // freeing returned pointer.

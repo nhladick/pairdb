@@ -57,6 +57,10 @@ size_t get(char *dst, size_t dsize, db_mgr dbm, char *key);
 // running multiple times on same key has no effect
 void db_remove(db_mgr dbm, char *key);
 
+// Returns number of key-val pairs
+// saved in current table.
+size_t get_num_tbl_entries(db_mgr dbm);
+
 // Returns pointer to heap-allocated array of
 // key strings. Caller is responsible for
 // freeing returned pointer.
