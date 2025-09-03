@@ -123,6 +123,17 @@ void test_cmd_enum_save(void)
     TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
 }
 
+// Test drop command - enum value and table name str
+void test_cmd_enum_and_str_drop(void)
+{
+    struct parse_object parse_data = {0};
+    char inbuff[] = "drop table1\n";
+    parse_input(inbuff, &parse_data);
+    enum CMD cmd = DROPTABLE;
+    TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
+    TEST_ASSERT_EQUAL_STRING("table1", parse_data.tbl_name);
+}
+
 // Test lsdata command enum value
 void test_cmd_enum_lsdata(void)
 {
@@ -167,6 +178,7 @@ int main(void)
     RUN_TEST(test_cmd_enum_and_str_get);
     RUN_TEST(test_cmd_enum_and_str_del);
     RUN_TEST(test_cmd_enum_save);
+    RUN_TEST(test_cmd_enum_and_str_drop);
     RUN_TEST(test_cmd_enum_lsdata);
     RUN_TEST(test_cmd_enum_help);
     RUN_TEST(test_cmd_enum_quit);
