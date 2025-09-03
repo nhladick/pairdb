@@ -83,6 +83,9 @@ static enum CMD parse_cmd(char *str_cmd)
     else if (strcmp(str_cmd, "save") == 0) {
         return SAVE;
     }
+    else if (strcmp(str_cmd, "lsdata") == 0) {
+        return LSDATA;
+    }
     else if (strcmp(str_cmd, "help") == 0) {
         return HELP;
     }
@@ -102,6 +105,7 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
         case SAVE:
         case HELP:
         case LSTABLES:
+        case LSDATA:
             break;
         case NEWTABLE:
         case USETABLE:

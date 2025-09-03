@@ -14,6 +14,7 @@ enum CMD {
     GET,
     DELETE,
     SAVE,
+    LSDATA,
     HELP,
     QUIT
 };
