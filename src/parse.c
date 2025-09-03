@@ -4,7 +4,7 @@
 
 #include "pairdbconst.h"
 #include "parse.h"
-#include "pairdbstring.h"
+#include "stringutil.h"
 
 enum {
     MAX_ARGS = 5

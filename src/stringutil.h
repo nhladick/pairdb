@@ -1,5 +1,5 @@
-#ifndef PAIRDBSTRING_H
-#define PAIRDBSTRING_H
+#ifndef STRINGUTIL_H
+#define STRINGUTIL_H
 
 #include <sys/types.h>
 
@@ -37,4 +37,4 @@ ssize_t strtcpy(char *restrict dst, const char *restrict src, size_t dsize);
 
 void getrandstr(char *dst, size_t len);
 
-#endif // PAIRDBSTRING_H
+#endif // STRINGUTIL_H

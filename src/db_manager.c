@@ -7,7 +7,7 @@
 #include "pairdbconst.h"
 #include "db_manager.h"
 #include "hashtable.h"
-#include "pairdbstring.h"
+#include "stringutil.h"
 
 // String constants
 static const char *PDB_ENV_VAR = "PAIRDB_DIR";

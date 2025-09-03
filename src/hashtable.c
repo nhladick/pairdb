@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "hashtable.h"
-#include "pairdbstring.h"
+#include "stringutil.h"
 
 enum {
     HT_KEY_MAX = 100,
