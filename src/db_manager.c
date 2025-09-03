@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "pairdbconst.h"
 #include "db_manager.h"
 #include "hashtable.h"
 #include "pairdbstring.h"

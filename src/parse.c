@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "pairdbconst.h"
 #include "parse.h"
 #include "pairdbstring.h"
 
