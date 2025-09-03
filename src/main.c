@@ -102,6 +102,23 @@ enum {
     INBUFF_SIZE = 256
 };
 
+/*
+ * pairdb main execution loop
+ *
+ * Main initializes a parse object that reads from
+ * an input buffer allocated on the stack. User
+ * input is parsed - if the command is valid/well-formed,
+ * a valid parse object is returned, and a switch
+ * statement on the parse command is executed for
+ * database operations. The input buffer on the stack
+ * is cleared after each loop iteration to ensure
+ * the parse function receives clean input.
+ *
+ * An initialized db manager object is used to create,
+ * manipulate, and save database tables.
+ *
+ */
+
 int main(int argc, char *argv[])
 {
     // Print program info if any command line
@@ -148,9 +165,11 @@ int main(int argc, char *argv[])
             }
 
         switch (parse_data.cmd) {
+
             case FAIL:
                 printf("%s", short_help_msg());
                 break;
+
             case LSTABLES:
                 size_t numtbls = get_numtbls(dbmgr);
                 char **tbls = get_tbls(dbmgr);
@@ -159,6 +178,7 @@ int main(int argc, char *argv[])
                 }
                 free(tbls);
                 break;
+
             case NEWTABLE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
@@ -174,6 +194,7 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
                 break;
+
             case USETABLE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
@@ -189,6 +210,7 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
                 break;
+
             case ADD:
                 int result = add(dbmgr, parse_data.key, parse_data.val);
                 if (result == -1) {
@@ -198,6 +220,7 @@ int main(int argc, char *argv[])
                     printf("Memory allocation error\n");
                 }
                 break;
+
             case GET:
                 char buff[VAL_MAX];
                 if (get(buff, VAL_MAX, dbmgr, parse_data.key) == 0) {
@@ -207,6 +230,7 @@ int main(int argc, char *argv[])
                     printf("%s\n", buff);
                 }
                 break;
+
             case DELETE:
                 db_remove(dbmgr, parse_data.key);
                 break;
@@ -215,6 +239,7 @@ int main(int argc, char *argv[])
                     save_curr_tbl(dbmgr);
                 }
                 break;
+
             case LSDATA:
                 printf("KEY\t\t\t-\tVAL\n");
                 printf("--------------------------------------\n");
@@ -227,9 +252,11 @@ int main(int argc, char *argv[])
                 free(keys);
                 free(vals);
                 break;
+
             case HELP:
                 printf("%s", long_help_msg());
                 break;
+
             case QUIT:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
