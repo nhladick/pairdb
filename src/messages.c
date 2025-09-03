@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "messages.h"
 
 const char *intro_msg()
