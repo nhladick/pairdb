@@ -79,6 +79,8 @@ const char *long_help_msg()
             "                            table.\n\n"
             " del <key>                  Deletes <key> <val> pair from\n"
             "                            current table.\n\n"
+            " lsdata                     Lists all key-value pairs in current\n"
+            "                            table.\n\n"
             " help                       Prints information on commands.\n\n"
             " quit                       Quit interactive program and save\n"
             "                            current table to disk.\n\n"

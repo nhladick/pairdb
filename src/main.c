@@ -60,6 +60,9 @@
  * del <key>                  Deletes <key> <val> pair from
  *                            current table.
  *
+ * lsdata                     Lists all key-value pairs in current
+ *                            table.
+ *
  * help                       Prints information on commands.
  *
  * quit                       Quit interactive program and save
