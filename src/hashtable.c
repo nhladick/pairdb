@@ -6,11 +6,6 @@
 #include "hashtable.h"
 #include "stringutil.h"
 
-enum {
-    HT_KEY_MAX = 100,
-    HT_VAL_MAX = 100
-};
-
 /*
  *
  * Values for Fowler/Noll/Vo hash function

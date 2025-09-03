@@ -5,6 +5,12 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+// Data size constants
+enum {
+    HT_KEY_MAX = 100,
+    HT_VAL_MAX = 100
+};
+
 // hashtable object handle
 typedef struct hashtbl_obj *hashtbl;
 
