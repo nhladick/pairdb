@@ -2,7 +2,7 @@
 #include <stddef.h>
 
 #include "unity/unity.h"
-#include "../src/pairdbstring.h"
+#include "../src/stringutil.h"
 
 void setUp(void)
 {

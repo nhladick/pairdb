@@ -6,7 +6,7 @@
 
 #include "unity/unity.h"
 #include "../src/hashtable.h"
-#include "../src/pairdbstring.h"
+#include "../src/stringutil.h"
 
 void setUp(void)
 {
@@ -170,13 +170,13 @@ void test_hashtbl_fileio(void)
     TEST_ASSERT_EQUAL_INT(true, k2exist);
     TEST_ASSERT_EQUAL_INT(true, k3exist);
 
-    char valbuff[VAL_MAX];
+    char valbuff[HT_VAL_MAX];
 
-    find(valbuff, VAL_MAX, tbl2, "key1");
+    find(valbuff, HT_VAL_MAX, tbl2, "key1");
     TEST_ASSERT_EQUAL_STRING("val1", valbuff);
-    find(valbuff, VAL_MAX, tbl2, "key2");
+    find(valbuff, HT_VAL_MAX, tbl2, "key2");
     TEST_ASSERT_EQUAL_STRING("val2", valbuff);
-    find(valbuff, VAL_MAX, tbl2, "key3");
+    find(valbuff, HT_VAL_MAX, tbl2, "key3");
     TEST_ASSERT_EQUAL_STRING("val3", valbuff);
 
     fclose(inf);
