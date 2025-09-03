@@ -84,7 +84,7 @@ int save_curr_tbl(db_mgr dbm);
 //
 // Returns: 1 if file is successfully deleted,
 //          -1 if no associated file is found,
-//          -2 on file access error.
+//          -2 on file access or memory error.
 //
 // If file access error occurs, the table
 // specified by tblname will remain accessible
@@ -114,13 +114,15 @@ int add(db_mgr dbm, char *key, char *val);
 // Returns 0 on error or if value not found.
 size_t get(char *dst, size_t dsize, db_mgr dbm, char *key);
 
-// key and value removed
-// running multiple times on same key has no effect
-void db_remove(db_mgr dbm, char *key);
+// Key and value removed from current table.
+// Running multiple times on the same key has no effect.
+// Returns 1 on success, 0 on failure.
+int db_remove(db_mgr dbm, char *key);
 
 // Returns number of key-val pairs
 // saved in current table.
-size_t get_num_tbl_entries(db_mgr dbm);
+// Returns -1 on error.
+ssize_t get_num_tbl_entries(db_mgr dbm);
 
 // Returns pointer to heap-allocated array of
 // key strings. Caller is responsible for
@@ -132,8 +134,9 @@ char **get_tbl_keys(db_mgr dbm);
 // freeing returned pointer.
 char **get_tbl_vals(db_mgr dbm);
 
-// Get number of tables saved in file
-size_t get_numtbls(db_mgr dbm);
+// Get number of tables saved in file.
+// Returns -1 on error.
+ssize_t get_numtbls(db_mgr dbm);
 
 // Returns pointer to heap-allocated array of
 // table name strings. Caller is responsible for

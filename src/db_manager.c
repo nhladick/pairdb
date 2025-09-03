@@ -95,13 +95,18 @@ db_mgr init_db_mgr()
     }
 
     ptr->active_tbls_fname = get_full_path(TBL_LIST_FNAME);
+    if (!ptr->active_tbls_fname) {
+        return NULL;
+    }
 
     // Check whether tbl_list file exists
     if (access(ptr->active_tbls_fname, F_OK) == 0) {
         // If exists, load tbl from file
         FILE *inf = fopen(ptr->active_tbls_fname, "r");
         if (!inf) {
+            free(ptr->active_tbls_fname);
             free(ptr);
+            fclose(inf);
             return NULL;
         }
         ptr->active_tbls = load_hashtbl_from_file(inf);
@@ -132,8 +137,9 @@ void destroy_db_mgr(db_mgr dbm)
 
     // Write active_tbls to file
     FILE *outf = fopen(dbm->active_tbls_fname, "w");
-
-    hashtbl_to_file(dbm->active_tbls, outf);
+    if (outf) {
+        hashtbl_to_file(dbm->active_tbls, outf);
+    }
     fclose(outf);
 
     destroy_hashtbl(dbm->active_tbls);
@@ -155,6 +161,10 @@ void destroy_db_mgr(db_mgr dbm)
 // operations
 bool has_curr_tbl(db_mgr dbm)
 {
+    if (!dbm) {
+        return false;
+    }
+
     return (dbm->curr_tbl);
 }
 
@@ -171,6 +181,10 @@ bool has_curr_tbl(db_mgr dbm)
 // is called.
 int get_new_tbl(db_mgr dbm, char *tblname)
 {
+    if (!dbm || !dbm->active_tbls) {
+        return -2;
+    }
+
     if (exists(dbm->active_tbls, tblname)) {
         return -1;
     }
@@ -208,6 +222,10 @@ int get_new_tbl(db_mgr dbm, char *tblname)
 // to disk until save_curr_tbl is called.
 int use_tbl(db_mgr dbm, char *tblname)
 {
+    if (!dbm || !dbm->active_tbls) {
+        return -2;
+    }
+
     if (!exists(dbm->active_tbls, tblname)) {
         return -1;
     }
@@ -224,6 +242,9 @@ int use_tbl(db_mgr dbm, char *tblname)
     find(fname, TBL_FNAME_LEN, dbm->active_tbls, tblname);
 
     char *tbl_fname = get_full_path(fname);
+    if (!tbl_fname) {
+        return -2;
+    }
 
     FILE *inf = fopen(tbl_fname, "r");
     if (!inf) {
@@ -256,7 +277,7 @@ int use_tbl(db_mgr dbm, char *tblname)
 // returns 1 on success.
 int save_curr_tbl(db_mgr dbm)
 {
-    if (!dbm) {
+    if (!dbm || !dbm->curr_tbl || dbm->curr_tbl_name) {
         return -1;
     }
 
@@ -273,6 +294,9 @@ int save_curr_tbl(db_mgr dbm)
     }
 
     char *tbl_fname = get_full_path(fname);
+    if (!tbl_fname) {
+        return -1;
+    }
 
     FILE *outf = fopen(tbl_fname, "w");
     if (!outf) {
@@ -300,7 +324,7 @@ int save_curr_tbl(db_mgr dbm)
 //
 // Returns: 1 if file is successfully deleted,
 //          -1 if no associated file is found,
-//          -2 on file access error.
+//          -2 on file access or memory error.
 //
 // If file access error occurs, the table
 // specified by tblname will remain accessible
@@ -314,9 +338,13 @@ int save_curr_tbl(db_mgr dbm)
 // return value.
 int drop_tbl(db_mgr dbm, char *tblname)
 {
+    if (!dbm || !dbm->active_tbls) {
+        return -2;
+    }
+
     // If current table is table to be deleted,
     // clear current table and table name
-    if (strcmp(dbm->curr_tbl_name, tblname) == 0) {
+    if (dbm->curr_tbl_name && strcmp(dbm->curr_tbl_name, tblname) == 0) {
         destroy_hashtbl(dbm->curr_tbl);
         dbm->curr_tbl = NULL;
         free(dbm->curr_tbl_name);
@@ -332,6 +360,9 @@ int drop_tbl(db_mgr dbm, char *tblname)
     char fname[TBL_FNAME_LEN];
     find(fname, TBL_FNAME_LEN, dbm->active_tbls, tblname);
     char *fullname = get_full_path(fname);
+    if (!fullname) {
+        return -2;
+    }
 
     if (unlink(fullname) < 0) {
         return -2;
@@ -341,6 +372,7 @@ int drop_tbl(db_mgr dbm, char *tblname)
     // if unlink is successful and the file
     // is removed from disk
     delete(dbm->active_tbls, tblname);
+    free(fullname);
 
     return 1;
 }
@@ -353,6 +385,10 @@ int drop_tbl(db_mgr dbm, char *tblname)
 // Attempt to add key that already exists results in failure.
 int add(db_mgr dbm, char *key, char *val)
 {
+    if (!dbm || !dbm->curr_tbl) {
+        return -2;
+    }
+
     return put(dbm->curr_tbl, key, val);
 }
 
@@ -364,20 +400,35 @@ int add(db_mgr dbm, char *key, char *val)
 // Returns 0 on error or if value not found.
 size_t get(char *dst, size_t dsize, db_mgr dbm, char *key)
 {
+    if (!dbm || !dbm->curr_tbl) {
+        return 0;
+    }
+
     return find(dst, dsize, dbm->curr_tbl, key);
 }
 
-// key and value removed
-// running multiple times on same key has no effect
-void db_remove(db_mgr dbm, char *key)
+// Key and value removed from current table.
+// Running multiple times on the same key has no effect.
+// Returns 1 on success, 0 on failure.
+int db_remove(db_mgr dbm, char *key)
 {
+    if (!dbm || !dbm->curr_tbl) {
+        return 0;
+    }
+
     delete(dbm->curr_tbl, key);
+    return 1;
 }
 
 // Returns number of key-val pairs
 // saved in current table.
-size_t get_num_tbl_entries(db_mgr dbm)
+// Returns -1 on error.
+ssize_t get_num_tbl_entries(db_mgr dbm)
 {
+    if (!dbm || !dbm->curr_tbl) {
+        return -1;
+    }
+
     return get_numentries(dbm->curr_tbl);
 }
 
@@ -386,6 +437,10 @@ size_t get_num_tbl_entries(db_mgr dbm)
 // freeing returned pointer.
 char **get_tbl_keys(db_mgr dbm)
 {
+    if (!dbm || !dbm->curr_tbl) {
+        return NULL;
+    }
+
     return get_keys(dbm->curr_tbl);
 }
 
@@ -394,12 +449,21 @@ char **get_tbl_keys(db_mgr dbm)
 // freeing returned pointer.
 char **get_tbl_vals(db_mgr dbm)
 {
+    if (!dbm || !dbm->curr_tbl) {
+        return NULL;
+    }
+
     return get_vals(dbm->curr_tbl);
 }
 
-// Get number of tables saved in file
-size_t get_numtbls(db_mgr dbm)
+// Get number of tables saved in file.
+// Returns -1 on error.
+ssize_t get_numtbls(db_mgr dbm)
 {
+    if (!dbm || !dbm->active_tbls) {
+        return -1;
+    }
+
     return get_numentries(dbm->active_tbls);
 }
 
@@ -408,6 +472,10 @@ size_t get_numtbls(db_mgr dbm)
 // freeing returned pointer.
 char **get_tbls(db_mgr dbm)
 {
+    if (!dbm || !dbm->active_tbls) {
+        return NULL;
+    }
+
     return get_keys(dbm->active_tbls);
 }
 
