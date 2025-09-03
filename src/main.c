@@ -259,6 +259,8 @@ int main(int argc, char *argv[])
                 else if (drop_stat == -2) {
                     printf("File read error\n");
                 }
+                // Reset table name field in parse_object
+                parse_data.tbl_name[0] = '\0';
                 break;
 
             case LSDATA:
