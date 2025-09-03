@@ -123,6 +123,16 @@ void test_cmd_enum_save(void)
     TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
 }
 
+// Test lsdata command enum value
+void test_cmd_enum_lsdata(void)
+{
+    struct parse_object parse_data = {0};
+    char inbuff[] = "lsdata\n";
+    parse_input(inbuff, &parse_data);
+    enum CMD cmd = LSDATA;
+    TEST_ASSERT_EQUAL_INT(cmd, parse_data.cmd);
+}
+
 // Test help command enum value
 void test_cmd_enum_help(void)
 {
@@ -157,6 +167,7 @@ int main(void)
     RUN_TEST(test_cmd_enum_and_str_get);
     RUN_TEST(test_cmd_enum_and_str_del);
     RUN_TEST(test_cmd_enum_save);
+    RUN_TEST(test_cmd_enum_lsdata);
     RUN_TEST(test_cmd_enum_help);
     RUN_TEST(test_cmd_enum_quit);
 
