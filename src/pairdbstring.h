@@ -3,13 +3,6 @@
 
 #include <sys/types.h>
 
-// maximum buffer size constants
-enum {
-    TBL_NAME_MAX = 32,
-    KEY_MAX = 100,
-    VAL_MAX = 100
-};
-
 /*
  * Public domain string copy function
  * recommended for use over functions
