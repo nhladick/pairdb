@@ -1,3 +1,88 @@
+/*
+ * Pairdb - a command line key-value database
+ * --------------------------------------------------
+ * Copyright (C) Nikolai Hladick - 2025
+ * https://github.com/nhladick/pairdb
+ * nhladick@gmail.com
+ * --------------------------------------------------
+ *
+ * Pairdb is an interactive key-value database for use
+ * at the command line. This program also accepts input
+ * files at stdin to execute batch commands.
+ *
+ * Pairdb can manage multiple named database tables. Each
+ * table contains key-value pairs of strings. Upon starting
+ * the program, a table must be created or a previously
+ * saved table must be chosen to work with. Users can add
+ * entries to a table, delete entries from a table, find
+ * entries within a table, and save a table to disk. Pairdb
+ * manages database files with its own file format. Syntax
+ * for database operations is listed below.
+ *
+ * ------------------- Commands -----------------------
+ *         SYNTAX                   ACTIONS
+ * newtbl <table_name>        Creates a new table in
+ *                            memory and sets as current
+ *                            table to be used for
+ *                            subsequent commands.
+ *                            Command fails if a table
+ *                            with <table_name> already
+ *                            exists. If used when another
+ *                            table is already set as
+ *                            current table, that table
+ *                            is saved before switching
+ *                            to the new table.
+ *
+ * use <table_name>           Loads a previously saved
+ *                            table into memory and sets
+ *                            as current table to be used
+ *                            for subsequent commands.
+ *                            Command fails if a table
+ *                            with <table_name> does not
+ *                            exist. If used when another
+ *                            table is already set as
+ *                            current table, that table is
+ *                            saved before switching to the
+ *                            table specified.
+ *
+ * save                       Saves current table to disk.
+ *
+ * lstbls                     Prints list of all saved tables.
+ *
+ * add <key> <val>            Adds key-value pair to current
+ *                            table. Command fails if <key>
+ *                            already exists in current table.
+ *
+ * get <key>                  Returns <val> associated with
+ *                            previously added <key> in current
+ *                            table.
+ *
+ * del <key>                  Deletes <key> <val> pair from
+ *                            current table.
+ *
+ * help                       Prints information on commands.
+ *
+ * quit                       Quit interactive program and save
+ *                            current table to disk.
+ *
+ * Any of the above commands can be placed in an input file with
+ * one command per line (separated by the newline character). Use
+ * the quit command on the final line. All data will be saved
+ * to disk in the table(s) specified.
+ *
+ * Example:
+ *
+ *   file: input.txt
+ *      newtbl table1
+ *      add key1 val1
+ *      add key2 val2
+ *      quit
+ *
+ *   command line:
+ *      pairdb < input.txt
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
