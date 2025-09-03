@@ -1,3 +1,27 @@
+/*
+ * --------------------------------------------------
+ * Copyright (C) 2025 Nikolai Hladick
+ * SPDX-License-Identifier: MIT
+ * https://github.com/nhladick/pairdb
+ * nhladick@gmail.com
+ * --------------------------------------------------
+ *
+ * Database Manager - db_manager
+ *
+ * The database manager is an object that can be used
+ * to get, modify, and save database tables. All tables
+ * save key-value pairs. Use the db_mgr handle to
+ * interact with a database containing multiple tables.
+ * The db_mgr object can work with at most 1 current
+ * database table. A table can be set to current with
+ * the get_new_tbl or use_tbl functions. Use the
+ * save_curr_tbl function to write the current table to
+ * disk. The user is responsible for freeing the db_mgr
+ * with the destroy_db_mgr function.
+ *
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -9,28 +33,44 @@
 #include "hashtable.h"
 #include "stringutil.h"
 
-// String constants
+// File/path string constants
+// Environment variable must be available at runtime
+// specifying the path for writing and reading files
 static const char *PDB_ENV_VAR = "PAIRDB_DIR";
+// Name of file for list of tables managed by db_mgr
 static const char *TBL_LIST_FNAME = "tbl_list";
 static const char *PDB_FILE_EXT = ".pairdb";
 
 enum {
     INIT_HASHTBL_SIZE = 32,
-    TBL_FNAME_LEN = 11
+    TBL_FNAME_LEN = 11  // 10 digit random string + '\0'
 };
 
+// Struct managed through handle declared in
+// db_manager.h:
+// typedef struct db_manager *db_mgr
 struct db_manager {
+    // Name of current table that
+    // db_mgr can perform operations on
     char *curr_tbl_name;
+    // Hashtable holding data for current table
     hashtbl curr_tbl;
+    // List of all tables currently saved on disk
+    // A table is initially added to active_tbls
+    // when the save_curr_tbl function is called
+    // on a table for the first time
     hashtbl active_tbls;
+    // Name of file that holds active_tbls data
     char *active_tbls_fname;
 };
+
+/*------------- Static functions -----------------*/
 
 // Input: file name without ".pairdb" file extension.
 // Allocates string on heap:
 //     absolute_pairdb_dir_path + input_file_name + ".pairdb"
 // Use return value to write to and read from file.
-// User is responsible for freeing allocated string.
+// Caller is responsible for freeing allocated string.
 static char *get_full_path(const char *fname)
 {
     char *PDB_PATH = getenv(PDB_ENV_VAR);
@@ -44,6 +84,9 @@ static char *get_full_path(const char *fname)
     return fullpath;
 }
 
+/* ----------- End static functions ----------------*/
+
+// Returns NULL on memory allocation error
 db_mgr init_db_mgr()
 {
     db_mgr ptr = calloc(1, sizeof(struct db_manager));
@@ -107,17 +150,25 @@ void destroy_db_mgr(db_mgr dbm)
     free(dbm);
 }
 
+// Check whether db_mgr object has a
+// current db table to perform
+// operations
 bool has_curr_tbl(db_mgr dbm)
 {
     return (dbm->curr_tbl);
 }
 
 // Get new empty table for use with db_mgr.
+// Use save_curr_tbl to keep current table
+// data, as this function overwrites current data.
 // Input: valid db_mgr handle, new table name string
 // Returns:
 //      -1 if table with tblname already exists
 //      -2 on memory allocation error
 //      1 on success
+// New table returned exists only in memory and
+// is not written to disk until save_curr_tbl
+// is called.
 int get_new_tbl(db_mgr dbm, char *tblname)
 {
     if (exists(dbm->active_tbls, tblname)) {
@@ -146,11 +197,15 @@ int get_new_tbl(db_mgr dbm, char *tblname)
 }
 
 // Use a previously saved table within db_mgr.
+// Use save_curr_tbl to keep current table
+// data, as this function overwrites current data.
 // Input: valid db_mgr handle, table name string
 // Returns:
 //      -1 if table with tblname does not exist
 //      -2 on memory allocation error
 //      1 on success
+// Modifications to the table are not saved
+// to disk until save_curr_tbl is called.
 int use_tbl(db_mgr dbm, char *tblname)
 {
     if (!exists(dbm->active_tbls, tblname)) {
@@ -193,6 +248,10 @@ int use_tbl(db_mgr dbm, char *tblname)
 
 }
 
+// Writes db to file and keeps table
+// as current table in db_mgr.
+// The saved table is added to active_tbls
+// if it is not there already.
 // Returns -1 on failure,
 // returns 1 on success.
 int save_curr_tbl(db_mgr dbm)
@@ -227,6 +286,7 @@ int save_curr_tbl(db_mgr dbm)
     return (result == 0) ? -1 : 1;
 }
 
+// Drop table
 // Input: db_mgr object and string name
 // of table to be deleted.
 //
@@ -263,6 +323,8 @@ int drop_tbl(db_mgr dbm, char *tblname)
         dbm->curr_tbl_name = NULL;
     }
 
+    // If tblname is not in active_tbls,
+    // then there is no file for the table
     if (!exists(dbm->active_tbls, tblname)) {
         return -1;
     }
@@ -275,6 +337,9 @@ int drop_tbl(db_mgr dbm, char *tblname)
         return -2;
     }
 
+    // Table is only removed from active_tbls
+    // if unlink is successful and the file
+    // is removed from disk
     delete(dbm->active_tbls, tblname);
 
     return 1;

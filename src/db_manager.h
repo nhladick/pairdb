@@ -1,15 +1,42 @@
+/*
+ * --------------------------------------------------
+ * Copyright (C) 2025 Nikolai Hladick
+ * SPDX-License-Identifier: MIT
+ * https://github.com/nhladick/pairdb
+ * nhladick@gmail.com
+ * --------------------------------------------------
+ *
+ * Database Manager - db_manager
+ *
+ * The database manager is an object that can be used
+ * to get, modify, and save database tables. All tables
+ * save key-value pairs. Use the db_mgr handle to
+ * interact with a database containing multiple tables.
+ * The db_mgr object can work with at most 1 current
+ * database table. A table can be set to current with
+ * the get_new_tbl or use_tbl functions. Use the
+ * save_curr_tbl function to write the current table to
+ * disk. The user is responsible for freeing the db_mgr
+ * with the destroy_db_mgr function.
+ *
+ */
+
 #ifndef DB_MANAGER_H
 #define DB_MANAGER_H
 
-#include "hashtable.h"
-
+// Use handle to db_mgr to interact
+// with database tables and files
 typedef struct db_manager *db_mgr;
 
+// Init function allocates db_mgr object
+// on the heap. Must be freed with destroy
+// function. User is responsible for freeing.
 db_mgr init_db_mgr();
 void destroy_db_mgr(db_mgr dbm);
 
 // Check whether db_mgr object has a
-// current db table
+// current db table to perform
+// operations
 bool has_curr_tbl(db_mgr dbm);
 
 // Get new empty table for use with db_mgr.
@@ -20,6 +47,9 @@ bool has_curr_tbl(db_mgr dbm);
 //      -1 if table with tblname already exists
 //      -2 on memory allocation error
 //      1 on success
+// New table returned exists only in memory and
+// is not written to disk until save_curr_tbl
+// is called.
 int get_new_tbl(db_mgr dbm, char *tblname);
 
 // Use a previously saved table within db_mgr.
@@ -30,13 +60,17 @@ int get_new_tbl(db_mgr dbm, char *tblname);
 //      -1 if table with tblname does not exist
 //      -2 on memory allocation error
 //      1 on success
+// Modifications to the table are not saved
+// to disk until save_curr_tbl is called.
 int use_tbl(db_mgr dbm, char *tblname);
 
-// Writes db to file.
+// Writes db to file and keeps table
+// as current table in db_mgr.
 // Returns -1 on failure,
 // returns 1 on success.
 int save_curr_tbl(db_mgr dbm);
 
+// Drop table
 // Input: db_mgr object and string name
 // of table to be deleted.
 //
