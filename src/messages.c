@@ -20,10 +20,12 @@ const char *short_help_msg()
                 "commands: newtbl <tbl_name>\n"
                 "          use <tbl_name>\n"
                 "          save\n"
-                "          lstble\n"
+                "          lstbls\n"
+                "          drop <tbl_name>\n"
                 "          add <key> <val>\n"
                 "          get <key>\n"
                 "          del <key>\n"
+                "          lsdata\n"
                 "          help\n"
                 "          quit\n"
                 "use help command for more info\n";
