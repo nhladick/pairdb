@@ -227,6 +227,28 @@ int save_curr_tbl(db_mgr dbm)
     return (result == 0) ? -1 : 1;
 }
 
+// Deletes all table data in memory and on disk
+// Input: db_mgr object and string table name
+// Returns: 1 on success,
+//          -1 if table not found
+//          -2 on file access error
+int drop_tbl(db_mgr dbm, char *tblname)
+{
+    if (!exists(dbm->active_tbls, tblname)) {
+        return -1;
+    }
+
+    char fname[TBL_FNAME_LEN];
+    find(fname, TBL_FNAME_LEN, dbm->active_tbls, tblname);
+    char *fullname = get_full_path(fname);
+
+    if (unlink(fullname) < 0) {
+        return -2;
+    }
+
+    return 1;
+}
+
 // Input: valid db_mgr handle,
 //        two strings, key and val, to be added to database.
 // Output: -1 if key already exists,

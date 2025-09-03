@@ -37,6 +37,13 @@ int use_tbl(db_mgr dbm, char *tblname);
 // returns 1 on success.
 int save_curr_tbl(db_mgr dbm);
 
+// Deletes all table data in memory and on disk
+// Input: db_mgr object and string table name
+// Returns: 1 on success,
+//          -1 if table not found
+//          -2 on file access error
+int drop_tbl(db_mgr dbm, char *tblname);
+
 // Input: valid db_mgr handle,
 //        two strings, key and val, to be added to database.
 // Output: -1 if key already exists,
