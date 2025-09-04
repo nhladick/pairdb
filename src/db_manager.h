@@ -11,12 +11,14 @@
  * The database manager is an object that can be used
  * to get, modify, and save database tables. All tables
  * save key-value pairs. Use the db_mgr handle to
- * interact with a database containing multiple tables.
- * The db_mgr object can work with at most 1 current
- * database table. A table can be set to current with
+ * interact with a database. The db_mgr object can work
+ * with only 1 current table at any one time, but can save
+ * multiple tables. A table can be set to current with
  * the get_new_tbl or use_tbl functions. Use the
- * save_curr_tbl function to write the current table to
- * disk. The user is responsible for freeing the db_mgr
+ * save_curr_tbl function to write the current table
+ * to disk. Data can be accessed in multiple ways - one
+ * key-value pair at a time, a list of keys, a list of
+ * values. The user is responsible for freeing the db_mgr
  * with the destroy_db_mgr function.
  *
  */
