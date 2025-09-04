@@ -340,7 +340,7 @@ int save_curr_tbl(db_mgr dbm)
 // return value.
 int drop_tbl(db_mgr dbm, char *tblname)
 {
-    if (!dbm || !dbm->active_tbls) {
+    if (!dbm || !dbm->active_tbls || !dbm->curr_tbl) {
         return -2;
     }
 
