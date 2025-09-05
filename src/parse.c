@@ -155,6 +155,7 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
         case LSTABLES:
         case LSDATA:
             break;
+
         case NEWTABLE:
         case USETABLE:
         case DROPTABLE:
@@ -164,6 +165,7 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
             }
             strtcpy(prs_data->tbl_name, argv[1], TBL_NAME_MAX);
             break;
+
         case ADD:
             if (argv[1] == NULL || argv[2] == NULL) {
                 prs_data->cmd = FAIL;
@@ -172,12 +174,15 @@ static void parse_args(char *argv[], struct parse_object *prs_data)
             strtcpy(prs_data->key, argv[1], KEY_MAX);
             strtcpy(prs_data->val, argv[2], VAL_MAX);
             break;
+
         case GET:
             if (argv[1] == NULL) {
                 prs_data->cmd = FAIL;
                 return;
             }
             strtcpy(prs_data->key, argv[1], KEY_MAX);
+            break;
+
         case DELETE:
             if (argv[1] == NULL) {
                 prs_data->cmd = FAIL;
