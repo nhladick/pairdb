@@ -121,10 +121,11 @@ size_t get(char *dst, size_t dsize, db_mgr dbm, char *key);
 // Returns 1 on success, 0 on failure.
 int db_remove(db_mgr dbm, char *key);
 
-// Returns number of key-val pairs
-// saved in current table.
-// Returns -1 on error.
-ssize_t get_num_tbl_entries(db_mgr dbm);
+// Returns number of key-val pairs saved
+// in current table.
+// Returns 0 if there are no table entries
+// and on error.
+size_t get_num_tbl_entries(db_mgr dbm);
 
 // Returns pointer to heap-allocated array of
 // key strings. Caller is responsible for
@@ -137,8 +138,9 @@ char **get_tbl_keys(db_mgr dbm);
 char **get_tbl_vals(db_mgr dbm);
 
 // Get number of tables saved in file.
-// Returns -1 on error.
-ssize_t get_numtbls(db_mgr dbm);
+// Returns 0 if there are no tables
+// and on error.
+size_t get_numtbls(db_mgr dbm);
 
 // Returns pointer to heap-allocated array of
 // table name strings. Caller is responsible for

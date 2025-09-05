@@ -422,13 +422,14 @@ int db_remove(db_mgr dbm, char *key)
     return 1;
 }
 
-// Returns number of key-val pairs
-// saved in current table.
-// Returns -1 on error.
-ssize_t get_num_tbl_entries(db_mgr dbm)
+// Returns number of key-val pairs saved
+// in current table.
+// Returns 0 if there are no table entries
+// and on error.
+size_t get_num_tbl_entries(db_mgr dbm)
 {
     if (!dbm || !dbm->curr_tbl) {
-        return -1;
+        return 0;
     }
 
     return get_numentries(dbm->curr_tbl);
@@ -459,8 +460,9 @@ char **get_tbl_vals(db_mgr dbm)
 }
 
 // Get number of tables saved in file.
-// Returns -1 on error.
-ssize_t get_numtbls(db_mgr dbm)
+// Returns 0 if there are no tables
+// and on error.
+size_t get_numtbls(db_mgr dbm)
 {
     if (!dbm || !dbm->active_tbls) {
         return -1;
