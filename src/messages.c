@@ -1,3 +1,14 @@
+/*
+ * Pairdb - a command line key-value database
+ * --------------------------------------------------
+ * Copyright (C) 2025 Nikolai Hladick
+ * SPDX-License-Identifier: MIT
+ * https://github.com/nhladick/pairdb
+ * nhladick@gmail.com
+ * --------------------------------------------------
+ *
+ */
+
 #include "messages.h"
 
 const char *intro_msg()
