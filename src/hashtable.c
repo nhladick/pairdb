@@ -1,3 +1,17 @@
+/*
+ * Pairdb - a command line key-value database
+ * --------------------------------------------------
+ * Copyright (C) 2025 Nikolai Hladick
+ * SPDX-License-Identifier: MIT
+ * https://github.com/nhladick/pairdb
+ * nhladick@gmail.com
+ * --------------------------------------------------
+ *
+ * Hashtable implementation using linear probing.
+ *
+ */
+
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -29,11 +43,7 @@ static const unsigned int RESIZE_FACTOR = 2;
 static const double LOAD_FACT_LIM = 0.65;
 
 
-/*
- *
- **************** Data structures ****************
- *
- */
+/*------------------ Data structures -----------------*/
 
 // all hashtable operations performed using pointer
 // to hashtbl_obj - pointer defined in header file
@@ -50,11 +60,7 @@ struct node {
     size_t tblpos;
 };
 
-/*
-*
-************* Start - static/internal functions ************
-*
-*/
+/*---------------- Start - static/internal functions --------------*/
 
 static double get_load_factor(hashtbl ht)
 {
@@ -157,19 +163,11 @@ static int resize(hashtbl tbl)
     return 1;
 }
 
-/*
- *
- ************* End - static/internal functions ************
- *
- */
+/*--------------- End - static/internal functions --------------*/
 
 
 
-/*
- *
- *************** Hash table public functions ***************
- *
- */
+/*---------------- Hash table public functions -----------------*/
 
 
 // returns handle to hash table object allocated on heap
