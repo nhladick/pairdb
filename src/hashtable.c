@@ -308,7 +308,7 @@ size_t find(char *dst, size_t dsize, hashtbl tbl, char *key)
 
     ssize_t cpy = strtcpy(dst, arr[i]->val, dsize);
 
-    return (cpy < 0) ? dsize - 1 : cpy;
+    return (cpy < 0) ? dsize - 1 : (size_t) cpy;
 }
 
 bool exists(hashtbl tbl, char *key)
