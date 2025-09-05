@@ -1,13 +1,13 @@
 # Pairdb
-Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. Pairdb manages database files with its own file format. See syntax for database operations below.
+Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. See syntax for table operations below.
 
 `newtbl table_name`
 
-Creates a new table in memory and sets as current table to be used for subsequent commands. Command fails if a table with *table_name* already exists. If used when another table is already set as current table, that table is saved before switching to the new table.
+Creates a new table in memory and sets as the current table to be used for subsequent commands. Command fails if a table with *table_name* already exists. If used when another table is already set as current table, that table is saved before switching to the new table.
 
 `use table_name`
 
-Loads a previously saved table into memory and sets as current table to be used for subsequent commands. Command fails if a table with *table_name* does not exist. If used when another table is already set as current table, that table is saved before switching to the table specified.
+Loads a previously saved table into memory and sets as the current table to be used for subsequent commands. Command fails if a table with *table_name* does not exist. If used when another table is already set as current table, that table is saved before switching to the table specified.
 
 `save`
 
@@ -19,7 +19,7 @@ Prints list of all saved tables.
 
 `drop table_name`
 
-Drops table by deleting file associated with *table_name* and removing *table_name* from database table list. If *table_name* refers to the current active table, all table data is cleared from memory, and another table must be created or selected to perform any table operations.
+Drops table by deleting the file associated with *table_name* and removing *table_name* from the database table list. If *table_name* refers to the current active table, all table data is cleared from memory, and another table must be created or selected to perform any table operations.
 
 `add key val`
 
@@ -39,7 +39,7 @@ Lists all key-value pairs in current table.
 
 `help`
 
-Prints information on commands
+Prints information on commands.
 
 `quit`
 
@@ -61,7 +61,19 @@ command line:
 
             pairdb < input.txt
 
-## Build
+## Build/Usage
+* Clone the repository: `git clone https://github.com/nhladick/pairdb`
+* Navigate to the pairdb directory and run `make`
+* Tests can be run with the provided script: `source test-pairdb.sh`
+        * Results are written to `/test/test_output.txt`
+* Run `make install`
+        * The `pairdb` executable will be moved to the `~/bin` directory. This directory will be created if it does not exist. Ensure this directory is on your path to use the executable.
+        * A directory `~/pairdb-data` will be created. Pairdb uses this directory to save and manage table files and application data.
+* Run with `pairdb`
 
-
-## Notes
+## Dependencies and Notes
+* This project uses the [Unity testing framework](https://github.com/ThrowTheSwitch/Unity). Unity is covered under the MIT License.
+* The hash table implementation uses the [Fowler/Noll/Vo hash function](https://github.com/lcn2/fnv/blob/master/hash_32a.c). This function is within the public domain.
+* This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
+* Pairdb is intended for personal use with relatively small data sets.
+* This is a personal learning project.
