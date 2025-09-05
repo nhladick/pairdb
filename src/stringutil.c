@@ -37,7 +37,7 @@ ssize_t strtcpy(char *restrict dst, const char *restrict src, size_t dsize)
     dlen = slen - trunc;
     stpcpy(mempcpy(dst, src, dlen), "");
 
-    return trunc ? -1 : slen;
+    return trunc ? -1 : (ssize_t) slen;
 }
 
 /*
