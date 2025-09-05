@@ -108,12 +108,12 @@ void test_find(void)
     hashtbl tbl = init_hashtbl(4);
     put(tbl, "key1", "val1");
 
-    char str1[6];
+    char str1[6] = {0};
     size_t result = find(str1, 6, tbl, "key1");
     TEST_ASSERT_EQUAL_INT(4, result);
     TEST_ASSERT_EQUAL_STRING("val1", str1);
 
-    char str2[6];
+    char str2[6] = {0};
     result = find(str2, 6, tbl, "nokey");
     TEST_ASSERT_EQUAL_INT(0, result);
     TEST_ASSERT_EQUAL_STRING("", str2);
@@ -145,7 +145,7 @@ void test_hashtbl_fileio(void)
     size_t initsize = get_tbl_size(tbl);
     size_t initnumentries = get_numentries(tbl);
 
-    char buff[256];
+    char buff[256] = {0};
 
     FILE *outf = fmemopen(buff, sizeof(buff), "w");
     hashtbl_to_file(tbl, outf);
@@ -225,6 +225,116 @@ void test_get_vals(void)
     destroy_hashtbl(tbl);
 }
 
+/*------- Tests to check behavior on uninitialized input ------*/
+
+void test_null_destroy(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    destroy_hashtbl(tbl);
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+}
+
+void test_null_get_size(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    size_t result = get_tbl_size(tbl);
+    TEST_ASSERT_EQUAL_INT(0, result);
+}
+
+void test_null_get_numentries(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    size_t result = get_tbl_size(tbl);
+    TEST_ASSERT_EQUAL_INT(0, result);
+}
+
+void test_null_put(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    size_t result = put(tbl, "key1", "val1");
+    TEST_ASSERT_EQUAL_INT(-2, result);
+}
+
+void test_null_find(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    char buff[6] = {0};
+    size_t result = find(buff, 6, tbl, "key1");
+    TEST_ASSERT_EQUAL_INT(0, result);
+}
+
+void test_null_exists(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    bool result = exists(tbl, "key1");
+    TEST_ASSERT_EQUAL_INT(0, result);
+}
+
+void test_null_delete(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    delete(tbl, "key1");
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+}
+
+void test_null_get_keys(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    char **k = get_keys(tbl);
+    TEST_ASSERT_EQUAL_INT(0, k);
+}
+
+void test_null_get_vals(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+    char **v = get_vals(tbl);
+    TEST_ASSERT_EQUAL_INT(0, v);
+}
+
+void test_null_tofile(void)
+{
+    hashtbl tbl = NULL;
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+
+    // Valid file, invalid hashtbl
+    char buff[256] = {0};
+
+    FILE *outf = fmemopen(buff, sizeof(buff), "w");
+    size_t result = hashtbl_to_file(tbl, outf);
+    fclose(outf);
+    TEST_ASSERT_EQUAL_INT(0, result);
+
+    // Valid hashtbl, invalid file
+    tbl = init_hashtbl(4);
+    outf = NULL;
+    result = hashtbl_to_file(tbl, outf);
+    TEST_ASSERT_EQUAL_INT(0, result);
+
+    destroy_hashtbl(tbl);
+
+    // Invalid hashtbl and invalid file
+    tbl = NULL;
+    outf = NULL;
+    result = hashtbl_to_file(tbl, outf);
+    TEST_ASSERT_EQUAL_INT(0, result);
+}
+
+void test_null_fromfile(void)
+{
+    FILE *f = NULL;
+    hashtbl tbl = load_hashtbl_from_file(f);
+    TEST_ASSERT_EQUAL_INT(0, tbl);
+}
+
 
 int main(void)
 {
@@ -239,6 +349,17 @@ int main(void)
     RUN_TEST(test_hashtbl_fileio);
     RUN_TEST(test_get_keys);
     RUN_TEST(test_get_vals);
+    RUN_TEST(test_null_destroy);
+    RUN_TEST(test_null_get_size);
+    RUN_TEST(test_null_get_numentries);
+    RUN_TEST(test_null_put);
+    RUN_TEST(test_null_find);
+    RUN_TEST(test_null_exists);
+    RUN_TEST(test_null_delete);
+    RUN_TEST(test_null_get_keys);
+    RUN_TEST(test_null_get_vals);
+    RUN_TEST(test_null_tofile);
+    RUN_TEST(test_null_fromfile);
 
     return UNITY_END();
 }
