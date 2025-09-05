@@ -64,6 +64,10 @@ struct node {
 
 static double get_load_factor(hashtbl ht)
 {
+    if (!ht) {
+        return (double) 0.0;
+    }
+
     return (double) ht->numentries / ht->arrsize;
 }
 
@@ -89,6 +93,10 @@ static unsigned int fnv_hash(void *p_in)
 // linear probing for collisions
 static void arr_insert(hashtbl tbl, struct node *np)
 {
+    if (!tbl || !np) {
+        return;
+    }
+
     // start with initial expected index
     // using hash function
     size_t i = np->hashval % tbl->arrsize;
@@ -109,6 +117,10 @@ static void arr_insert(hashtbl tbl, struct node *np)
 
 static void free_node(struct node *np)
 {
+    if (!np) {
+        return;
+    }
+
     if (np->key) {
         free(np->key);
     }
@@ -124,6 +136,10 @@ static void free_node(struct node *np)
 // returns -1 if key not found
 static ssize_t get_index_by_key(hashtbl tbl, char *key)
 {
+    if (!tbl) {
+        return -1;
+    }
+
     struct node **arr = tbl->arr;
     ssize_t i = fnv_hash(key) % tbl->arrsize;
 
@@ -140,9 +156,13 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
 
 // resize tbl array when load factor reaches LOAD_FACT_LIM
 // returns 1 if successful
-// returns -1 on memory allocation failure
+// returns -1 on memory allocation failure or invalid table
 static int resize(hashtbl tbl)
 {
+    if (!tbl) {
+        return -1;
+    }
+
     struct node **prevarr = tbl->arr;
     tbl->arr = NULL;
     size_t prevsize = tbl->arrsize;
@@ -198,6 +218,10 @@ hashtbl init_hashtbl(size_t tblsize)
 // and frees table
 void destroy_hashtbl(hashtbl tbl)
 {
+    if (!tbl) {
+        return;
+    }
+
     for (size_t i = 0; i < tbl->arrsize; i++) {
         if (tbl->arr[i]) {
             free_node(tbl->arr[i]);
@@ -225,6 +249,10 @@ void destroy_hashtbl(hashtbl tbl)
 // node itself must be freed)
 int put(hashtbl tbl, char *key, char *val)
 {
+    if (!tbl) {
+        return -2;
+    }
+
     // stop if key already exists
     if (get_index_by_key(tbl, key) >= 0) {
         return -1;
@@ -267,6 +295,10 @@ int put(hashtbl tbl, char *key, char *val)
 
 size_t find(char *dst, size_t dsize, hashtbl tbl, char *key)
 {
+    if (!tbl) {
+        return 0;
+    }
+
     struct node **arr = tbl->arr;
     ssize_t i = get_index_by_key(tbl, key);
 
@@ -281,6 +313,10 @@ size_t find(char *dst, size_t dsize, hashtbl tbl, char *key)
 
 bool exists(hashtbl tbl, char *key)
 {
+    if (!tbl) {
+        return false;
+    }
+
     if (get_index_by_key(tbl, key) < 0) {
         return false;
     }
@@ -293,6 +329,10 @@ bool exists(hashtbl tbl, char *key)
 // key has no effect
 void delete(hashtbl tbl, char *key)
 {
+    if (!tbl) {
+        return;
+    }
+
     ssize_t i = get_index_by_key(tbl, key);
     if (i < 0) {
         return;
@@ -305,11 +345,19 @@ void delete(hashtbl tbl, char *key)
 
 size_t get_tbl_size(hashtbl tbl)
 {
+    if (!tbl) {
+        return 0;
+    }
+
     return tbl->arrsize;
 }
 
 size_t get_numentries(hashtbl tbl)
 {
+    if (!tbl) {
+        return 0;
+    }
+
     return tbl->numentries;
 }
 
@@ -318,6 +366,10 @@ size_t get_numentries(hashtbl tbl)
 // freeing returned pointer.
 char **get_keys(hashtbl tbl)
 {
+    if (!tbl) {
+        return NULL;
+    }
+
     char **keyarr = calloc(tbl->numentries, sizeof(char *));
 
     size_t k_index = 0;
@@ -338,6 +390,10 @@ char **get_keys(hashtbl tbl)
 // freeing returned pointer.
 char **get_vals(hashtbl tbl)
 {
+    if (!tbl) {
+        return NULL;
+    }
+
     char **valarr = calloc(tbl->numentries, sizeof(char *));
 
     size_t v_index = 0;
