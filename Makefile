@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -MMD -Wall
+CFLAGS = -MMD -Wall -Wextra -pedantic
 
 # Directories
 SRCDIR = src
@@ -28,3 +28,6 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/
+
+
+
