@@ -66,11 +66,8 @@ command line:
 ## Build/Usage
 * Clone the repository: `git clone https://github.com/nhladick/pairdb`
 * Navigate to the pairdb directory and run `make`
-* Tests can be run with the provided script: `source test-pairdb.sh`
-        * Results are written to `/test/test_output.txt`
-* Run `make install`
-        * The `pairdb` executable will be moved to the `~/bin` directory. This directory will be created if it does not exist. Ensure this directory is on your path to use the executable.
-        * A directory `~/pairdb-data` will be created. Pairdb uses this directory to save and manage table files and application data.
+* Tests can be run with the provided script: `source test-pairdb.sh`. Results are written to `/test/test_output.txt`
+* Run `make install`. The `pairdb` executable will be moved to the `~/bin` directory. This directory will be created if it does not exist. Ensure this directory is on your path to use the executable. A directory `~/pairdb-data` will be created. Pairdb uses this directory to save and manage table files and application data.
 * Run with `pairdb`
 
 ## Dependencies and Notes
