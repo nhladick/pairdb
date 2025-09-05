@@ -56,14 +56,14 @@ Example:
 
 file: input.txt
 
-            newtbl table1
-            add key1 val1
-            add key2 val2
-            quit
+    newtbl table1
+    add key1 val1
+    add key2 val2
+    quit
 
 command line:
 
-            pairdb < input.txt
+    pairdb < input.txt
 
 ## Build/Usage
 * Clone the repository: `git clone https://github.com/nhladick/pairdb`
