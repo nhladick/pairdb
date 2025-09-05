@@ -1,4 +1,5 @@
 # Pairdb
+**Copyright (C) 2025 Nikolai Hladick**
 Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. See syntax for table operations below.
 
 ## Command syntax
