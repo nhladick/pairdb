@@ -2,10 +2,17 @@ CC = gcc
 CFLAGS = -MMD -Wall -Wextra -pedantic
 
 # Directories
+## installation
+BINDIR=~/bin
+DATADIR=~/pairdb-data
+
+## source and object files
 SRCDIR = src
 BUILDDIR = build
 
-TARGET = $(BUILDDIR)/pairdb
+EXE=pairdb
+
+TARGET = $(BUILDDIR)/$(EXE)
 
 .PHONY: all
 all: $(TARGET)
@@ -29,5 +36,8 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.c
 clean:
 	rm -rf $(BUILDDIR)/
 
-
-
+.PHONY: install
+install:
+	@mkdir -p $(BINDIR)
+	@install $(TARGET) $(BINDIR)/$(EXE)
+	@mkdir -p $(DATADIR)
