@@ -53,7 +53,7 @@
 #include "stringutil.h"
 
 enum {
-    MAX_ARGS = 5
+    MAX_ARGS = 3
 };
 
 /*---------- start - static/internal functions ------------*/
