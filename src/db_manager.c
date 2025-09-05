@@ -36,10 +36,8 @@
 #include "stringutil.h"
 
 // File/path string constants
-// Environment variable must be available at runtime
-// specifying the path for writing and reading files
-static const char *PDB_ENV_VAR = "PAIRDB_DIR";
 // Name of file for list of tables managed by db_mgr
+static const char *PAIRDB_DIR = "pairdb-data";
 static const char *TBL_LIST_FNAME = "tbl_list";
 static const char *PDB_FILE_EXT = ".pairdb";
 
@@ -75,12 +73,16 @@ struct db_manager {
 // Caller is responsible for freeing allocated string.
 static char *get_full_path(const char *fname)
 {
-    char *PDB_PATH = getenv(PDB_ENV_VAR);
-    size_t buffsize = strlen(PDB_PATH) +
+    const char *home = getenv("HOME");
+    size_t buffsize = strlen(home) + 1 +         // Add 1 for '/'
+                      strlen(PAIRDB_DIR) + 1 +   // Add 1 for '/'
                       strlen(fname) +
-                      strlen(PDB_FILE_EXT) + 1;
+                      strlen(PDB_FILE_EXT) + 1;  // Add 1 for terminating nul char
     char *fullpath = calloc(1, buffsize);
-    strcat(fullpath, PDB_PATH);
+    strcat(fullpath, home);
+    strcat(fullpath, "/");
+    strcat(fullpath, PAIRDB_DIR);
+    strcat(fullpath, "/");
     strcat(fullpath, fname);
     strcat(fullpath, PDB_FILE_EXT);
     return fullpath;
@@ -340,13 +342,14 @@ int save_curr_tbl(db_mgr dbm)
 // return value.
 int drop_tbl(db_mgr dbm, char *tblname)
 {
-    if (!dbm || !dbm->active_tbls || !dbm->curr_tbl) {
+    if (!dbm || !dbm->active_tbls) {
         return -2;
     }
 
     // If current table is table to be deleted,
     // clear current table and table name
-    if (dbm->curr_tbl_name && strcmp(dbm->curr_tbl_name, tblname) == 0) {
+    if (dbm->curr_tbl && dbm->curr_tbl_name &&
+        strcmp(dbm->curr_tbl_name, tblname) == 0) {
         destroy_hashtbl(dbm->curr_tbl);
         dbm->curr_tbl = NULL;
         free(dbm->curr_tbl_name);
