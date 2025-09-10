@@ -1,9 +1,9 @@
 # Pairdb
 **Copyright (C) 2025 Nikolai Hladick**
 
-Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. See syntax for table operations below.
+Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. After completing the [build and installation steps](#build-and-usage), the executable can be run with the command `pairdb` at the command line. See list of commands for table operations below.
 
-## Command syntax
+## Commands
 
 `newtbl table_name`
 
@@ -65,7 +65,7 @@ command line:
 
     pairdb < input.txt
 
-## Build/Usage
+## Build and Usage
 * Clone the repository: `git clone https://github.com/nhladick/pairdb`
 * Navigate to the pairdb directory and run `make`
 * Tests can be run with the provided script: `source test-pairdb.sh`. The script downloads three files from the [Unity testing framework](https://github.com/ThrowTheSwitch/Unity). Results are written to `/test/test_output.txt`
