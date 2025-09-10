@@ -1,7 +1,7 @@
 # Pairdb
 **Copyright (C) 2025 Nikolai Hladick**
 
-Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. After completing the [build and installation steps](#build-and-usage), the executable can be run with the command `pairdb` at the command line. See list of commands for table operations below.
+Pairdb is an interactive key-value database for use at the command line. Pairdb can manage multiple named database tables containing pairs of strings. Upon starting the program, a table must be created or a previously saved table must be chosen to work with. Users can add entries to a table, delete entries from a table, find entries within a table, and save a table to disk. After completing the [build and installation steps](#build-and-usage), the executable can be run with the command `pairdb` at the command line. See the list of commands for table operations below.
 
 ## Commands
 
@@ -72,9 +72,14 @@ command line:
 * Run `make install`. The `pairdb` executable will be moved to the `~/bin` directory. This directory will be created if it does not exist. Ensure this directory is on your path to use the executable. A directory `~/pairdb-data` will be created. Pairdb uses this directory to save and manage table files and application data.
 * Run with `pairdb`
 
-## Dependencies and Notes
+## Dependencies
 * This project uses the [Unity testing framework](https://github.com/ThrowTheSwitch/Unity). Unity is covered under the MIT License.
 * The hash table implementation uses the [Fowler/Noll/Vo hash function](https://github.com/lcn2/fnv/blob/master/hash_32a.c). This function is in the public domain.
+
+## Notes
+* The table name field is limited to 30 characters, and the key and value fields are limited to 98 characters each. Exceeding these limits results in undefined behavior.
+* All provided strings other than commands may include spaces if the string is enclosed in single (') or double (") quotation marks. Pairdb does not currently support any escape characters for including quotation marks within strings.
+* Pairdb does not accept the tab character within an input string.
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
 * Pairdb is intended for personal use with relatively small data sets.
 * This is a personal learning project.
