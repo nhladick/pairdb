@@ -7,11 +7,11 @@ Pairdb is an interactive key-value database for use at the command line. Pairdb 
 
 `newtbl table_name`
 
-Creates a new table in memory and sets as the current table to be used for subsequent commands. Command fails if a table with *table_name* already exists. If used when another table is already set as current table, that table is saved before switching to the new table.
+Creates a new table in memory and sets it as the current table to be used for subsequent commands. The command fails if a table with *table_name* already exists. If used when another table is already set as the current table, that table is saved before switching to the new table.
 
 `use table_name`
 
-Loads a previously saved table into memory and sets as the current table to be used for subsequent commands. Command fails if a table with *table_name* does not exist. If used when another table is already set as current table, that table is saved before switching to the table specified.
+Loads a previously saved table into memory and sets it as the current table to be used for subsequent commands. The command fails if a table with *table_name* does not exist. If used when another table is already set as the current table, that table is saved before switching to the table specified.
 
 `save`
 
@@ -27,19 +27,19 @@ Drops table by deleting the file associated with *table_name* and removing *tabl
 
 `add key val`
 
-Adds *key-value* pair to current table. Command fails if *key* already exists in current table.
+Adds *key-value* pair to the current table. The command fails if *key* already exists in the current table.
 
 `get key`
 
-Returns *val* associated with previously added *key* in current table.
+Returns *val* associated with previously added *key* in the current table.
 
 `del key`
 
-Deletes *key-value* pair associated with *key* from current table.
+Deletes *key-value* pair associated with *key* from the current table.
 
 `lsdata`
 
-Lists all key-value pairs in current table.
+Lists all key-value pairs in the current table.
 
 `help`
 
@@ -74,7 +74,7 @@ command line:
 
 ## Dependencies and Notes
 * This project uses the [Unity testing framework](https://github.com/ThrowTheSwitch/Unity). Unity is covered under the MIT License.
-* The hash table implementation uses the [Fowler/Noll/Vo hash function](https://github.com/lcn2/fnv/blob/master/hash_32a.c). This function is within the public domain.
+* The hash table implementation uses the [Fowler/Noll/Vo hash function](https://github.com/lcn2/fnv/blob/master/hash_32a.c). This function is in the public domain.
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
 * Pairdb is intended for personal use with relatively small data sets.
 * This is a personal learning project.
