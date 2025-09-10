@@ -161,8 +161,6 @@ int main(int argc, char *argv[])
         // Commands 'use <tbl_name>' or 'newtbl <tbl_name>'
         // will set the table name that will be used until
         // another 'use' or 'newtbl' command is received.
-        // FAIL, QUIT, HELP are bypassed - no table needed
-        // for these commands.
         if ((parse_data.cmd == ADD ||
             parse_data.cmd == GET ||
             parse_data.cmd == DELETE ||
