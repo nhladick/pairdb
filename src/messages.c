@@ -57,7 +57,7 @@ const char *long_help_msg()
             "saved table must be chosen to work with. Users can add\n"
             "entries to a table, delete entries from a table, find\n"
             "entries within a table, and save a table to disk. Pairdb\n"
-            "manages database files with its own file format. Syntax\n"
+            "manages database files with the pairdb file format. Syntax\n"
             "for database operations is listed below.\n\n"
             "------------------- Commands -----------------------\n"
             "         SYNTAX                   ACTIONS           \n"

@@ -19,7 +19,7 @@
  * saved table must be chosen to work with. Users can add
  * entries to a table, delete entries from a table, find
  * entries within a table, and save a table to disk. Pairdb
- * manages database files with its own file format. Syntax
+ * manages database files with the pairdb file format. Syntax
  * for database operations is listed below.
  *
  * ------------------- Commands -----------------------
