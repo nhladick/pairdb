@@ -81,5 +81,5 @@ command line:
 * All provided strings other than commands may include spaces if the string is enclosed in single (') or double (") quotation marks. Pairdb does not currently support any escape characters for including quotation marks within strings.
 * Pairdb does not accept the tab character within an input string.
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
-* Pairdb is intended for personal use with relatively small data sets.
+* Pairdb is intended for use with relatively small data sets.
 * This is a personal learning project.
