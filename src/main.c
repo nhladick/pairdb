@@ -174,11 +174,12 @@ int main(int argc, char *argv[])
 
         switch (parse_data.cmd) {
 
-            case FAIL:
+            case FAIL: {
                 printf("%s", short_help_msg());
                 break;
+            }
 
-            case LSTABLES:
+            case LSTABLES: {
                 size_t numtbls = get_numtbls(dbmgr);
                 char **tbls = get_tbls(dbmgr);
                 for (size_t i = 0; i < numtbls; i++) {
@@ -186,8 +187,9 @@ int main(int argc, char *argv[])
                 }
                 free(tbls);
                 break;
+            }
 
-            case NEWTABLE:
+            case NEWTABLE: {
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
@@ -202,8 +204,9 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
                 break;
+            }
 
-            case USETABLE:
+            case USETABLE: {
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
@@ -218,8 +221,9 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
                 break;
+            }
 
-            case ADD:
+            case ADD: {
                 int result = add(dbmgr, parse_data.key, parse_data.val);
                 if (result == -1) {
                     printf("Key %s already exists\n", parse_data.key);
@@ -228,8 +232,9 @@ int main(int argc, char *argv[])
                     printf("Memory allocation error\n");
                 }
                 break;
+            }
 
-            case GET:
+            case GET: {
                 char buff[VAL_MAX];
                 if (get(buff, VAL_MAX, dbmgr, parse_data.key) == 0) {
                     printf("Value not found\n");
@@ -238,8 +243,9 @@ int main(int argc, char *argv[])
                     printf("%s\n", buff);
                 }
                 break;
+            }
 
-            case DELETE:
+            case DELETE: {
                 db_remove(dbmgr, parse_data.key);
                 break;
 
@@ -248,8 +254,9 @@ int main(int argc, char *argv[])
                     save_curr_tbl(dbmgr);
                 }
                 break;
+            }
 
-            case DROPTABLE:
+            case DROPTABLE: {
                 int drop_stat = drop_tbl(dbmgr, parse_data.tbl_name);
                 if (drop_stat == -1) {
                     printf("No file found - not deleted\n");
@@ -260,8 +267,9 @@ int main(int argc, char *argv[])
                 // Reset table name field in parse_object
                 parse_data.tbl_name[0] = '\0';
                 break;
+            }
 
-            case LSDATA:
+            case LSDATA: {
                 printf("KEY\t\t\t-\tVAL\n");
                 printf("--------------------------------------\n");
                 size_t numentries = get_num_tbl_entries(dbmgr);
@@ -273,17 +281,20 @@ int main(int argc, char *argv[])
                 free(keys);
                 free(vals);
                 break;
+            }
 
-            case HELP:
+            case HELP: {
                 printf("%s", long_help_msg());
                 break;
+            }
 
-            case QUIT:
+            case QUIT: {
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
                 run_loop = false;
                 break;
+            }
         }
     }
     destroy_db_mgr(dbmgr);
