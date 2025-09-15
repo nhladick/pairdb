@@ -248,8 +248,9 @@ int main(int argc, char *argv[])
             case DELETE: {
                 db_remove(dbmgr, parse_data.key);
                 break;
+            }
 
-            case SAVE:
+            case SAVE: {
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
