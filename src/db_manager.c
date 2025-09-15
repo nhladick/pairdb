@@ -377,6 +377,7 @@ int drop_tbl(db_mgr dbm, char *tblname)
         strcmp(dbm->curr_tbl_name, tblname) == 0) {
         destroy_hashtbl(dbm->curr_tbl);
         dbm->curr_tbl = NULL;
+        dbm->curr_tbl_updated = false;
         free(dbm->curr_tbl_name);
         dbm->curr_tbl_name = NULL;
     }
