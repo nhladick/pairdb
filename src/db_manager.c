@@ -53,13 +53,21 @@ struct db_manager {
     // Name of current table that
     // db_mgr can perform operations on
     char *curr_tbl_name;
+
     // Hashtable holding data for current table
     hashtbl curr_tbl;
+
+    // Indicates whether current table has been
+    // updated since opening or since it was
+    // last saved
+    bool curr_tbl_updated;
+
     // List of all tables currently saved on disk
     // A table is initially added to active_tbls
     // when the save_curr_tbl function is called
     // on a table for the first time
     hashtbl active_tbls;
+
     // Name of file that holds active_tbls data
     char *active_tbls_fname;
 };
@@ -129,6 +137,7 @@ db_mgr init_db_mgr()
 
     ptr->curr_tbl = NULL;
     ptr->curr_tbl_name = NULL;
+    ptr->curr_tbl_updated = false;
 
     return ptr;
 }
@@ -211,6 +220,10 @@ int get_new_tbl(db_mgr dbm, char *tblname)
         return -2;
     }
 
+    // Set to true to ensure new table is saved
+    // even if no data are added
+    dbm->curr_tbl_updated = true;
+
     return 1;
 }
 
@@ -269,6 +282,8 @@ int use_tbl(db_mgr dbm, char *tblname)
 
     free(tbl_fname);
 
+    dbm->curr_tbl_updated = false;
+
     return 1;
 
 }
@@ -283,6 +298,10 @@ int save_curr_tbl(db_mgr dbm)
 {
     if (!dbm || !dbm->curr_tbl || !dbm->curr_tbl_name) {
         return -1;
+    }
+
+    if (!dbm->curr_tbl_updated) {
+        return 1;
     }
 
     char fname[TBL_FNAME_LEN];
@@ -311,7 +330,13 @@ int save_curr_tbl(db_mgr dbm)
 
     free(tbl_fname);
 
-    return (result == 0) ? -1 : 1;
+    if (result > 0) {
+        dbm->curr_tbl_updated = false;
+        return 1;
+    }
+    else {
+        return -1;
+    }
 }
 
 // Drop table
@@ -394,6 +419,8 @@ int add(db_mgr dbm, char *key, char *val)
         return -2;
     }
 
+    dbm->curr_tbl_updated = true;
+
     return put(dbm->curr_tbl, key, val);
 }
 
@@ -422,6 +449,8 @@ int db_remove(db_mgr dbm, char *key)
     }
 
     delete(dbm->curr_tbl, key);
+    dbm->curr_tbl_updated = true;
+
     return 1;
 }
 
