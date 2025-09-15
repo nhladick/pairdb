@@ -21,7 +21,8 @@
  *
  * This version is modified slightly - updates
  * to error numbers were removed, slight formatting
- * changes were made.
+ * changes were made, mempcpy was replaced by memcpy
+ * for portability.
  *
  */
 
@@ -36,7 +37,15 @@ ssize_t strtcpy(char *restrict dst, const char *restrict src, size_t dsize)
     slen = strnlen(src, dsize);
     trunc = (slen == dsize);
     dlen = slen - trunc;
-    stpcpy(mempcpy(dst, src, dlen), "");
+
+    // Original public domain code uses:
+    // stpcpy(mempcpy(dst, src, dlen), "").
+    // Here, mempcpy is replaced with memcpy,
+    // and the final NUL char is set without
+    // stpcpy. This was done to enhance code
+    // portability.
+    memcpy(dst, src, dlen);
+    dst[dlen] = '\0';
 
     return trunc ? -1 : (ssize_t) slen;
 }
