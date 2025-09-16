@@ -119,6 +119,7 @@ void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_add(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_get(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_droptable(db_mgr dbm, struct parse_object *parse_ptr);
+void handle_lsdata(db_mgr dbm);
 
 /*
  * pairdb main execution loop
@@ -228,19 +229,9 @@ int main(int argc, char *argv[])
                 handle_droptable(dbmgr, &parse_data);
                 break;
 
-            case LSDATA: {
-                printf("KEY\t\t\t-\tVAL\n");
-                printf("--------------------------------------\n");
-                size_t numentries = get_num_tbl_entries(dbmgr);
-                char **keys = get_tbl_keys(dbmgr);
-                char **vals = get_tbl_vals(dbmgr);
-                for (size_t i = 0; i < numentries; i++) {
-                    printf("%s\t\t\t-\t%s\n", keys[i], vals[i]);
-                }
-                free(keys);
-                free(vals);
+            case LSDATA:
+                handle_lsdata(dbmgr);
                 break;
-            }
 
             case HELP: {
                 printf("%s", long_help_msg());
@@ -332,5 +323,19 @@ void handle_droptable(db_mgr dbm, struct parse_object *parse_ptr)
     }
     // Reset table name field in parse_object
     parse_ptr->tbl_name[0] = '\0';
+}
+
+void handle_lsdata(db_mgr dbm)
+{
+    printf("KEY\t\t\t-\tVAL\n");
+    printf("--------------------------------------\n");
+    size_t numentries = get_num_tbl_entries(dbm);
+    char **keys = get_tbl_keys(dbm);
+    char **vals = get_tbl_vals(dbm);
+    for (size_t i = 0; i < numentries; i++) {
+        printf("%s\t\t\t-\t%s\n", keys[i], vals[i]);
+    }
+    free(keys);
+    free(vals);
 }
 
