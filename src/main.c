@@ -117,6 +117,7 @@ void handle_lstables(db_mgr dbm);
 void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_add(db_mgr dbm, struct parse_object *parse_ptr);
+void handle_get(db_mgr dbm, struct parse_object *parse_ptr);
 
 /*
  * pairdb main execution loop
@@ -206,16 +207,9 @@ int main(int argc, char *argv[])
                 handle_add(dbmgr, &parse_data);
                 break;
 
-            case GET: {
-                char buff[VAL_MAX];
-                if (get(buff, VAL_MAX, dbmgr, parse_data.key) == 0) {
-                    printf("Value not found\n");
-                }
-                else {
-                    printf("%s\n", buff);
-                }
+            case GET:
+                handle_get(dbmgr, &parse_data);
                 break;
-            }
 
             case DELETE: {
                 db_remove(dbmgr, parse_data.key);
@@ -324,4 +318,14 @@ void handle_add(db_mgr dbm, struct parse_object *parse_ptr)
     }
 }
 
+void handle_get(db_mgr dbm, struct parse_object *parse_ptr)
+{
+    char buff[VAL_MAX];
+    if (get(buff, VAL_MAX, dbm, parse_ptr->key) == 0) {
+        printf("Value not found\n");
+    }
+    else {
+        printf("%s\n", buff);
+    }
+}
 
