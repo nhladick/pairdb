@@ -112,6 +112,9 @@ enum {
     INBUFF_SIZE = 256
 };
 
+// Forward declarations
+void handle_lstables(db_mgr dbm);
+
 /*
  * pairdb main execution loop
  *
@@ -174,20 +177,15 @@ int main(int argc, char *argv[])
 
         switch (parse_data.cmd) {
 
-            case FAIL: {
+            case FAIL:
                 printf("%s", short_help_msg());
                 break;
-            }
 
-            case LSTABLES: {
-                size_t numtbls = get_numtbls(dbmgr);
-                char **tbls = get_tbls(dbmgr);
-                for (size_t i = 0; i < numtbls; i++) {
-                    printf("%s\n", tbls[i]);
-                }
-                free(tbls);
+            case LSTABLES:
+                // Print all tables saved to file and
+                // managed by dbmgr
+                handle_lstables(dbmgr);
                 break;
-            }
 
             case NEWTABLE: {
                 if (has_curr_tbl(dbmgr)) {
@@ -300,3 +298,19 @@ int main(int argc, char *argv[])
     }
     destroy_db_mgr(dbmgr);
 }
+
+
+void handle_lstables(db_mgr dbm)
+{
+    size_t numtbls = get_numtbls(dbm);
+    char **tbls = get_tbls(dbm);
+    for (size_t i = 0; i < numtbls; i++) {
+        printf("%s\n", tbls[i]);
+    }
+    free(tbls);
+}
+
+
+
+
+
