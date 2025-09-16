@@ -115,6 +115,7 @@ enum {
 // Forward declarations
 void handle_lstables(db_mgr dbm);
 void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr);
+void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr);
 
 /*
  * pairdb main execution loop
@@ -193,22 +194,12 @@ int main(int argc, char *argv[])
                 handle_newtable(dbmgr, &parse_data);
                 break;
 
-            case USETABLE: {
+            case USETABLE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
-                int usetbl_stat = use_tbl(dbmgr, parse_data.tbl_name);
-                if (usetbl_stat == -1) {
-                    printf("Table does not exist\n");
-                    // Reset table name field in parse_object
-                    parse_data.tbl_name[0] = '\0';
-                }
-                else if (usetbl_stat == -2) {
-                    fprintf(stderr, "Memory allocation error\n");
-                    exit(EXIT_FAILURE);
-                }
+                handle_usetable(dbmgr, &parse_data);
                 break;
-            }
 
             case ADD: {
                 int result = add(dbmgr, parse_data.key, parse_data.val);
@@ -313,6 +304,21 @@ void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr)
         exit(EXIT_FAILURE);
     }
 }
+
+void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr)
+{
+    int usetbl_stat = use_tbl(dbm, parse_ptr->tbl_name);
+    if (usetbl_stat == -1) {
+        printf("Table does not exist\n");
+        // Reset table name field in parse_object
+        parse_ptr->tbl_name[0] = '\0';
+    }
+    else if (usetbl_stat == -2) {
+        fprintf(stderr, "Memory allocation error\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
 
 
 
