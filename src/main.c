@@ -118,6 +118,7 @@ void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_add(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_get(db_mgr dbm, struct parse_object *parse_ptr);
+void handle_droptable(db_mgr dbm, struct parse_object *parse_ptr);
 
 /*
  * pairdb main execution loop
@@ -223,18 +224,9 @@ int main(int argc, char *argv[])
                 break;
             }
 
-            case DROPTABLE: {
-                int drop_stat = drop_tbl(dbmgr, parse_data.tbl_name);
-                if (drop_stat == -1) {
-                    printf("No file found - not deleted\n");
-                }
-                else if (drop_stat == -2) {
-                    printf("File read error\n");
-                }
-                // Reset table name field in parse_object
-                parse_data.tbl_name[0] = '\0';
+            case DROPTABLE:
+                handle_droptable(dbmgr, &parse_data);
                 break;
-            }
 
             case LSDATA: {
                 printf("KEY\t\t\t-\tVAL\n");
@@ -327,5 +319,18 @@ void handle_get(db_mgr dbm, struct parse_object *parse_ptr)
     else {
         printf("%s\n", buff);
     }
+}
+
+void handle_droptable(db_mgr dbm, struct parse_object *parse_ptr)
+{
+    int drop_stat = drop_tbl(dbm, parse_ptr->tbl_name);
+    if (drop_stat == -1) {
+        printf("No file found - not deleted\n");
+    }
+    else if (drop_stat == -2) {
+        printf("File read error\n");
+    }
+    // Reset table name field in parse_object
+    parse_ptr->tbl_name[0] = '\0';
 }
 
