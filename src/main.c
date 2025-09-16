@@ -114,6 +114,7 @@ enum {
 
 // Forward declarations
 void handle_lstables(db_mgr dbm);
+void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr);
 
 /*
  * pairdb main execution loop
@@ -182,27 +183,15 @@ int main(int argc, char *argv[])
                 break;
 
             case LSTABLES:
-                // Print all tables saved to file and
-                // managed by dbmgr
                 handle_lstables(dbmgr);
                 break;
 
-            case NEWTABLE: {
+            case NEWTABLE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
-                int newtbl_stat = get_new_tbl(dbmgr, parse_data.tbl_name);
-                if (newtbl_stat == -1) {
-                    printf("Table already exists\n");
-                    // Reset table name field in parse_object
-                    parse_data.tbl_name[0] = '\0';
-                }
-                else if (newtbl_stat == -2) {
-                    fprintf(stderr, "Memory allocation error\n");
-                    exit(EXIT_FAILURE);
-                }
+                handle_newtable(dbmgr, &parse_data);
                 break;
-            }
 
             case USETABLE: {
                 if (has_curr_tbl(dbmgr)) {
@@ -300,6 +289,7 @@ int main(int argc, char *argv[])
 }
 
 
+
 void handle_lstables(db_mgr dbm)
 {
     size_t numtbls = get_numtbls(dbm);
@@ -310,6 +300,19 @@ void handle_lstables(db_mgr dbm)
     free(tbls);
 }
 
+void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr)
+{
+    int newtbl_stat = get_new_tbl(dbm, parse_ptr->tbl_name);
+    if (newtbl_stat == -1) {
+        printf("Table already exists\n");
+        // Reset table name field in parse_object
+        parse_ptr->tbl_name[0] = '\0';
+    }
+    else if (newtbl_stat == -2) {
+        fprintf(stderr, "Memory allocation error\n");
+        exit(EXIT_FAILURE);
+    }
+}
 
 
 
