@@ -116,6 +116,7 @@ enum {
 void handle_lstables(db_mgr dbm);
 void handle_newtable(db_mgr dbm, struct parse_object *parse_ptr);
 void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr);
+void handle_add(db_mgr dbm, struct parse_object *parse_ptr);
 
 /*
  * pairdb main execution loop
@@ -201,16 +202,9 @@ int main(int argc, char *argv[])
                 handle_usetable(dbmgr, &parse_data);
                 break;
 
-            case ADD: {
-                int result = add(dbmgr, parse_data.key, parse_data.val);
-                if (result == -1) {
-                    printf("Key %s already exists\n", parse_data.key);
-                }
-                else if (result == -2) {
-                    printf("Memory allocation error\n");
-                }
+            case ADD:
+                handle_add(dbmgr, &parse_data);
                 break;
-            }
 
             case GET: {
                 char buff[VAL_MAX];
@@ -319,7 +313,15 @@ void handle_usetable(db_mgr dbm, struct parse_object *parse_ptr)
     }
 }
 
-
-
+void handle_add(db_mgr dbm, struct parse_object *parse_ptr)
+{
+    int result = add(dbm, parse_ptr->key, parse_ptr->val);
+    if (result == -1) {
+        printf("Key %s already exists\n", parse_ptr->key);
+    }
+    else if (result == -2) {
+        printf("Memory allocation error\n");
+    }
+}
 
 
