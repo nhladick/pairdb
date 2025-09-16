@@ -213,17 +213,15 @@ int main(int argc, char *argv[])
                 handle_get(dbmgr, &parse_data);
                 break;
 
-            case DELETE: {
+            case DELETE:
                 db_remove(dbmgr, parse_data.key);
                 break;
-            }
 
-            case SAVE: {
+            case SAVE:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
                 break;
-            }
 
             case DROPTABLE:
                 handle_droptable(dbmgr, &parse_data);
@@ -233,18 +231,16 @@ int main(int argc, char *argv[])
                 handle_lsdata(dbmgr);
                 break;
 
-            case HELP: {
+            case HELP:
                 printf("%s", long_help_msg());
                 break;
-            }
 
-            case QUIT: {
+            case QUIT:
                 if (has_curr_tbl(dbmgr)) {
                     save_curr_tbl(dbmgr);
                 }
                 run_loop = false;
                 break;
-            }
         }
     }
     destroy_db_mgr(dbmgr);
