@@ -105,20 +105,32 @@ static void arr_insert(hashtbl tbl, struct node *np)
 
     // start with initial expected index
     // using hash function
-    size_t i = np->hashval % tbl->arrsize;
+    size_t hv = np->hashval;
 
-    // find first NULL element of arr
-    // starting at expected index
-    while (tbl->arr[i]) {
-        i = (i + 1) % tbl->arrsize;
+    // Probe value - quadratic probing
+    // probe = hash value + (i * i + 1) / 2
+    // i starts at 0
+    size_t probe = hv;
+
+    // Probe count to track maxprobe
+    size_t pcount = 1;
+
+    // Find first open bucket with quadratic probing
+    for (size_t i = 1; tbl->arr[probe % tbl->arrsize] != NULL; i++) {
+        probe = hv + ((i * i + i) / 2);
+        pcount++;
+    }
+
+    if (pcount > tbl->maxprobe) {
+        tbl->maxprobe = pcount;
     }
 
     // insert pointer to array
-    tbl->arr[i] = np;
+    tbl->arr[probe % tbl->arrsize] = np;
 
     // cache table position for faster
     // loading from disk
-    np->tblpos = i;
+    np->tblpos = probe % tbl->arrsize;
 }
 
 static void free_node(struct node *np)
@@ -147,14 +159,15 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
     }
 
     struct node **arr = tbl->arr;
-    ssize_t i = fnv_hash(key) % tbl->arrsize;
+    ssize_t hv = fnv_hash(key);
 
-    for (size_t j = 0; j < tbl->arrsize; i = (i + 1) % tbl->arrsize, j++) {
-        if (arr[i]) {
-            if (strcmp(key, arr[i]->key) == 0) {
-                return i;
+    for (size_t probe = hv, i = 1; i <= tbl->maxprobe + MAXPROBE_OFFSET; i++) {
+        if (arr[probe % tbl->arrsize]) {
+            if (strcmp(key, arr[probe % tbl->arrsize]->key) == 0) {
+                return probe % tbl->arrsize;
             }
         }
+        probe = hv + ((i * i + i) / 2);
     }
 
     return -1;
