@@ -7,7 +7,16 @@
  * nhladick@gmail.com
  * --------------------------------------------------
  *
- * Hashtable implementation using linear probing.
+ * Hashtable implementation using quadratic probing.
+ * The table tracks the maximum number of times a
+ * table insertion (using the put function) had to
+ * probe for an open bucket. When subsequently
+ * searching for a key, the sum of the maximum probe
+ * level and the probe level offset is used as the
+ * limit to stop searching if a key is not found.
+ * This stops the search function from degrading to
+ * linear time but provides a reasonable range within
+ * which to search.
  *
  */
 
@@ -95,8 +104,8 @@ static unsigned int fnv_hash(void *p_in)
     return hval;
 }
 
-// insert to hash table array using
-// linear probing for collisions
+// insert to hash table array using quadratic
+// probing for collisions.
 static void arr_insert(hashtbl tbl, struct node *np)
 {
     if (!tbl || !np) {
@@ -160,8 +169,22 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
 
     struct node **arr = tbl->arr;
     ssize_t hv = fnv_hash(key);
+    size_t probe = hv;
 
-    for (size_t probe = hv, i = 1; i <= tbl->maxprobe + MAXPROBE_OFFSET; i++) {
+    // Loop exits if key has not been found within maxprobe + MAXPROBE_OFFSET
+    // iterations. Limiting the range searched stops algorithmic complexity/
+    // performance from degrading to linear time, but restricting the range
+    // must be balanced with ensuring a wide enough rage is searched. The
+    // offset is used to provide a buffer for searching in case a table resize
+    // has increased the maximum probing depth. Since a table resize reduces
+    // the load factor, it is highly unlikely the maximum probing depth would
+    // increase. The offset should be relativley small (10-30). In hashtable
+    // testing and benchmarking, the maximum probing depth was usually in the
+    // range of 10 - 18 iterations, even for tests in which ~900,000 strings
+    // were hashed and inserted, and the collision rate was consistently
+    // around 10-14%.
+    for (size_t i = 1; i <= tbl->maxprobe + MAXPROBE_OFFSET; i++) {
+        // Start at hashvalue % table size
         if (arr[probe % tbl->arrsize]) {
             if (strcmp(key, arr[probe % tbl->arrsize]->key) == 0) {
                 return probe % tbl->arrsize;
