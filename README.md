@@ -88,3 +88,8 @@ command line:
 * Pairdb does not accept the tab character within an input string.
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
 * Pairdb is intended for use with relatively small data sets.
+
+## Limitations and Future Improvements
+In the current implementation, when a table is updated, pairdb writes the entire table to disk when saving rather than updating only the data that have changed. For small tables, the performance penalty is not noticeable, but a future version of pairdb should address this limitation.
+
+Each table within the program is implemented with a hash table that uses linear probing. The hash table is doubled in size when the load factor (number of table buckets used / total table buckets) exceeds 0.65. In the future, I would like to implement quadratic probing ensuring all hash table buckets will be covered by the chosen quadratic function, as this would likely improve performance relative to linear probing.
