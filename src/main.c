@@ -318,7 +318,10 @@ void handle_droptable(db_mgr dbm, struct parse_object *parse_ptr)
         printf("File read error\n");
     }
     // Reset table name field in parse_object
-    parse_ptr->tbl_name[0] = '\0';
+    // if current table was dropped
+    if (!has_curr_tbl(dbm)) {
+        parse_ptr->tbl_name[0] = '\0';
+    }
 }
 
 void handle_lsdata(db_mgr dbm)
