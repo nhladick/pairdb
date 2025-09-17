@@ -89,7 +89,7 @@ command line:
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
 
 ## Implementation Details
-Each database table is implemented using a hash table with quadratic probing. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the term $(i(i + 1)) / 2$ is added to the hash value for a key and this sum is used to index into the table:
+Each database table is implemented using a hash table with quadratic probing. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the term $\left(i \left(i + 1 \right) \right) / 2$ is added to the hash value for a key and this sum is used to index into the table:\
 $$ Index = HASH(key) + (i(i + 1)) / 2) modulo S $$ for i = 0, 1, 2, 3,..., where $Index$ is the table index, $HASH$ is the hash function, $key$ is the key to be inserted, and $S$ is the table size.
 
 ## Limitations and Future Improvements
