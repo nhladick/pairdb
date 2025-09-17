@@ -265,13 +265,15 @@ hashtbl init_hashtbl(size_t tblsize)
         return NULL;
     }
 
+    tblsize = topower2(tblsize);
+
     ptr->arr = calloc(tblsize, sizeof(struct node *));
     if (!ptr->arr) {
         free(ptr);
         return NULL;
     }
 
-    ptr->arrsize = topower2(tblsize);
+    ptr->arrsize = tblsize;
     ptr->numentries = 0;
     ptr->maxprobe = 0;
 
