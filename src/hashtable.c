@@ -40,7 +40,7 @@ static const unsigned int FNV_PRIME = 0x01000193; // FNV hash
  */
 
 static const unsigned int RESIZE_FACTOR = 2;
-static const double LOAD_FACT_LIM = 0.65;
+static const double LOAD_FACT_LIM = 0.60;
 
 
 /*------------------ Data structures -----------------*/
@@ -183,6 +183,50 @@ static int resize(hashtbl tbl)
     return 1;
 }
 
+// Input: unsigned integer a
+// Returns: the nearest power of 2 that is
+// greater than a
+static size_t topower2(size_t a)
+{
+    // Shift a right (divide by 2) until a = 2.
+    // Track whether a is odd at any point.
+    // If no intermediate value was ever odd
+    // when a == 2 with the loop, a was originally
+    // a power of 2. If an intermediate value was
+    // odd, a was not a power of 2. Left shift a
+    // (multiply by 2) count + 1 times for next
+    // greatest power of 2.
+    //
+    // Bit level:
+    //      00001100 - shift right until a == 2
+    //      00000001 - a was not divisible by 2 at step 2
+    //      00010000 - a is the power of 2 that is greater
+    //                 than the original value
+
+    if (a < 2) {
+        return 2;
+    }
+
+    size_t b = a;
+
+    size_t count = 0;
+    bool is_odd = false;
+    while (a > 2) {
+        if (a % 2 == 1) {
+            is_odd = true;
+        }
+        a = a >> 1;
+        count++;
+    }
+
+    if (is_odd) {
+        return a << (count + 1);
+    }
+    else {
+        return b;
+    }
+}
+
 /*--------------- End - static/internal functions --------------*/
 
 
@@ -208,7 +252,7 @@ hashtbl init_hashtbl(size_t tblsize)
         return NULL;
     }
 
-    ptr->arrsize = tblsize;
+    ptr->arrsize = topower2(tblsize);
     ptr->numentries = 0;
 
     return ptr;
