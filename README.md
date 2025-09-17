@@ -90,7 +90,7 @@ command line:
 
 ## Implementation Details
 Each database table is implemented using a hash table with quadratic probing. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the term $(i(i + 1)) / 2$ is added to the hash value for a key and this sum is used to index into the table:
-$$Index = FNV_HASH(key) + (i(i + 1)) / 2)$$ for i = 0, 1, 2, 3,....
+$$ Index = HASH(key) + (i(i + 1)) / 2) modulo S $$ for i = 0, 1, 2, 3,..., where $Index$ is the table index, $HASH$ is the hash function, $key$ is the key to be inserted, and $S$ is the table size.
 
 ## Limitations and Future Improvements
 In the current implementation, when a table is updated, pairdb writes the entire table to disk when saving rather than updating only the data that have changed. For small tables, the performance penalty is not noticeable, but a future version of pairdb should address this limitation.
