@@ -109,3 +109,9 @@ Since these probabilities assume very favorable conditions, I used an offset val
 
 ## Limitations and Future Improvements
 In the current implementation, when a table is updated, pairdb writes the entire table to disk when saving rather than updating only the data that have changed. For small tables, the performance penalty is not noticeable, but a future version of pairdb should address this limitation.
+
+Pairdb has some limitations related to text input. Command history and command autocompletion is not supported, but in the future, support can be added with the inclusion of a library like ncurses. Additionally, pairdb does not support the input of tab characters or escaping quotation marks. Future versions should have a broader range of permissible input values.
+
+In the future, I would like to add command line support so pairdb can be used one command at a time, without an interactive mode. This would make using pairdb in bash scripts easier and cleaner.
+
+Future versions may also support consuming and writing data in common formats, such as CSV, XML, and JSON.
