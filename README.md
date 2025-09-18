@@ -89,8 +89,23 @@ command line:
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
 
 ## Implementation Details
-Each database table is implemented using a hash table with quadratic probing. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the term $frac{(i(i + 1))}{2}$ is added to the hash value for a key and this sum is used to index into the table:\
-$$ Index = HASH(key) + (i(i + 1)) / 2) modulo S $$ for i = 0, 1, 2, 3,..., where $Index$ is the table index, $HASH$ is the hash function, $key$ is the key to be inserted, and $S$ is the table size.
+Each database table is implemented using a hash table with quadratic probing. A table is set to double size when the load factor (number of table entries / total table buckets) reaches 0.60. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the term (i(i + 1)) / 2 is added to the hash value, and this sum is used to index into the table:
+
+Index(i) = HASH(key) + (i(i + 1)) / 2) modulo S, for i = 0, 1, 2, 3,...
+
+where Index is the table index, HASH is the hash function, key is the key to be inserted, and S is the table size.
+
+The maximum number of probing iterations reached during a key insertion is saved in each table struct. When determining whether a key exists in a table or searching for a key, the initial index (Index(0) shown above) is checked first. If the key is not found at Index(0), the Index function iterates until i reaches the saved maximum probing depth value plus a constant offset value. This ensures the search algorithm does not degrade to linear time while providing a reasonable range within which to search.
+
+An offset value is used because the required probing depth to find a given key after insertion is likely to change when a table is resized. However, it is very unlikey the probing depth will increase, as the load factor decreases with a table resize. The constant offset value should be between 10-30. In tests involving thousands of strings, maximum probing depth typically ranged from around 10 to around 17. Since 10-17 more iterations is not too expensive, the sum of the maximum depth and this offset is used to balance the probability of finding the key and avoiding undesirable time complexity.
+
+The probability of reaching a probing depth of around 30 seems low. In the worst case scenario, a table is around half full during an insertion. Assuming a half full table, assuming the FNV hash disperses values well, and assuming quadratic probing acts as a form of "random selection," there is a 50% chance of choosing an occupied table bucket on the first attempt. The probability of consecutively choosing another occupied bucket will be (1/2) * ((occupied buckets - 1) / (total buckets - 1)). As an example, consider a 64 bucket table with 32 occupied buckets. The probability of choosing consecutive occupied buckets while probing is:
+
+(32/64)(31/63)(30/62)...
+
+According to these assumptions, the probability of choosing 10 consecutive buckets in this situation would be about 0.0004258; the probability of choosing 20 consecutive buckets would be about 1.1508E-8. The probability of choosing 20 consecutive occupied buckets in a larger table that is half full, one with 8,192 buckets, is about 9.3176E-7.
+
+Since these probabilities assume very favorable conditions, I used an offset value of 20 to be added to the maximum probing depth that will likely be around 10-20.
 
 ## Limitations and Future Improvements
 In the current implementation, when a table is updated, pairdb writes the entire table to disk when saving rather than updating only the data that have changed. For small tables, the performance penalty is not noticeable, but a future version of pairdb should address this limitation.
