@@ -105,7 +105,7 @@ The probability of reaching a probing depth of around 30 seems low. In the worst
 
 According to these assumptions, the probability of choosing 10 consecutive buckets in this situation would be about 0.0004258; the probability of choosing 20 consecutive buckets would be about 1.1508E-8. The probability of choosing 20 consecutive occupied buckets in a larger table that is half full, one with 8,192 buckets, is about 9.3176E-7.
 
-Since these probabilities assume very favorable conditions, I used an offset value of 20 to be added to the maximum probing depth that will likely be around 10-20.
+Since these probabilities assume very favorable conditions, I used an offset value of 20 to be added to the maximum probing depth that will likely be around 10-20, so each search loop, if needed, will likely run a maximum of about 30-50 times.
 
 ## Limitations and Future Improvements
 In the current implementation, when a table is updated, pairdb writes the entire table to disk when saving rather than updating only the data that have changed. For small tables, the performance penalty is not noticeable, but a future version of pairdb should address this limitation.
