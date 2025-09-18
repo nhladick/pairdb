@@ -49,7 +49,7 @@ static const unsigned int FNV_PRIME = 0x01000193; // FNV hash
  */
 
 static const unsigned int RESIZE_FACTOR = 2;
-// Added to maxprobe value to provide extra loop interations
+// Added to maxprobe value to provide extra loop iterations
 // when searching table. Serves as a buffer to decrease
 // probability of false negatives in get_index_by_key while
 // avoiding degrading to linear search/O(n) time.
@@ -63,16 +63,16 @@ static const double LOAD_FACT_LIM = 0.60;
 // to hashtbl_obj - pointer defined in header file
 struct hashtbl_obj {
     struct node **arr;
-    size_t arrsize;
-    size_t numentries;
-    size_t maxprobe;
+    size_t arrsize;     // Full table size including empty and used buckets
+    size_t numentries;  // Number of occupied buckets
+    size_t maxprobe;    // Max number of probes performed during data insert
 };
 
 struct node {
     char *key;
     char *val;
-    unsigned int hashval;
-    size_t tblpos;
+    unsigned int hashval;   // hashval stored to avoid reduntant hashing
+    size_t tblpos;          // Table position for efficient loading from file
 };
 
 /*---------------- Start - static/internal functions --------------*/
