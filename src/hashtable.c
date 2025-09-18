@@ -513,6 +513,7 @@ size_t hashtbl_to_file(hashtbl tbl, FILE *outf)
     // File format:
     // arrsize          (sizeof(size_t)) bytes
     // numentries       (sizeof(size_t)) bytes
+    // maxprobe         (sizeof(size_t)) bytes
     // list of nodes with no separation:
     //      key len     (sizeof(size_t)) bytes
     //      key         (strlen(key)) bytes
@@ -528,6 +529,9 @@ size_t hashtbl_to_file(hashtbl tbl, FILE *outf)
 
     // Write numentries
     writecnt += fwrite(&tbl->numentries, sizeof(size_t), 1, outf);
+
+    // Write maxprobe
+    writecnt += fwrite(&tbl->maxprobe, sizeof(size_t), 1, outf);
 
     size_t tbllen = get_tbl_size(tbl);
     size_t keylen;
@@ -582,7 +586,12 @@ hashtbl load_hashtbl_from_file(FILE *inf)
     size_t numentries;
     fread(&numentries, sizeof(size_t), 1, inf);
 
+    // Read maxprobe
+    size_t maxprobe;
+    fread(&maxprobe, sizeof(size_t), 1, inf);
+
     hashtbl tbl = init_hashtbl(arrsize);
+    tbl->maxprobe = maxprobe;
 
     char keybuff[HT_KEY_MAX] = {0};
     char valbuff[HT_VAL_MAX] = {0};
