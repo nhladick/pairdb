@@ -95,7 +95,7 @@ Index(i) = HASH(key) + (i(i + 1)) / 2) modulo S, for i = 0, 1, 2, 3,...
 
 where Index is the table index, HASH is the hash function, key is the key to be inserted, S is the table size, and i is the probe iteration number.
 
-The maximum number of probing iterations reached during a key insertion is saved in each table struct. When determining whether a key exists in a table or searching for a key, the initial index (Index(0) shown above) is checked first. If the key is not found at Index(0), the Index function iterates until the key is found or until i reaches the saved maximum probing depth value. This guarantees that there will be no false negatives.
+The maximum number of probing iterations reached during a key insertion is saved in each table struct. When searching for a key, the initial index (Index(0) shown above) is checked first. If the key is not found at Index(0), the Index function iterates until the key is found or until i reaches the saved maximum probing depth value. This guarantees that there will be no false negatives.
 
 In theory, the maximum probing depth that can be reached is floor(load factor * table size). This would occur when the table has one element less than maximum capacity according to the load factor (i.e., the table will be expanded if another element is added after the current addition), the hash results in a collision, and probing continues until all occupied buckets have been visited, after which the new element is inserted.
 
