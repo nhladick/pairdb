@@ -13,8 +13,8 @@
  * probe for an open bucket. When subsequently
  * searching for a key, this number is used as the
  * limit to stop searching if a key is not found.
- * This stops the search function from degrading to
- * linear time.
+ * This prevents false negatives and stops the search
+ * function from degrading to linear time.
  *
  */
 
@@ -65,7 +65,7 @@ struct node {
     char *key;
     char *val;
     unsigned int hashval;   // hashval stored to avoid reduntant hashing
-    size_t tblpos;          // Table position for efficient loading from file
+    size_t tblpos;          // Table position stored for efficient loading from file
 };
 
 /*---------------- Start - static/internal functions --------------*/
