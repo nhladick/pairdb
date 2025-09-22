@@ -89,11 +89,11 @@ command line:
 * This tool is currently intended for use on Unix/Linux systems, as it depends on the /dev/urandom device file and POSIX functions included in unistd.h.
 
 ## Implementation Details
-Each database table is implemented using a hash table with quadratic probing. A table is set to double in size when the load factor (number of table entries / total table buckets) reaches 0.60. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the following function is used to index into the table:
+Each database table is implemented using a hash table with quadratic probing. A table is set to double in size when the load factor (number of table entries / total table buckets) reaches 0.60, and the table size is always a power of 2. The Fowler/Noll/Vo hash function provides a fast and simple hash value for each key. When probing for open buckets upon key insertion, the following function is used to index into the table:
 
-Index(i) = HASH(key) + (i(i + 1)) / 2) modulo S, for i = 0, 1, 2, 3,...
+Index(key, i) = HASH(key) + (i(i + 1)) / 2) modulo S, for i = 0, 1, 2, 3,...
 
-where Index is the table index, HASH is the hash function, key is the key to be inserted, S is the table size, and i is the probe iteration number.
+where the output Index is the table index, HASH is the hash function, key is the key to be inserted, S is the table size, and i is the probe iteration number.
 
 The maximum number of probing iterations reached during a key insertion is saved in each table struct. When searching for a key, the initial index (Index(0) shown above) is checked first. If the key is not found at Index(0), the Index function iterates until the key is found or until i reaches the saved maximum probing depth value. This guarantees that there will be no false negatives.
 
