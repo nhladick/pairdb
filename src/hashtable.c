@@ -115,16 +115,16 @@ static void arr_insert(hashtbl tbl, struct node *np)
     size_t probe = hv;
 
     // Probe count to track maxprobe
-    size_t pcount = 1;
+    size_t i = 0;
 
     // Find first open bucket with quadratic probing
-    for (size_t i = 1; tbl->arr[probe % tbl->arrsize] != NULL; i++) {
+    while (tbl->arr[probe % tbl->arrsize] != NULL) {
+        i++;
         probe = hv + ((i * i + i) / 2);
-        pcount++;
     }
 
-    if (pcount > tbl->maxprobe) {
-        tbl->maxprobe = pcount;
+    if (i > tbl->maxprobe) {
+        tbl->maxprobe = i;
     }
 
     // insert pointer to array
