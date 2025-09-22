@@ -165,14 +165,14 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
     size_t probe = hv;
 
     // Loop exits if key has not been found within maxprobe iterations
-    for (size_t i = 1; i <= tbl->maxprobe; i++) {
+    for (size_t i = 0; i <= tbl->maxprobe; i++) {
+        probe = hv + ((i * i + i) / 2);
         // Start at hashvalue % table size
         if (arr[probe % tbl->arrsize]) {
             if (strcmp(key, arr[probe % tbl->arrsize]->key) == 0) {
                 return probe % tbl->arrsize;
             }
         }
-        probe = hv + ((i * i + i) / 2);
     }
 
     return -1;
