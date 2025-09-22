@@ -11,12 +11,10 @@
  * The table tracks the maximum number of times a
  * table insertion (using the put function) had to
  * probe for an open bucket. When subsequently
- * searching for a key, the sum of the maximum probe
- * level and the probe level offset is used as the
+ * searching for a key, this number is used as the
  * limit to stop searching if a key is not found.
  * This stops the search function from degrading to
- * linear time but provides a reasonable range within
- * which to search.
+ * linear time.
  *
  */
 
@@ -49,11 +47,6 @@ static const unsigned int FNV_PRIME = 0x01000193; // FNV hash
  */
 
 static const unsigned int RESIZE_FACTOR = 2;
-// Added to maxprobe value to provide extra loop iterations
-// when searching table. Serves as a buffer to decrease
-// probability of false negatives in get_index_by_key while
-// avoiding degrading to linear search/O(n) time.
-static const size_t MAXPROBE_OFFSET = 20;
 static const double LOAD_FACT_LIM = 0.60;
 
 
@@ -171,19 +164,8 @@ static ssize_t get_index_by_key(hashtbl tbl, char *key)
     ssize_t hv = fnv_hash(key);
     size_t probe = hv;
 
-    // Loop exits if key has not been found within maxprobe + MAXPROBE_OFFSET
-    // iterations. Limiting the range searched stops algorithmic complexity/
-    // performance from degrading to linear time, but restricting the range
-    // must be balanced with ensuring a wide enough rage is searched. The
-    // offset is used to provide a buffer for searching in case a table resize
-    // has increased the maximum probing depth. Since a table resize reduces
-    // the load factor, it is highly unlikely the maximum probing depth would
-    // increase. The offset should be relativley small (10-30). In hashtable
-    // testing and benchmarking, the maximum probing depth was usually in the
-    // range of 10 - 18 iterations, even for tests in which ~900,000 strings
-    // were hashed and inserted, and the collision rate was consistently
-    // around 10-14%.
-    for (size_t i = 1; i <= tbl->maxprobe + MAXPROBE_OFFSET; i++) {
+    // Loop exits if key has not been found within maxprobe iterations
+    for (size_t i = 1; i <= tbl->maxprobe; i++) {
         // Start at hashvalue % table size
         if (arr[probe % tbl->arrsize]) {
             if (strcmp(key, arr[probe % tbl->arrsize]->key) == 0) {
