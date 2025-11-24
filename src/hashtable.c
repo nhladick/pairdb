@@ -64,7 +64,7 @@ struct hashtbl_obj {
 struct node {
     char *key;
     char *val;
-    unsigned int hashval;   // hashval stored to avoid reduntant hashing
+    unsigned int hashval;   // hashval stored to avoid repeated hashing
     size_t tblpos;          // Table position stored for efficient loading from file
 };
 
